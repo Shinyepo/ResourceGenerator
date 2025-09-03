@@ -1,0 +1,13 @@
+{
+  "itemGroup.resourcegenerator": "Example Mod Tab",
+  "block.resourcegenerator.example_block": "Example Block",
+  "item.resourcegenerator.example_item": "Example Item",
+
+  "resourcegenerator.configuration.title": "Resource Generator Configs",
+  "resourcegenerator.configuration.section.resourcegenerator.common.toml": "Resource Generator Configs",
+  "resourcegenerator.configuration.section.resourcegenerator.common.toml.title": "Resource Generator Configs",
+  "resourcegenerator.configuration.items": "Item List",
+  "resourcegenerator.configuration.logDirtBlock": "Log Dirt Block",
+  "resourcegenerator.configuration.magicNumberIntroduction": "Magic Number Text",
+  "resourcegenerator.configuration.magicNumber": "Magic Number"
+}
