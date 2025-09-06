@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "resourcegenerator:block/controller",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "resourcegenerator:block/controller"
+    },
+    "facing=south": {
+      "model": "resourcegenerator:block/controller",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "resourcegenerator:block/controller",
+      "y": 270
+    }
+  }
+}

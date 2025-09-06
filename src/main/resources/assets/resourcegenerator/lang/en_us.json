@@ -1,8 +1,11 @@
 {
-  "itemGroup.resourcegenerator": "Example Mod Tab",
-  "block.resourcegenerator.example_block": "Example Block",
-  "item.resourcegenerator.example_item": "Example Item",
-
+  "itemGroup.resourcegenerator": "Resource Generator",
+  "block.resourcegenerator.controller": "Controller",
+  "item.resourcegenerator.controller": "Controller",
+  "block.resourcegenerator.solar_panel": "Solar Panel",
+  "item.resourcegenerator.solar_panel": "Solar Panel",
+  "block.resourcegenerator.pipe": "Pipe",
+  "item.resourcegenerator.pipe": "Pipe",
   "resourcegenerator.configuration.title": "Resource Generator Configs",
   "resourcegenerator.configuration.section.resourcegenerator.common.toml": "Resource Generator Configs",
   "resourcegenerator.configuration.section.resourcegenerator.common.toml.title": "Resource Generator Configs",

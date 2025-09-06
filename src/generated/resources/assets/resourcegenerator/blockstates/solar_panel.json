@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "resourcegenerator:block/solar_panel"
+    }
+  }
+}
