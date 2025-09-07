@@ -6,6 +6,7 @@
   "item.resourcegenerator.solar_panel": "Solar Panel",
   "block.resourcegenerator.pipe": "Pipe",
   "item.resourcegenerator.pipe": "Pipe",
+  "item.resourcegenerator.id_card": "Id Card",
   "resourcegenerator.configuration.title": "Resource Generator Configs",
   "resourcegenerator.configuration.section.resourcegenerator.common.toml": "Resource Generator Configs",
   "resourcegenerator.configuration.section.resourcegenerator.common.toml.title": "Resource Generator Configs",

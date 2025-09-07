@@ -4,9 +4,11 @@ import com.mojang.serialization.MapCodec;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.blocks.entities.ControllerEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.DummyExtensionEntity;
+import dev.shinyepo.resourcegenerator.persistence.ResourceGeneratorSavedData;
 import dev.shinyepo.resourcegenerator.registries.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -137,7 +139,16 @@ public class Controller extends HorizontalDirectionalBlock implements EntityBloc
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        System.out.println("i've been hit");
+        if (level instanceof ServerLevel serverLevel) {
+            var dataStorage = ResourceGeneratorSavedData.getStorage(serverLevel);
+            var size = dataStorage.getNetworks().size();
+            System.out.println("Network size: " + size);
+            var userId = player.getGameProfile().getId();
+            var result = dataStorage.createNetwork(userId);
+            if (result == null) System.out.println("Did not create network as user already owns one");
+            System.out.println("New size: " + dataStorage.getNetworks().size());
+
+        }
         return InteractionResult.SUCCESS;
     }
 

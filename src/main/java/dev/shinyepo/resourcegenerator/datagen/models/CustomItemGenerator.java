@@ -6,6 +6,7 @@ import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ItemModelOutput;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelInstance;
+import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
@@ -23,6 +24,7 @@ public class CustomItemGenerator extends ItemModelGenerators {
         generateItemWithExistingParent(ItemRegistry.SOLAR_ITEM.get(), "solar_panel");
         generateItemWithExistingParent(ItemRegistry.CONTROLLER_ITEM.get(), "controller");
         generateItemWithExistingParent(ItemRegistry.PIPE_ITEM.get(), "pipe");
+        generateFlatItem(ItemRegistry.ID_CARD.get(), ModelTemplates.FLAT_ITEM);
     }
 
     private void generateItemWithExistingParent(Item item, String parent) {

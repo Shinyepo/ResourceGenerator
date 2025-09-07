@@ -1,8 +1,10 @@
-// 1.21.8	2025-09-06T18:16:19.2100199	Model Definitions - resourcegenerator
+// 1.21.8	2025-09-07T23:27:23.194831	Model Definitions - resourcegenerator
 3901d1bc04bef8188ce388fe37427c51e36e706b assets/resourcegenerator/blockstates/controller.json
 3dff9e1ec59415779195d2abfa9f07bc17b428a1 assets/resourcegenerator/blockstates/dummy_extension.json
 27cc336ecf8fbcf68fb83faeb63b3c85382f2156 assets/resourcegenerator/blockstates/pipe.json
 7482c30090123725b05ebac1dcb8ed46d8925f08 assets/resourcegenerator/blockstates/solar_panel.json
 59795a53c42fc86239878d93a99bb561bdf390f6 assets/resourcegenerator/items/controller.json
+86ae4def8ad75e638e4d1caf67c27ef65da59842 assets/resourcegenerator/items/id_card.json
 09a1cb444393d830293b453ba5a41705f4242e39 assets/resourcegenerator/items/pipe.json
 47fe782192711c54b988a2e63224c8442100ef02 assets/resourcegenerator/items/solar_panel.json
+f8bd3664fb1a7e12f0f857a908e42bc076ac307c assets/resourcegenerator/models/item/id_card.json

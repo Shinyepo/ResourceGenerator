@@ -16,6 +16,7 @@ public class CreativeTabRegistry {
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> ItemRegistry.CONTROLLER_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
+                output.accept(ItemRegistry.ID_CARD.get());
                 output.accept(ItemRegistry.CONTROLLER_ITEM.get());
                 output.accept(ItemRegistry.SOLAR_ITEM.get());
                 output.accept(ItemRegistry.PIPE_ITEM.get());
