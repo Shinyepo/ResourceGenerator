@@ -4,12 +4,17 @@ import com.mojang.serialization.MapCodec;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.blocks.entities.ControllerEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.DummyExtensionEntity;
+import dev.shinyepo.resourcegenerator.menus.controller.ControllerContainer;
 import dev.shinyepo.resourcegenerator.persistence.ResourceGeneratorSavedData;
 import dev.shinyepo.resourcegenerator.registries.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -139,6 +144,9 @@ public class Controller extends HorizontalDirectionalBlock implements EntityBloc
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.openMenu(state.getMenuProvider(level, pos), buf -> buf.writeBlockPos(pos));
+        }
         if (level instanceof ServerLevel serverLevel) {
             var dataStorage = ResourceGeneratorSavedData.getStorage(serverLevel);
             var size = dataStorage.getNetworks().size();
@@ -147,7 +155,6 @@ public class Controller extends HorizontalDirectionalBlock implements EntityBloc
             var result = dataStorage.createNetwork(userId);
             if (result == null) System.out.println("Did not create network as user already owns one");
             System.out.println("New size: " + dataStorage.getNetworks().size());
-
         }
         return InteractionResult.SUCCESS;
     }
@@ -160,5 +167,10 @@ public class Controller extends HorizontalDirectionalBlock implements EntityBloc
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new ControllerEntity(blockPos, blockState);
+    }
+
+    @Override
+    protected @Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new SimpleMenuProvider((windowId, inv, data) -> new ControllerContainer(windowId, inv.player, pos), Component.literal("Controller"));
     }
 }
