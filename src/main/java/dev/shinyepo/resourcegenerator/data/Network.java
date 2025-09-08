@@ -61,6 +61,10 @@ public class Network {
         this.value = value;
     }
 
+    public Long changeValue(long amount) {
+        return this.value = value + amount;
+    }
+
     public Map<UUID, Integer> getUsers() {
         return users;
     }

@@ -2,6 +2,7 @@ package dev.shinyepo.resourcegenerator.persistence;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.data.Network;
 import dev.shinyepo.resourcegenerator.data.Permissions;
 import net.minecraft.server.level.ServerLevel;
@@ -11,35 +12,46 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class ResourceGeneratorSavedData extends SavedData {
-    public static final SavedDataType<ResourceGeneratorSavedData> ID = new SavedDataType<>(
+public class NetworkSavedData extends SavedData {
+    public static final SavedDataType<NetworkSavedData> ID = new SavedDataType<>(
             "resource_generator_networks",
-            ResourceGeneratorSavedData::new,
+            NetworkSavedData::new,
             RecordCodecBuilder.create(instance -> instance.group(
-                    Codec.list(Network.CODEC).xmap(ArrayList::new, ArrayList::new).fieldOf("networks").forGetter(ResourceGeneratorSavedData::getNetworks)
-            ).apply(instance, ResourceGeneratorSavedData::new))
+                    Codec.list(Network.CODEC).xmap(ArrayList::new, ArrayList::new).fieldOf("networks").forGetter(NetworkSavedData::getNetworks)
+            ).apply(instance, NetworkSavedData::new))
     );
-
-    public static ResourceGeneratorSavedData getStorage(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(ID);
-    }
 
     private ArrayList<Network> networks = new ArrayList<>();
 
-    public ResourceGeneratorSavedData() {
+    private NetworkSavedData() {
 
     }
 
-    public ResourceGeneratorSavedData(ArrayList<Network> networks) {
+    private NetworkSavedData(ArrayList<Network> networks) {
         this.networks = networks;
+    }
+
+    public static NetworkSavedData getOrCreate(ServerLevel level) {
+        return level.getDataStorage().computeIfAbsent(ID);
     }
 
     public ArrayList<Network> getNetworks() {
         return networks;
     }
 
-    public Network findNetwork(UUID id) {
-        return networks.stream().filter(n -> n.getNetworkId() == id).findFirst().orElse(null);
+    public Network findNetworkByOwner(UUID ownerId) {
+        return networks.stream().filter(n -> n.getOwnerId().compareTo(ownerId) == 0).findFirst().orElse(null);
+    }
+
+    public Network findNetworkById(UUID networkId) {
+        return networks.stream().filter(n -> n.getNetworkId().compareTo(networkId) == 0).findFirst().orElse(null);
+    }
+
+    public UUID getOrCreateNetwork(UUID userId) {
+        Network network = findNetworkByOwner(userId);
+        if (network == null) network = createNetwork(userId);
+        setDirty();
+        return network.getNetworkId();
     }
 
     public Network createNetwork(UUID userId) {
@@ -52,7 +64,7 @@ public class ResourceGeneratorSavedData extends SavedData {
     }
 
     public Network updateNetwork(UUID id, Long value) {
-        Network network = findNetwork(id);
+        Network network = findNetworkByOwner(id);
         if (network == null) return null;
         network.setValue(value);
         setDirty();
@@ -60,7 +72,7 @@ public class ResourceGeneratorSavedData extends SavedData {
     }
 
     public Network addUserToNetwork(UUID id, UUID userId) {
-        Network network = findNetwork(id);
+        Network network = findNetworkByOwner(id);
         if (network == null) return null;
         network.addUser(userId);
         setDirty();
@@ -68,10 +80,20 @@ public class ResourceGeneratorSavedData extends SavedData {
     }
 
     public Network updateUserPermissions(UUID networkId, UUID userId, Permissions permissions) {
-        Network network = findNetwork(networkId);
+        Network network = findNetworkByOwner(networkId);
         if (network == null) return null;
         network.updateUser(userId, permissions);
         setDirty();
         return network;
+    }
+
+    public Long changeNetworksValue(UUID networkId, long amount) {
+        Network network = findNetworkById(networkId);
+        if (network == null) {
+            ResourceGenerator.LOGGER.error("Could not find network - {}", networkId);
+            return 0L;
+        }
+        setDirty();
+        return network.changeValue(amount);
     }
 }

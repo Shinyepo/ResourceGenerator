@@ -17,6 +17,7 @@ public class ControllerScreen extends AbstractContainerScreen<ControllerContaine
         super(menu, playerInventory, title);
         this.inventoryLabelY = this.imageHeight - 94;
 //        this.titleLabelX = 32;
+        this.imageWidth = 196;
     }
 
     @Override
@@ -36,5 +37,11 @@ public class ControllerScreen extends AbstractContainerScreen<ControllerContaine
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         super.renderLabels(graphics, mouseX, mouseY);
         graphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xFF404040, false);
+        String owner = this.menu.getOwnerName();
+//        if (!"".equals(owner)) {
+        graphics.drawString(this.font, Component.literal("Owner: " + owner), 10, 24, 0xFF404040, false);
+        graphics.drawString(this.font, Component.literal("Value: " + this.menu.getValue()), 10, 34, 0xFF404040, false);
+
+//        }
     }
 }

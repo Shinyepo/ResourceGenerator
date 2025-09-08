@@ -5,12 +5,10 @@ import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.blocks.entities.ControllerEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.DummyExtensionEntity;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerContainer;
-import dev.shinyepo.resourcegenerator.persistence.ResourceGeneratorSavedData;
 import dev.shinyepo.resourcegenerator.registries.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -25,6 +23,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -138,6 +138,16 @@ public class Controller extends HorizontalDirectionalBlock implements EntityBloc
     }
 
     @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        if (level.isClientSide()) return null;
+        return (entityLevel, entityPos, entityState, entityType) -> {
+            if (entityType instanceof ControllerEntity controllerEntity) {
+                controllerEntity.tick();
+            }
+        };
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
@@ -146,15 +156,6 @@ public class Controller extends HorizontalDirectionalBlock implements EntityBloc
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             serverPlayer.openMenu(state.getMenuProvider(level, pos), buf -> buf.writeBlockPos(pos));
-        }
-        if (level instanceof ServerLevel serverLevel) {
-            var dataStorage = ResourceGeneratorSavedData.getStorage(serverLevel);
-            var size = dataStorage.getNetworks().size();
-            System.out.println("Network size: " + size);
-            var userId = player.getGameProfile().getId();
-            var result = dataStorage.createNetwork(userId);
-            if (result == null) System.out.println("Did not create network as user already owns one");
-            System.out.println("New size: " + dataStorage.getNetworks().size());
         }
         return InteractionResult.SUCCESS;
     }
@@ -171,6 +172,10 @@ public class Controller extends HorizontalDirectionalBlock implements EntityBloc
 
     @Override
     protected @Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        return new SimpleMenuProvider((windowId, inv, data) -> new ControllerContainer(windowId, inv.player, pos), Component.literal("Controller"));
+        BlockEntity entity = level.getBlockEntity(pos);
+        if (entity instanceof ControllerEntity controllerEntity) {
+            return new SimpleMenuProvider((windowId, inv, data) -> new ControllerContainer(windowId, inv.player, pos, controllerEntity.getDataSlot()), Component.literal("Controller"));
+        }
+        return null;
     }
 }
