@@ -2,6 +2,7 @@ package dev.shinyepo.resourcegenerator;
 
 import com.mojang.logging.LogUtils;
 import dev.shinyepo.resourcegenerator.network.NetworkController;
+import dev.shinyepo.resourcegenerator.registries.PacketRegistry;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -32,6 +33,7 @@ public class ResourceGenerator {
         MENUS.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(PacketRegistry::registerPayloadHandler);
         NeoForge.EVENT_BUS.addListener(this::onServerStopping);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
