@@ -1,76 +1,58 @@
 package dev.shinyepo.resourcegenerator.blocks;
 
-import com.mojang.serialization.MapCodec;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.blocks.entities.ControllerEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.DummyExtensionEntity;
+import dev.shinyepo.resourcegenerator.blocks.types.HorizontalNetworkBlock;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerContainer;
 import dev.shinyepo.resourcegenerator.registries.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.HashMap;
 
 @ParametersAreNonnullByDefault
-public class Controller extends HorizontalDirectionalBlock implements EntityBlock {
+public class Controller extends HorizontalNetworkBlock {
     private static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape[] SHAPE = new VoxelShape[]{Shapes.or(
-            Block.box(-15.5, 0.5, 0.75, 31.5, 15.5, 16),
-            Block.box(-15.99, 0, 0.01, -13.99, 15.99, 2.01),
-            Block.box(-15.99, 0, 14.01, -13.99, 15.99, 16.01),
-            Block.box(29.99, 0, 0.01, 31.99, 15.99, 2.01),
-            Block.box(29.99, 0, 14.01, 31.99, 15.99, 16.01),
-            Block.box(-16, 15, 0, 32, 16, 16.02)
-    ), Shapes.or(
-            Block.box(0.01, 0, -15.99, 2.01, 16, -13.99),
-            Block.box(13.99, 0, -15.99, 15.99, 16, -13.99),
-            Block.box(13.99, 0, 29.99, 15.99, 16, 31.99),
-            Block.box(0.01, 0, 29.99, 2.01, 16, 31.99),
-            Block.box(0.75, 0.5, -15.5, 15.98, 15, 31.5),
-            Block.box(0, 15, -16, 16, 16.01, 32)
-    )};
+    private static final HashMap<Direction, VoxelShape> SHAPE = new HashMap<>();
 
-    public Controller(Properties p_54120_) {
-        super(p_54120_);
-
-        registerDefaultState(getStateDefinition().any()
-                .setValue(FACING, Direction.NORTH));
+    static {
+        SHAPE.put(Direction.NORTH, Shapes.or(
+                Block.box(-15.5, 0.5, 0.75, 31.5, 15.5, 16),
+                Block.box(-15.99, 0, 0.01, -13.99, 15.99, 2.01),
+                Block.box(-15.99, 0, 14.01, -13.99, 15.99, 16.01),
+                Block.box(29.99, 0, 0.01, 31.99, 15.99, 2.01),
+                Block.box(29.99, 0, 14.01, 31.99, 15.99, 16.01),
+                Block.box(-16, 15, 0, 32, 16, 16.02)
+        ));
+        SHAPE.put(Direction.WEST, Shapes.or(
+                Block.box(0.01, 0, -15.99, 2.01, 16, -13.99),
+                Block.box(13.99, 0, -15.99, 15.99, 16, -13.99),
+                Block.box(13.99, 0, 29.99, 15.99, 16, 31.99),
+                Block.box(0.01, 0, 29.99, 2.01, 16, 31.99),
+                Block.box(0.75, 0.5, -15.5, 15.98, 15, 31.5),
+                Block.box(0, 15, -16, 16, 16.01, 32)
+        ));
     }
 
-    @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        Direction facing = state.getValue(FACING);
-        if (facing.getAxis() == Direction.Axis.X) {
-            return SHAPE[1];
-        }
-        return SHAPE[0];
+    public Controller(Properties properties) {
+        super(ControllerEntity::new, properties);
+        setDataContainerFactory(ControllerContainer::new);
+        setShape(SHAPE);
     }
 
 
@@ -125,57 +107,5 @@ public class Controller extends HorizontalDirectionalBlock implements EntityBloc
                 ResourceGenerator.LOGGER.error("Could not find block entity for Controller at {} AND {}", leftPos, rightPos);
             }
         }
-    }
-
-
-    @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        Direction facing = state.getValue(FACING);
-        if (facing.getAxis() == Direction.Axis.X) {
-            return SHAPE[1];
-        }
-        return SHAPE[0];
-    }
-
-    @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        if (level.isClientSide()) return null;
-        return (entityLevel, entityPos, entityState, entityType) -> {
-            if (entityType instanceof ControllerEntity controllerEntity) {
-                controllerEntity.tick();
-            }
-        };
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.openMenu(state.getMenuProvider(level, pos), buf -> buf.writeBlockPos(pos));
-        }
-        return InteractionResult.SUCCESS;
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return null;
-    }
-
-    @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new ControllerEntity(blockPos, blockState);
-    }
-
-    @Override
-    protected @Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof ControllerEntity controllerEntity) {
-            return new SimpleMenuProvider((windowId, inv, data) -> new ControllerContainer(windowId, inv.player, pos, controllerEntity.getDataSlot()), Component.literal("Controller"));
-        }
-        return null;
     }
 }
