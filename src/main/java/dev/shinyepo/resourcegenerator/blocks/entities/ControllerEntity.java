@@ -1,5 +1,6 @@
 package dev.shinyepo.resourcegenerator.blocks.entities;
 
+import dev.shinyepo.resourcegenerator.blocks.entities.types.IDataEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.Receiver;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
 import dev.shinyepo.resourcegenerator.datacomponents.IdCardData;
@@ -23,13 +24,13 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
-public class ControllerEntity extends Receiver {
+public class ControllerEntity extends Receiver implements IDataEntity {
     private final ItemStackHandler cardHandler;
     public static List<TagKey<Item>> validInputs = List.of(TagRegistry.ID_CARDS);
     private Long value = 0L;
 
 
-    private DataSlot dataSlot = new DataSlot() {
+    private final DataSlot dataSlot = new DataSlot() {
         @Override
         public int get() {
             return Math.toIntExact(value);
