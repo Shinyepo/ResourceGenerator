@@ -1,7 +1,7 @@
 package dev.shinyepo.resourcegenerator.networking.packets;
 
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
-import dev.shinyepo.resourcegenerator.blocks.entities.ControllerEntity;
+import dev.shinyepo.resourcegenerator.blocks.entities.types.IAccountEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -31,8 +31,8 @@ public record SyncOwnerS2C(String ownerName, BlockPos pos) implements CustomPack
     public void handler(IPayloadContext context) {
         context.enqueueWork(() -> {
             if (Minecraft.getInstance().level == null) return;
-            if (Minecraft.getInstance().level.getBlockEntity(pos) instanceof ControllerEntity controller) {
-                controller.setOwner(ownerName);
+            if (Minecraft.getInstance().level.getBlockEntity(pos) instanceof IAccountEntity controller) {
+                controller.setOwnerName(ownerName);
             }
         });
     }

@@ -1,9 +1,15 @@
 package dev.shinyepo.resourcegenerator.blocks;
 
 import dev.shinyepo.resourcegenerator.blocks.entities.SolarPanelEntity;
+import dev.shinyepo.resourcegenerator.blocks.entities.types.INetworkDevice;
+import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
 import dev.shinyepo.resourcegenerator.properties.CustomProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -14,6 +20,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class SolarPanel extends Block implements EntityBlock {
     private static final VoxelShape SHAPE = Shapes.or(Block.box(0, 0, 0, 16, 3, 16),
@@ -46,5 +54,23 @@ public class SolarPanel extends Block implements EntityBlock {
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new SolarPanelEntity(blockPos, blockState);
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (level.isClientSide()) return;
+        INetworkDevice networkDevice = (INetworkDevice) level.getBlockEntity(pos);
+        assert networkDevice != null;
+
+        BlockEntity below = level.getBlockEntity(pos.below());
+        DeviceNetworkController controller = DeviceNetworkController.getInstance((ServerLevel) level);
+        if (below instanceof INetworkDevice belowDevice) {
+            UUID networkId = controller.addDeviceToNetwork(belowDevice.getNetworkId(), (INetworkDevice) level.getBlockEntity(pos), pos);
+            networkDevice.setNetworkId(networkId);
+        } else {
+            UUID networkId = controller.createNewNetwork(level.dimension(), networkDevice, pos);
+            networkDevice.setNetworkId(networkId);
+        }
     }
 }
