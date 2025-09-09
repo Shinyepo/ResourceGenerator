@@ -10,7 +10,7 @@ public class Transmitter extends NetworkDeviceEntity {
     }
 
     @Override
-    protected void tick() {
+    public void tick() {
 
     }
 }

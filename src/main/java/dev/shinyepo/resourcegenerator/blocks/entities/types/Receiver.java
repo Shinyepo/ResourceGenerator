@@ -21,7 +21,7 @@ public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
     }
 
     @Override
-    protected void tick() {
+    public void tick() {
 
     }
 

@@ -33,7 +33,7 @@ public abstract class NetworkDeviceEntity extends BlockEntity implements INetwor
         this.networkId = networkId;
     }
 
-    protected abstract void tick();
+    public abstract void tick();
 
 
     @Override

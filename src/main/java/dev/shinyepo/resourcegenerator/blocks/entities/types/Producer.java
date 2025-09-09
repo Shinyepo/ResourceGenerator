@@ -14,7 +14,7 @@ public class Producer extends NetworkDeviceEntity {
     }
 
     @Override
-    protected void tick() {
+    public void tick() {
 
     }
 }
