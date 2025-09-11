@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public abstract class NetworkDeviceEntity extends BlockEntity implements INetworkDevice {
-    protected UUID networkId;
+    protected INetworkCapability networkCapability = new NetworkCapability();
 
     public NetworkDeviceEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -39,14 +39,14 @@ public abstract class NetworkDeviceEntity extends BlockEntity implements INetwor
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        networkId = input.read("networkId", UUIDUtil.CODEC).orElse(null);
+        networkCapability.setNetworkId(input.read("networkId", UUIDUtil.CODEC).orElse(null));
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        if (networkId != null) {
-            output.store("networkId", UUIDUtil.CODEC, networkId);
+        if (networkCapability.getNetworkId() != null) {
+            output.store("networkId", UUIDUtil.CODEC, networkCapability.getNetworkId());
         }
     }
 
@@ -63,5 +63,17 @@ public abstract class NetworkDeviceEntity extends BlockEntity implements INetwor
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    protected void configureSides(Direction... directions) {
+        for (Direction direction : directions) {
+            networkCapability.configureSide(direction);
+        }
+    }
+
+    public @Nullable INetworkCapability getNetworkCapability(Direction direction) {
+        if (direction == null) return networkCapability;
+        if (networkCapability.isSideValid(direction) == SideConfig.NETWORK) return networkCapability;
+        return null;
     }
 }

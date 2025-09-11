@@ -45,6 +45,7 @@ public class ControllerEntity extends Receiver implements IDataEntity {
     public ControllerEntity(BlockPos pos, BlockState blockState) {
         super(BlockEntityRegistry.CONTROLLER_ENTITY.get(), pos, blockState);
         cardHandler = createInputItemHandler(1);
+        configureSides(Direction.DOWN, Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH);
     }
 
     @Nonnull
