@@ -23,7 +23,7 @@ public class DeviceNetwork {
     private HashSet<BlockPos> transmitters = new HashSet<>();
     private HashSet<BlockPos> receivers = new HashSet<>();
     private ResourceKey<Level> dimension;
-    private transient Long balance;
+    private transient Long balance = 0L;
 
     public static final Codec<DeviceNetwork> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -111,5 +111,23 @@ public class DeviceNetwork {
             receivers.add(pos);
         }
         //TODO: Throw exception?
+    }
+
+    public boolean isMarkedForDeletion() {
+        int devices = producers.size() + transmitters.size() + receivers.size();
+        return devices <= 0;
+    }
+
+    public void removeDevice(INetworkDevice device, BlockPos pos) {
+        if (device instanceof Producer) {
+            producers.remove(pos);
+        }
+        if (device instanceof Transmitter) {
+            transmitters.remove(pos);
+        }
+        if (device instanceof Receiver) {
+            receivers.remove(pos);
+        }
+
     }
 }

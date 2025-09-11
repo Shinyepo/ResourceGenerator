@@ -8,6 +8,7 @@ import dev.shinyepo.resourcegenerator.registries.BlockEntityRegistry;
 import dev.shinyepo.resourcegenerator.registries.DataComponentRegistry;
 import dev.shinyepo.resourcegenerator.registries.TagRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.DataSlot;
@@ -22,13 +23,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.UUID;
 
 public class ControllerEntity extends Receiver implements IDataEntity {
     private final ItemStackHandler cardHandler;
     public static List<TagKey<Item>> validInputs = List.of(TagRegistry.ID_CARDS);
-    private Long value = 0L;
-
 
     private final DataSlot dataSlot = new DataSlot() {
         @Override
@@ -73,7 +71,7 @@ public class ControllerEntity extends Receiver implements IDataEntity {
     private void assignAccount() {
         ItemStack card = cardHandler.getStackInSlot(0);
         IdCardData cardData = card.get(DataComponentRegistry.ID_CARD.get());
-        if (cardData != null && cardData.userId() != null && networkId == null) {
+        if (cardData != null && cardData.userId() != null && getAccountId() == null) {
             ServerLevel serverLevel = (ServerLevel) level;
             assert serverLevel != null;
             AccountController accountController = AccountController.getInstance(serverLevel);
@@ -83,17 +81,11 @@ public class ControllerEntity extends Receiver implements IDataEntity {
         }
     }
 
-    public void tick() {
-        assert level != null;
-        if (level.isClientSide()) return;
+    @Override
+    public void tick(ServerLevel level) {
+        super.tick(level);
         if (level.getGameTime() % 5 != 0) return;
         if (!cardHandler.getStackInSlot(0).isEmpty()) assignAccount();
-        if (level.getGameTime() % 20 != 0) return;
-        UUID accountId = getAccountId();
-        if (accountId != null) {
-            AccountController controller = AccountController.getInstance((ServerLevel) level);
-            value = controller.changeAccountBalance(getAccountId(), 20L);
-        }
     }
 
     public DataSlot getDataSlot() {

@@ -1,20 +1,23 @@
 package dev.shinyepo.resourcegenerator.blocks.entities.types;
 
+import dev.shinyepo.resourcegenerator.capabilities.INetworkCapability;
+import dev.shinyepo.resourcegenerator.capabilities.NetworkCapability;
+import dev.shinyepo.resourcegenerator.configs.SideConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
 
 public abstract class NetworkDeviceEntity extends BlockEntity implements INetworkDevice {
     protected INetworkCapability networkCapability = new NetworkCapability();
@@ -23,18 +26,7 @@ public abstract class NetworkDeviceEntity extends BlockEntity implements INetwor
         super(type, pos, blockState);
     }
 
-    @Override
-    public UUID getNetworkId() {
-        return networkId;
-    }
-
-    @Override
-    public void setNetworkId(UUID networkId) {
-        this.networkId = networkId;
-    }
-
-    public abstract void tick();
-
+    public abstract void tick(ServerLevel level);
 
     @Override
     protected void loadAdditional(ValueInput input) {

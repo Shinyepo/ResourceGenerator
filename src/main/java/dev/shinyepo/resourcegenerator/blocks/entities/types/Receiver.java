@@ -1,10 +1,13 @@
 package dev.shinyepo.resourcegenerator.blocks.entities.types;
 
 import com.mojang.serialization.Codec;
+import dev.shinyepo.resourcegenerator.controllers.AccountController;
+import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
 import dev.shinyepo.resourcegenerator.networking.CustomMessages;
 import dev.shinyepo.resourcegenerator.networking.packets.SyncOwnerS2C;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -15,14 +18,23 @@ import java.util.UUID;
 public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
     private UUID accountId;
     protected String ownerName = "";
+    protected Long value = 0L;
 
     public Receiver(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
 
     @Override
-    public void tick() {
-
+    public void tick(ServerLevel level) {
+        if (level.getGameTime() % 20 == 0) {
+            if (accountId != null && networkCapability.getNetworkId() != null) {
+                DeviceNetworkController controller = DeviceNetworkController.getInstance(level);
+                AccountController accountController = AccountController.getInstance(level);
+                Long balance = controller.getNetworksBalance(networkCapability.getNetworkId());
+                value = accountController.changeAccountBalance(accountId, balance);
+                controller.resetNetworksBalance(networkCapability.getNetworkId());
+            }
+        }
     }
 
     @Override

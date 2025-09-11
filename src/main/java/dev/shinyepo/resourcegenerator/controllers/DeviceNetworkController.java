@@ -51,6 +51,7 @@ public class DeviceNetworkController {
         DeviceNetwork network = dataStore.getNetwork(networkId);
         if (network != null) {
             network.addNetworkDevice(device, pos);
+            dataStore.setDirty();
             return network.getNetworkId();
         }
         return null;
@@ -58,5 +59,21 @@ public class DeviceNetworkController {
 
     public UUID createNewNetwork(ResourceKey<Level> dimension, INetworkDevice networkDevice, BlockPos pos) {
         return dataStore.createNetwork(dimension, networkDevice, pos);
+    }
+
+    public int getNetworksSize() {
+        return dataStore.getNetworks().size();
+    }
+
+    public void removeDeviceFromNetwork(UUID networkId, INetworkDevice device, BlockPos pos) {
+        DeviceNetwork network = dataStore.getNetwork(networkId);
+        if (network != null) {
+            network.removeDevice(device, pos);
+            if (network.isMarkedForDeletion()) {
+                System.out.println("Network is empty, deleting...");
+                dataStore.removeNetwork(networkId);
+            }
+            dataStore.setDirty();
+        }
     }
 }

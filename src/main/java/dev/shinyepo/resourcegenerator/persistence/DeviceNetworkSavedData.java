@@ -13,23 +13,22 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class DeviceNetworkSavedData extends SavedData {
-    private Map<UUID, DeviceNetwork> networks = new HashMap<>();
+    private HashMap<UUID, DeviceNetwork> networks = new HashMap<>();
     public static final SavedDataType<DeviceNetworkSavedData> TYPE = new SavedDataType<>(
             "device_networks",
             DeviceNetworkSavedData::new,
             RecordCodecBuilder.create(instance -> instance.group(
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, DeviceNetwork.CODEC).fieldOf("networks").forGetter(DeviceNetworkSavedData::getNetworks)
-            ).apply(instance, DeviceNetworkSavedData::new))
+            ).apply(instance, networks -> new DeviceNetworkSavedData(new HashMap<>(networks))))
     );
 
     public DeviceNetworkSavedData() {
     }
 
-    public DeviceNetworkSavedData(Map<UUID, DeviceNetwork> networks) {
+    public DeviceNetworkSavedData(HashMap<UUID, DeviceNetwork> networks) {
         this.networks = networks;
     }
 
@@ -37,7 +36,7 @@ public class DeviceNetworkSavedData extends SavedData {
         return level.getDataStorage().computeIfAbsent(TYPE);
     }
 
-    public Map<UUID, DeviceNetwork> getNetworks() {
+    public HashMap<UUID, DeviceNetwork> getNetworks() {
         return networks;
     }
 
@@ -54,5 +53,9 @@ public class DeviceNetworkSavedData extends SavedData {
         networks.put(network.getNetworkId(), network);
         setDirty();
         return network.getNetworkId();
+    }
+
+    public void removeNetwork(UUID networkId) {
+        networks.remove(networkId);
     }
 }

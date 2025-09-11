@@ -1,6 +1,7 @@
 package dev.shinyepo.resourcegenerator.blocks.entities.types;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -10,7 +11,7 @@ public class Transmitter extends NetworkDeviceEntity {
     }
 
     @Override
-    public void tick() {
+    public void tick(ServerLevel level) {
 
     }
 }
