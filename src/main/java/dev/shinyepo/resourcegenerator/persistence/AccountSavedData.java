@@ -9,17 +9,16 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class AccountSavedData extends SavedData {
-    private Map<UUID, Account> accounts = new HashMap<>();
+    private HashMap<UUID, Account> accounts = new HashMap<>();
     public static final SavedDataType<AccountSavedData> TYPE = new SavedDataType<>(
-            "resource_generator_networks",
+            "resource_generator_accounts",
             AccountSavedData::new,
             RecordCodecBuilder.create(instance -> instance.group(
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Account.CODEC).fieldOf("accounts").forGetter(AccountSavedData::getAccounts)
-            ).apply(instance, AccountSavedData::new))
+            ).apply(instance, accounts -> new AccountSavedData(new HashMap<>(accounts))))
     );
 
 
@@ -27,7 +26,7 @@ public class AccountSavedData extends SavedData {
 
     }
 
-    public AccountSavedData(Map<UUID, Account> accounts) {
+    public AccountSavedData(HashMap<UUID, Account> accounts) {
         this.accounts = accounts;
     }
 
@@ -35,11 +34,11 @@ public class AccountSavedData extends SavedData {
         return level.getDataStorage().computeIfAbsent(TYPE);
     }
 
-    public Map<UUID, Account> getAccounts() {
+    public HashMap<UUID, Account> getAccounts() {
         return accounts;
     }
 
-    public void setAccounts(Map<UUID, Account> accounts) {
+    public void setAccounts(HashMap<UUID, Account> accounts) {
         this.accounts = accounts;
     }
 
