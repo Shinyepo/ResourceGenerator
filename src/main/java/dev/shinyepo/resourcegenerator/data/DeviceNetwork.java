@@ -84,6 +84,10 @@ public class DeviceNetwork {
         this.producers = producers;
     }
 
+    public void addProducers(HashSet<BlockPos> producers) {
+        this.producers.addAll(producers);
+    }
+
     public HashSet<BlockPos> getTransmitters() {
         return transmitters;
     }
@@ -92,12 +96,20 @@ public class DeviceNetwork {
         this.transmitters = transmitters;
     }
 
+    public void addTransmitters(HashSet<BlockPos> transmitters) {
+        this.transmitters.addAll(transmitters);
+    }
+
     public HashSet<BlockPos> getReceivers() {
         return receivers;
     }
 
     public void setReceivers(HashSet<BlockPos> receivers) {
         this.receivers = receivers;
+    }
+
+    public void addReceivers(HashSet<BlockPos> receivers) {
+        this.receivers.addAll(receivers);
     }
 
     public void addNetworkDevice(INetworkDevice device, BlockPos pos) {

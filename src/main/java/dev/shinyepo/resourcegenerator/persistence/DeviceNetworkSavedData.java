@@ -18,7 +18,7 @@ import java.util.UUID;
 public class DeviceNetworkSavedData extends SavedData {
     private HashMap<UUID, DeviceNetwork> networks = new HashMap<>();
     public static final SavedDataType<DeviceNetworkSavedData> TYPE = new SavedDataType<>(
-            "device_networks",
+            "resource_generator_networks",
             DeviceNetworkSavedData::new,
             RecordCodecBuilder.create(instance -> instance.group(
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, DeviceNetwork.CODEC).fieldOf("networks").forGetter(DeviceNetworkSavedData::getNetworks)
@@ -57,5 +57,6 @@ public class DeviceNetworkSavedData extends SavedData {
 
     public void removeNetwork(UUID networkId) {
         networks.remove(networkId);
+        setDirty();
     }
 }

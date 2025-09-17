@@ -104,39 +104,32 @@ public class NetworkBlock extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
-        System.out.println(level.isClientSide);
         if (!level.isClientSide()) {
             INetworkCapability networkCapability = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, pos, null);
             INetworkDevice device = (INetworkDevice) level.getBlockEntity(pos);
             if (networkCapability != null) {
-                System.out.println("We've got placed device cap");
                 SideConfig[] sides = networkCapability.getSides();
                 List<UUID> networkIds = new ArrayList<>();
                 for (int i = 0; i < sides.length; i++) {
                     if (sides[i] == SideConfig.NETWORK) {
-                        System.out.println("looping through device network sides");
                         Direction direction = Direction.values()[i];
                         BlockPos relPos = pos.relative(direction);
                         INetworkCapability relCapability = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, relPos, direction.getOpposite());
                         if (relCapability != null) {
-                            System.out.println("MATCH");
                             networkIds.add(relCapability.getNetworkId());
                         }
                     }
                 }
                 DeviceNetworkController networkController = DeviceNetworkController.getInstance((ServerLevel) level);
-                System.out.println("before: " + networkController.getNetworksSize());
                 UUID networkId = null;
                 if (networkIds.isEmpty()) {
-                    System.out.println("Creating network");
                     networkId = networkController.createNewNetwork(level.dimension(), device, pos);
                 } else if (networkIds.size() == 1) {
-                    System.out.println("merging to existing network");
                     networkId = networkController.addDeviceToNetwork(networkIds.getFirst(), device, pos);
                 } else {
                     //TODO: implement merging networks
+                    networkId = networkController.mergeNetworks(networkIds, device, pos, (ServerLevel) level);
                 }
-                System.out.println("after count: " + networkController.getNetworksSize());
 
                 networkCapability.setNetworkId(networkId);
             }
@@ -151,7 +144,6 @@ public class NetworkBlock extends Block implements EntityBlock {
         if (networkCapability != null) {
             DeviceNetworkController networkController = DeviceNetworkController.getInstance((ServerLevel) level);
             networkController.removeDeviceFromNetwork(networkCapability.getNetworkId(), device, pos);
-            System.out.println("Removed Device from network");
         }
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
