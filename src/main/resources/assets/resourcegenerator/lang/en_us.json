@@ -7,6 +7,7 @@
   "block.resourcegenerator.pipe": "Pipe",
   "item.resourcegenerator.pipe": "Pipe",
   "item.resourcegenerator.id_card": "Id Card",
+  "item.resourcegenerator.inspector": "Inspector",
   "resourcegenerator.configuration.title": "Resource Generator Configs",
   "resourcegenerator.configuration.section.resourcegenerator.common.toml": "Resource Generator Configs",
   "resourcegenerator.configuration.section.resourcegenerator.common.toml.title": "Resource Generator Configs",
