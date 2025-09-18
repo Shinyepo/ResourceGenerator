@@ -2,15 +2,10 @@ package dev.shinyepo.resourcegenerator.blocks.types;
 
 import com.mojang.datafixers.util.Function4;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.IDataEntity;
-import dev.shinyepo.resourcegenerator.blocks.entities.types.INetworkDevice;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.NetworkDeviceEntity;
-import dev.shinyepo.resourcegenerator.capabilities.INetworkCapability;
-import dev.shinyepo.resourcegenerator.configs.SideConfig;
 import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
 import dev.shinyepo.resourcegenerator.menus.types.ContainerBase;
-import dev.shinyepo.resourcegenerator.registries.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,9 +30,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import java.util.function.BiFunction;
 
 public class NetworkBlock extends Block implements EntityBlock {
@@ -105,46 +97,18 @@ public class NetworkBlock extends Block implements EntityBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
         if (!level.isClientSide()) {
-            INetworkCapability networkCapability = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, pos, null);
-            INetworkDevice device = (INetworkDevice) level.getBlockEntity(pos);
-            if (networkCapability != null) {
-                SideConfig[] sides = networkCapability.getSides();
-                List<UUID> networkIds = new ArrayList<>();
-                for (int i = 0; i < sides.length; i++) {
-                    if (sides[i] == SideConfig.NETWORK) {
-                        Direction direction = Direction.values()[i];
-                        BlockPos relPos = pos.relative(direction);
-                        INetworkCapability relCapability = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, relPos, direction.getOpposite());
-                        if (relCapability != null) {
-                            networkIds.add(relCapability.getNetworkId());
-                        }
-                    }
-                }
-                DeviceNetworkController networkController = DeviceNetworkController.getInstance((ServerLevel) level);
-                UUID networkId = null;
-                if (networkIds.isEmpty()) {
-                    networkId = networkController.createNewNetwork(level.dimension(), device, pos);
-                } else if (networkIds.size() == 1) {
-                    networkId = networkController.addDeviceToNetwork(networkIds.getFirst(), device, pos);
-                } else {
-                    //TODO: implement merging networks
-                    networkId = networkController.mergeNetworks(networkIds, device, pos, (ServerLevel) level);
-                }
-
-                networkCapability.setNetworkId(networkId);
-            }
+            DeviceNetworkController networkController = DeviceNetworkController.getInstance((ServerLevel) level);
+            networkController.handleNetworkOnPlace((ServerLevel) level, pos);
         }
     }
 
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (level.isClientSide()) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-        INetworkDevice device = (INetworkDevice) level.getBlockEntity(pos);
-        INetworkCapability networkCapability = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, pos, null);
-        if (networkCapability != null) {
-            DeviceNetworkController networkController = DeviceNetworkController.getInstance((ServerLevel) level);
-            networkController.removeDeviceFromNetwork(networkCapability.getNetworkId(), device, pos);
-        }
+
+        DeviceNetworkController networkController = DeviceNetworkController.getInstance((ServerLevel) level);
+        networkController.handleNetworkOnDestroy((ServerLevel) level, pos);
+
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 }

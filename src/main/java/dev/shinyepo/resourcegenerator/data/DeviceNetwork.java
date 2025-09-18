@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class DeviceNetwork {
@@ -141,5 +142,13 @@ public class DeviceNetwork {
             receivers.remove(pos);
         }
 
+    }
+
+    public Set<BlockPos> getAllDevices() {
+        Set<BlockPos> devices = new HashSet<>();
+        devices.addAll(producers);
+        devices.addAll(transmitters);
+        devices.addAll(receivers);
+        return devices;
     }
 }
