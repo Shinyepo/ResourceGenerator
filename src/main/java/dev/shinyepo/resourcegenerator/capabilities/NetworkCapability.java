@@ -17,6 +17,7 @@ public class NetworkCapability implements INetworkCapability {
     @Override
     public void setNetworkId(UUID networkId) {
         this.networkId = networkId;
+        this.markDirty();
     }
 
     @Override
@@ -32,6 +33,10 @@ public class NetworkCapability implements INetworkCapability {
     @Override
     public void configureSide(Direction direction) {
         sides[direction.ordinal()] = SideConfig.NETWORK;
+    }
+
+    public void markDirty() {
+
     }
 
 }

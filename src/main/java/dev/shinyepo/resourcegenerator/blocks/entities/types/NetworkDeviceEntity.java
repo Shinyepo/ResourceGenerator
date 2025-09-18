@@ -20,7 +20,13 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class NetworkDeviceEntity extends BlockEntity implements INetworkDevice {
-    protected INetworkCapability networkCapability = new NetworkCapability();
+    protected INetworkCapability networkCapability = new NetworkCapability() {
+        @Override
+        public void markDirty() {
+            super.markDirty();
+            setChanged();
+        }
+    };
 
     public NetworkDeviceEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
