@@ -3,6 +3,7 @@ package dev.shinyepo.resourcegenerator;
 import com.mojang.logging.LogUtils;
 import dev.shinyepo.resourcegenerator.registries.CapabilityRegistry;
 import dev.shinyepo.resourcegenerator.registries.PacketRegistry;
+import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -10,6 +11,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.slf4j.Logger;
 
 import static dev.shinyepo.resourcegenerator.registries.BlockEntityRegistry.ENTITIES;
@@ -18,6 +20,7 @@ import static dev.shinyepo.resourcegenerator.registries.CreativeTabRegistry.CREA
 import static dev.shinyepo.resourcegenerator.registries.DataComponentRegistry.DATA_COMPONENTS;
 import static dev.shinyepo.resourcegenerator.registries.ItemRegistry.ITEMS;
 import static dev.shinyepo.resourcegenerator.registries.MenuRegistry.MENUS;
+import static dev.shinyepo.resourcegenerator.registries.UpgradeRegistry.UPGRADES;
 
 @Mod(ResourceGenerator.MODID)
 public class ResourceGenerator {
@@ -31,8 +34,10 @@ public class ResourceGenerator {
         CREATIVE_TABS.register(modEventBus);
         ENTITIES.register(modEventBus);
         MENUS.register(modEventBus);
+        UPGRADES.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(ResourceGenerator::registerRegistries);
         modEventBus.addListener(CapabilityRegistry::registerCapabilities);
         modEventBus.addListener(PacketRegistry::registerPayloadHandler);
         NeoForge.EVENT_BUS.addListener(this::onServerStopping);
@@ -44,5 +49,10 @@ public class ResourceGenerator {
     }
 
     public void onServerStopping(ServerStoppingEvent event) {
+    }
+
+    public static void registerRegistries(NewRegistryEvent event) {
+        System.out.println("registering");
+        event.register(UpgradeRegistry.UPGRADE_REGISTRY);
     }
 }
