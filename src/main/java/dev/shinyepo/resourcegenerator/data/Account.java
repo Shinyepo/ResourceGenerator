@@ -3,6 +3,7 @@ package dev.shinyepo.resourcegenerator.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ public class Account {
     private Long balance;
     private UUID ownerId;
     private Map<UUID, Integer> users = new HashMap<>();
+    private Map<ResourceLocation, Integer> upgrades = new HashMap<>();
 
 
     public static final Codec<Account> CODEC = RecordCodecBuilder.create(instance ->
@@ -20,14 +22,16 @@ public class Account {
                     UUIDUtil.CODEC.fieldOf("networkId").forGetter(Account::getAccountId),
                     Codec.LONG.fieldOf("value").forGetter(Account::getBalance),
                     UUIDUtil.CODEC.fieldOf("ownerId").forGetter(Account::getOwnerId),
-                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.INT).fieldOf("users").forGetter(Account::getUsers)
+                    Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.INT).fieldOf("users").forGetter(Account::getUsers),
+                    Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("upgrades").forGetter(Account::getUpgrades)
             ).apply(instance, Account::new));
 
-    public Account(UUID accountId, Long balance, UUID ownerId, Map<UUID, Integer> users) {
+    public Account(UUID accountId, Long balance, UUID ownerId, Map<UUID, Integer> users, Map<ResourceLocation, Integer> upgrades) {
         this.accountId = accountId;
         this.balance = balance;
         this.ownerId = ownerId;
         this.users = users;
+        this.upgrades = upgrades;
     }
 
     public Account(UUID userId) {
@@ -67,6 +71,14 @@ public class Account {
 
     public Map<UUID, Integer> getUsers() {
         return users;
+    }
+
+    public Map<ResourceLocation, Integer> getUpgrades() {
+        return upgrades;
+    }
+
+    public void addUpgrade(ResourceLocation id, Integer tier) {
+        upgrades.put(id, tier);
     }
 
     public void updateUser(UUID userId, Permissions permissions) {

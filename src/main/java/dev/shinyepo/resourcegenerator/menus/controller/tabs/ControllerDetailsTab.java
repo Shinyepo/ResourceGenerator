@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Map;
+
 import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
 
 public class ControllerDetailsTab extends ScreenTab<ControllerContainer> {
@@ -21,6 +23,11 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer> {
     @Override
     public void display(GuiGraphics graphics) {
         graphics.drawString(getFont(), Component.literal("Details tab is active"), 10, 34, BASIC, false);
+        Map<ResourceLocation, Integer> upgrades = getMenu().getUpgrades();
+        if (upgrades != null)
+            upgrades.forEach((name, tier) -> {
+                graphics.drawString(getFont(), Component.literal("Name: " + name + ", Tier: " + tier), 10, 44, BASIC, false);
+            });
     }
 
     @Override

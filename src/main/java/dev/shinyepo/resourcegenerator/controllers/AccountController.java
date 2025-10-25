@@ -3,8 +3,10 @@ package dev.shinyepo.resourcegenerator.controllers;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.data.Account;
 import dev.shinyepo.resourcegenerator.persistence.AccountSavedData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class AccountController {
@@ -28,6 +30,21 @@ public class AccountController {
             return balance;
         }
         return 0L;
+    }
+
+    public Map<ResourceLocation, Integer> getUpgrades(UUID accountId) {
+        Account account = dataStore.getAccount(accountId);
+        if (account != null) {
+            return account.getUpgrades();
+        }
+        return null;
+    }
+
+    public void addUpgrade(UUID accountId, ResourceLocation id, Integer tier) {
+        Account account = dataStore.getAccount(accountId);
+        if (account != null) {
+            account.addUpgrade(id, tier);
+        }
     }
 
     public Long getAccountBalance(UUID accountId) {
