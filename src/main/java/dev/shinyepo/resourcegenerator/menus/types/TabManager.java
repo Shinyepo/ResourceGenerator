@@ -28,8 +28,17 @@ public class TabManager {
         activeTab = index;
     }
 
-    public void displayTab(GuiGraphics graphics) {
-        tabs.get(activeTab).display(graphics);
+    public boolean tabShouldRenderInventory() {
+        return tabs.get(activeTab).isInventoryTab();
+    }
+
+    public void displayTab(GuiGraphics graphics, int mouseX, int mouseY) {
+        tabs.get(activeTab).display(graphics, mouseX, mouseY);
+
+    }
+
+    public boolean handleScroll(double mouseX, double mouseY, double scrollX, double scrollY) {
+        return tabs.get(activeTab).handleScroll(mouseX, mouseY, scrollX, scrollY);
     }
 
     public void renderTabs(GuiGraphics graphics, int leftPos, int topPos) {
@@ -49,6 +58,8 @@ public class TabManager {
     public void renderTooltips(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY) {
         int tabX = leftPos + 174;
         for (IScreenTab tab : tabs) {
+            if (activeTab == tab.getIndex())
+                tab.renderTabTooltips(graphics, leftPos, topPos, mouseX, mouseY);
             int tabY = topPos + (tab.getIndex() * 24 + 4);
             if (mouseOver(mouseX, mouseY, tabX, tabY)) {
                 List<Component> tooltip = new ArrayList<>();
@@ -68,6 +79,7 @@ public class TabManager {
             int tabY = topPos + (tab.getIndex() * 24 + 4);
             if (mouseOver((int) mouseX, (int) mouseY, tabX, tabY)) {
                 if (activeTab != tab.getIndex()) {
+                    tab.cleanup();
                     switchTab(tab.getIndex());
                     return true;
                 }

@@ -7,8 +7,10 @@ import dev.shinyepo.resourcegenerator.datacomponents.IdCardData;
 import dev.shinyepo.resourcegenerator.registries.BlockEntityRegistry;
 import dev.shinyepo.resourcegenerator.registries.DataComponentRegistry;
 import dev.shinyepo.resourcegenerator.registries.TagRegistry;
+import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.DataSlot;
@@ -23,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class ControllerEntity extends Receiver implements IDataEntity {
     private final ItemStackHandler cardHandler;
@@ -81,11 +85,27 @@ public class ControllerEntity extends Receiver implements IDataEntity {
         }
     }
 
+    public Map<ResourceLocation, Integer> getUpgrades() {
+        UUID accountId = getAccountId();
+        if (getAccountId() != null) {
+            ServerLevel serverLevel = (ServerLevel) level;
+            AccountController accountController = AccountController.getInstance(serverLevel);
+            return accountController.getUpgrades(accountId);
+        }
+        return null;
+    }
+
     @Override
     public void tick(ServerLevel level) {
         super.tick(level);
         if (level.getGameTime() % 5 != 0) return;
         if (!cardHandler.getStackInSlot(0).isEmpty()) assignAccount();
+        if (getAccountId() != null) {
+            AccountController controller = AccountController.getInstance(level);
+            var upgrades = controller.getUpgrades(getAccountId());
+            if (upgrades != null && upgrades.isEmpty())
+                AccountController.getInstance(level).addUpgrade(getAccountId(), UpgradeRegistry.MAX_ABSORBERS.get().id(), 2);
+        }
     }
 
     public DataSlot getDataSlot() {

@@ -14,5 +14,11 @@
   "resourcegenerator.configuration.items": "Item List",
   "resourcegenerator.configuration.logDirtBlock": "Log Dirt Block",
   "resourcegenerator.configuration.magicNumberIntroduction": "Magic Number Text",
-  "resourcegenerator.configuration.magicNumber": "Magic Number"
+  "resourcegenerator.configuration.magicNumber": "Magic Number",
+  "gui.resourcegenerator.max_absorbers": "Maximum Absorbers",
+  "gui.resourcegenerator.max_absorbers.desc": "Increase number of maximum absorbers",
+  "gui.resourcegenerator.absorption_amount": "Production amount",
+  "gui.resourcegenerator.absorption_amount.desc": "Increase production amount of absorbers",
+  "gui.resourcegenerator.absorption_speed": "Production speed",
+  "gui.resourcegenerator.absorption_speed.desc": "Increase production speed of absorbers"
 }
