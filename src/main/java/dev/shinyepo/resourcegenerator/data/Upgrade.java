@@ -3,9 +3,11 @@ package dev.shinyepo.resourcegenerator.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public record Upgrade(ResourceLocation id, int tier, int baseCost, float costMultiplier, int baseBonus,
+public record Upgrade(ResourceLocation id, int tier, int maxTier, int baseCost, float costMultiplier,
+                      int baseBonus,
                       int bonusMultiplier) {
 
     public static final Codec<Upgrade> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -14,7 +16,7 @@ public record Upgrade(ResourceLocation id, int tier, int baseCost, float costMul
     ).apply(instance, Upgrade::new));
 
     public Upgrade(ResourceLocation id, int tier) {
-        this(id, tier, 0, 0, 0, 0);
+        this(id, tier, 0, 0, 0, 0, 0);
     }
 
     public long upgradeCost(int tier) {
@@ -29,6 +31,7 @@ public record Upgrade(ResourceLocation id, int tier, int baseCost, float costMul
     public String toString() {
         return "Upgrade[" +
                 "id=" + id + ", " +
+                "desc=" + Component.translatable(id.toLanguageKey() + ".desc") + ", " +
                 "tier=" + tier + ", " +
                 "baseCost=" + baseCost + ", " +
                 "costMultiplier=" + costMultiplier + ", " +
@@ -40,6 +43,7 @@ public record Upgrade(ResourceLocation id, int tier, int baseCost, float costMul
     public static class Builder {
         private ResourceLocation id;
         private int tier = 0;
+        private int maxTier;
         private int baseCost = 0;
         private float costMultiplier = 0;
         private int baseBonus = 0;
@@ -47,6 +51,11 @@ public record Upgrade(ResourceLocation id, int tier, int baseCost, float costMul
 
         public Builder setId(String id) {
             this.id = ResourceLocation.fromNamespaceAndPath(ResourceGenerator.MODID, id);
+            return this;
+        }
+
+        public Builder setMaxTier(int maxTier) {
+            this.maxTier = maxTier;
             return this;
         }
 
@@ -71,7 +80,7 @@ public record Upgrade(ResourceLocation id, int tier, int baseCost, float costMul
         }
 
         public Upgrade build() {
-            return new Upgrade(id, tier, baseCost, costMultiplier, baseBonus, bonusMultiplier);
+            return new Upgrade(id, tier, maxTier, baseCost, costMultiplier, baseBonus, bonusMultiplier);
         }
     }
 
