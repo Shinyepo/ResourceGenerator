@@ -80,6 +80,10 @@ public class Account {
         return upgrades;
     }
 
+    public void removeUpgrade(ResourceLocation id) {
+        upgrades.remove(id);
+    }
+
     public boolean buyUpgrade(ResourceLocation id, Integer tier) {
         Optional<Holder.Reference<Upgrade>> registryEntry = UpgradeRegistry.UPGRADE_REGISTRY.get(id);
 

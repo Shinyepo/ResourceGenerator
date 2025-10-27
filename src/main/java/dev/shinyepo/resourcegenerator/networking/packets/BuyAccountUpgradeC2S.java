@@ -40,8 +40,8 @@ public record BuyAccountUpgradeC2S(UUID accountId, ResourceLocation id, Integer 
             ServerLevel level = (ServerLevel) context.player().level();
             AccountController controller = AccountController.getInstance(level);
             boolean result = controller.buyUpgrade(accountId, id, tier);
-            System.out.println("im here + " + result);
-            CustomMessages.sendToPlayer(new SyncAccountUpgradesS2C(controller.getUpgrades(accountId)), (ServerPlayer) context.player());
+            if (result)
+                CustomMessages.sendToPlayer(new SyncAccountUpgradesS2C(controller.getUpgrades(accountId)), (ServerPlayer) context.player());
         });
     }
 }

@@ -127,6 +127,18 @@ public class ResourceGenerator {
                                                     return 1;
                                                 })))
                         )
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("id", ResourceLocationArgument.id())
+                                        .executes(ctx -> {
+                                            CommandSourceStack source = ctx.getSource();
+                                            AccountController controller = AccountController.getInstance(source.getLevel());
+                                            UUID accId = controller.getOrCreateAccount(source.getPlayer().getGameProfile().getId());
+
+                                            ResourceLocation id = ResourceLocationArgument.getId(ctx, "id");
+                                            controller.removeUpgrade(accId, id);
+                                            source.sendSuccess(() -> Component.literal("Removed upgrade: ").append(Component.translatable("gui." + id.toLanguageKey())), true);
+                                            return 1;
+                                        })))
         );
     }
 

@@ -48,6 +48,13 @@ public class AccountController {
         return false;
     }
 
+    public void removeUpgrade(UUID accountId, ResourceLocation id) {
+        Account account = dataStore.getAccount(accountId);
+        if (account != null) {
+            account.removeUpgrade(id);
+        }
+    }
+
     public Long getAccountBalance(UUID accountId) {
         Account account = dataStore.getAccount(accountId);
         if (account != null) {
