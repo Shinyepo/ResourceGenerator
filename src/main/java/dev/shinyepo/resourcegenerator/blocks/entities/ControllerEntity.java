@@ -104,7 +104,7 @@ public class ControllerEntity extends Receiver implements IDataEntity {
             AccountController controller = AccountController.getInstance(level);
             var upgrades = controller.getUpgrades(getAccountId());
             if (upgrades != null && upgrades.isEmpty())
-                AccountController.getInstance(level).addUpgrade(getAccountId(), UpgradeRegistry.MAX_ABSORBERS.get().id(), 2);
+                AccountController.getInstance(level).buyUpgrade(getAccountId(), UpgradeRegistry.MAX_ABSORBERS.get().id(), 2);
         }
     }
 

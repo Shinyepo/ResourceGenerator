@@ -2,12 +2,17 @@ package dev.shinyepo.resourcegenerator.menus.controller;
 
 import dev.shinyepo.resourcegenerator.blocks.entities.ControllerEntity;
 import dev.shinyepo.resourcegenerator.menus.types.ContainerBase;
+import dev.shinyepo.resourcegenerator.networking.CustomMessages;
+import dev.shinyepo.resourcegenerator.networking.packets.BuyAccountUpgradeC2S;
 import dev.shinyepo.resourcegenerator.registries.BlockRegistry;
 import dev.shinyepo.resourcegenerator.registries.MenuRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
 import net.neoforged.neoforge.items.SlotItemHandler;
+
+import java.util.UUID;
 
 public class ControllerContainer extends ContainerBase {
     private ControllerEntity controllerEntity;
@@ -35,5 +40,12 @@ public class ControllerContainer extends ContainerBase {
 
     public Long getValue() {
         return (long) data.get();
+    }
+
+    public void buyUpgrade(ResourceLocation id, Integer tier) {
+        UUID accountId = this.controllerEntity.getAccountId();
+        if (accountId != null) {
+            CustomMessages.sendToServer(new BuyAccountUpgradeC2S(accountId, id, tier));
+        }
     }
 }

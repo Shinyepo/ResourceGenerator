@@ -40,11 +40,12 @@ public class AccountController {
         return null;
     }
 
-    public void addUpgrade(UUID accountId, ResourceLocation id, Integer tier) {
+    public boolean buyUpgrade(UUID accountId, ResourceLocation id, Integer tier) {
         Account account = dataStore.getAccount(accountId);
         if (account != null) {
-            account.addUpgrade(id, tier);
+            return account.buyUpgrade(id, tier);
         }
+        return false;
     }
 
     public Long getAccountBalance(UUID accountId) {

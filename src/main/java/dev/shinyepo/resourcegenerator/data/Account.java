@@ -2,11 +2,14 @@ package dev.shinyepo.resourcegenerator.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
+import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class Account {
@@ -24,7 +27,7 @@ public class Account {
                     UUIDUtil.CODEC.fieldOf("ownerId").forGetter(Account::getOwnerId),
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.INT).fieldOf("users").forGetter(Account::getUsers),
                     Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("upgrades").forGetter(Account::getUpgrades)
-            ).apply(instance, Account::new));
+            ).apply(instance, (id, value, ownerId, users, upgrades) -> new Account(id, value, ownerId, new HashMap<>(users), new HashMap<>(upgrades))));
 
     public Account(UUID accountId, Long balance, UUID ownerId, Map<UUID, Integer> users, Map<ResourceLocation, Integer> upgrades) {
         this.accountId = accountId;
@@ -77,8 +80,21 @@ public class Account {
         return upgrades;
     }
 
-    public void addUpgrade(ResourceLocation id, Integer tier) {
-        upgrades.put(id, tier);
+    public boolean buyUpgrade(ResourceLocation id, Integer tier) {
+        Optional<Holder.Reference<Upgrade>> registryEntry = UpgradeRegistry.UPGRADE_REGISTRY.get(id);
+
+        if (registryEntry.isPresent()) {
+            Upgrade upgrade = registryEntry.get().value();
+            if (tier > upgrade.maxTier()) return false;
+            long cost = upgrade.upgradeCost(tier);
+            if (cost <= balance) {
+                changeValue(-cost);
+                upgrades.put(id, tier);
+                System.out.println("bought upgrade");
+                return true;
+            }
+        }
+        return false;
     }
 
     public void updateUser(UUID userId, Permissions permissions) {
