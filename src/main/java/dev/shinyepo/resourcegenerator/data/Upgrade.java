@@ -20,7 +20,7 @@ public record Upgrade(ResourceLocation id, int tier, int maxTier, int baseCost, 
     }
 
     public long upgradeCost(int tier) {
-        return Math.round(baseCost * Math.pow(bonusMultiplier, tier - 1));
+        return Math.round(baseCost * Math.pow(costMultiplier, tier - 1));
     }
 
     public float totalBonus(int tier) {
