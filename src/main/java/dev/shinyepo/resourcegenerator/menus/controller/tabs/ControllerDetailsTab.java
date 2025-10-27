@@ -44,9 +44,13 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
                     Upgrade upgrade = upgradeEntry.getUpgrade();
                     Map<ResourceLocation, Integer> playerUpgrades = AccountUpgradeData.get();
                     int playerTier = playerUpgrades.getOrDefault(upgradeEntry.getUpgrade().id(), 0);
+                    long upgradeCost = upgrade.upgradeCost(playerUpgrades.getOrDefault(upgrade.id(), 0) + 1);
                     boolean maxTierFlag = upgrade.maxTier() >= playerTier + 1;
-                    if (upgrade.upgradeCost(playerUpgrades.getOrDefault(upgrade.id(), 0)) <= getMenu().getValue() && maxTierFlag)
+                    boolean costFlag = upgradeCost <= getMenu().getValue();
+                    if (costFlag && maxTierFlag) {
                         getMenu().buyUpgrade(upgradeEntry.getUpgrade().id(), playerTier + 1);
+                        getMenu().setValue(getMenu().getValue() - upgradeCost);
+                    }
                 }
             }).pos(leftPos + 120, topPos + 142).size(48, 16).build());
             getParent().registerWidget(widget);

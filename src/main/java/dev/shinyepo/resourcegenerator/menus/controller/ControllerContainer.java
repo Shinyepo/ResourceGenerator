@@ -48,4 +48,8 @@ public class ControllerContainer extends ContainerBase {
             CustomMessages.sendToServer(new BuyAccountUpgradeC2S(accountId, id, tier));
         }
     }
+
+    public void setValue(long l) {
+        data.set((int) l);
+    }
 }
