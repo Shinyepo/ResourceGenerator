@@ -27,12 +27,12 @@ public class ScrollableUpgradeList extends ObjectSelectionList<ScrollableUpgrade
 
     @Override
     public int getRowWidth() {
-        return listWidth - 8;
+        return listWidth;
     }
 
     @Override
     protected int scrollBarX() {
-        return getRowLeft() + listWidth - 6;
+        return getRowLeft() + listWidth - 2;
     }
 
     public class UpgradeEntry extends ObjectSelectionList.Entry<UpgradeEntry> {
@@ -63,7 +63,7 @@ public class ScrollableUpgradeList extends ObjectSelectionList<ScrollableUpgrade
             pose.translate(left, top + 3);
             pose.scale(0.65F);
 
-            graphics.drawString(font, mainText, 0, 0, 0xFF404040, false);
+            graphics.drawString(font, mainText, 0, 0, 0xFF303030, false);
             pose.popMatrix();
         }
 
