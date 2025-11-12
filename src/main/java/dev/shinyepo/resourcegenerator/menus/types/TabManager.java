@@ -26,6 +26,7 @@ public class TabManager {
 
     protected void switchTab(int index) {
         activeTab = index;
+        tabs.get(activeTab).onTabSwitch();
     }
 
     public boolean tabShouldRenderInventory() {

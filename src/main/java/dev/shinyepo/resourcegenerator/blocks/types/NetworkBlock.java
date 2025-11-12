@@ -1,17 +1,12 @@
 package dev.shinyepo.resourcegenerator.blocks.types;
 
 import com.mojang.datafixers.util.Function4;
-import dev.shinyepo.resourcegenerator.blocks.entities.types.IAccountEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.IDataEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.NetworkDeviceEntity;
-import dev.shinyepo.resourcegenerator.controllers.AccountController;
 import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
 import dev.shinyepo.resourcegenerator.menus.types.ContainerBase;
-import dev.shinyepo.resourcegenerator.networking.CustomMessages;
-import dev.shinyepo.resourcegenerator.networking.packets.SyncAccountUpgradesS2C;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -19,7 +14,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -35,13 +30,11 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.UUID;
 import java.util.function.BiFunction;
 
 public class NetworkBlock extends Block implements EntityBlock {
     private final BiFunction<BlockPos, BlockState, ? extends NetworkDeviceEntity> BLOCK_ENTITY;
-    private Function4<Integer, Player, BlockPos, DataSlot, ? extends ContainerBase> DATA_CONTAINER;
+    private Function4<Integer, Player, BlockPos, ContainerData, ? extends ContainerBase> DATA_CONTAINER;
     public VoxelShape SHAPE;
 
     public NetworkBlock(BiFunction<BlockPos, BlockState, ? extends NetworkDeviceEntity> blockEntityFactory, Properties properties) {
@@ -59,7 +52,7 @@ public class NetworkBlock extends Block implements EntityBlock {
         return BLOCK_ENTITY.apply(blockPos, blockState);
     }
 
-    protected void setDataContainerFactory(Function4<Integer, Player, BlockPos, DataSlot, ? extends ContainerBase> factory) {
+    protected void setDataContainerFactory(Function4<Integer, Player, BlockPos, ContainerData, ? extends ContainerBase> factory) {
         DATA_CONTAINER = factory;
     }
 
@@ -78,24 +71,12 @@ public class NetworkBlock extends Block implements EntityBlock {
         if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             MenuProvider menu = state.getMenuProvider(level, pos);
             if (menu != null) {
-                syncDataToPlayer(level.getBlockEntity(pos), (ServerLevel) level, serverPlayer);
                 serverPlayer.openMenu(state.getMenuProvider(level, pos), buf -> buf.writeBlockPos(pos));
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.PASS;
         }
         return InteractionResult.PASS;
-    }
-
-    private void syncDataToPlayer(BlockEntity entity, ServerLevel level, ServerPlayer player) {
-        if (entity instanceof IAccountEntity accountEntity) {
-            UUID accountId = accountEntity.getAccountId();
-            AccountController controller = AccountController.getInstance(level);
-
-            Map<ResourceLocation, Integer> upgrades = controller.getUpgrades(accountId);
-            if (upgrades != null && !upgrades.isEmpty())
-                CustomMessages.sendToPlayer(new SyncAccountUpgradesS2C(upgrades), player);
-        }
     }
 
     @Override

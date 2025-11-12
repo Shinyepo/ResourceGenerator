@@ -7,12 +7,14 @@ import dev.shinyepo.resourcegenerator.networking.CustomMessages;
 import dev.shinyepo.resourcegenerator.networking.packets.SyncOwnerS2C;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
@@ -45,11 +47,22 @@ public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
     @Override
     public void setAccountId(UUID accountId) {
         this.accountId = accountId;
+        if (!level.isClientSide())
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 1);
     }
 
     @Override
     public String getOwnerName() {
         return ownerName;
+    }
+
+    public Map<ResourceLocation, Integer> getUpgrades() {
+        if (accountId != null) {
+            ServerLevel serverLevel = (ServerLevel) level;
+            AccountController accountController = AccountController.getInstance(serverLevel);
+            return accountController.getUpgrades(accountId);
+        }
+        return null;
     }
 
     @Override

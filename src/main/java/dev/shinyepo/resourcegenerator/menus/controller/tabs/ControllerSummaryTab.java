@@ -40,6 +40,10 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
     }
 
     @Override
+    public void onTabSwitch() {
+    }
+
+    @Override
     public void cleanup() {
 
     }

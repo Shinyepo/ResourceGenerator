@@ -94,6 +94,11 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
     }
 
     @Override
+    public void onTabSwitch() {
+        getMenu().syncUpgradeData();
+    }
+
+    @Override
     public ResourceLocation getInactiveTexture() {
         return INACTIVE_TAB;
     }

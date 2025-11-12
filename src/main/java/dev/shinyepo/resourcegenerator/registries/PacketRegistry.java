@@ -2,6 +2,7 @@ package dev.shinyepo.resourcegenerator.registries;
 
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.networking.packets.BuyAccountUpgradeC2S;
+import dev.shinyepo.resourcegenerator.networking.packets.RequestUpgradesSyncC2S;
 import dev.shinyepo.resourcegenerator.networking.packets.SyncAccountUpgradesS2C;
 import dev.shinyepo.resourcegenerator.networking.packets.SyncOwnerS2C;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -21,5 +22,6 @@ public class PacketRegistry {
 
         //TO SERVER
         registrar.playToServer(BuyAccountUpgradeC2S.TYPE, BuyAccountUpgradeC2S.STREAM_CODEC, BuyAccountUpgradeC2S::handler);
+        registrar.playToServer(RequestUpgradesSyncC2S.TYPE, RequestUpgradesSyncC2S.STREAM_CODEC, RequestUpgradesSyncC2S::handler);
     }
 }

@@ -24,4 +24,7 @@ public interface IScreenTab {
     ResourceLocation getInactiveTexture();
 
     boolean handleScroll(double mouseX, double mouseY, double scrollX, double scrollY);
+
+    void onTabSwitch();
+
 }

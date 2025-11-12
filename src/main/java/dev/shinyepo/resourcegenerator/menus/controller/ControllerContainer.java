@@ -38,6 +38,10 @@ public class ControllerContainer extends ContainerBase {
         return this.controllerEntity.getOwnerName();
     }
 
+    public void syncUpgradeData() {
+        CustomMessages.sendToServer(new RequestUpgradesSyncC2S(controllerEntity.getBlockPos()));
+    }
+
     public Long getValue() {
         return (long) data.get();
     }

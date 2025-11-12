@@ -85,16 +85,6 @@ public class ControllerEntity extends Receiver implements IDataEntity {
         }
     }
 
-    public Map<ResourceLocation, Integer> getUpgrades() {
-        UUID accountId = getAccountId();
-        if (getAccountId() != null) {
-            ServerLevel serverLevel = (ServerLevel) level;
-            AccountController accountController = AccountController.getInstance(serverLevel);
-            return accountController.getUpgrades(accountId);
-        }
-        return null;
-    }
-
     @Override
     public void tick(ServerLevel level) {
         super.tick(level);
