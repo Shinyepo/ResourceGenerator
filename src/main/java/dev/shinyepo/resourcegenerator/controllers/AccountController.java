@@ -2,7 +2,9 @@ package dev.shinyepo.resourcegenerator.controllers;
 
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.data.Account;
+import dev.shinyepo.resourcegenerator.data.Upgrade;
 import dev.shinyepo.resourcegenerator.persistence.AccountSavedData;
+import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 
@@ -28,6 +30,20 @@ public class AccountController {
             Long balance = account.changeValue(amount);
             dataStore.setDirty();
             return balance;
+        }
+        return 0L;
+    }
+
+    public Long addBalanceFromMachines(UUID accountId, Long amount) {
+        Account account = dataStore.getAccount(accountId);
+        if (account != null) {
+            Integer productionUpgradeTier = account.getUpgrade(UpgradeRegistry.ABSORPTION_AMOUNT);
+            Upgrade upgrade = UpgradeRegistry.getUpgradeData(UpgradeRegistry.ABSORPTION_AMOUNT);
+            float upgradeBonus = upgrade.totalBonus(productionUpgradeTier);
+            Long amountWithUpgrades = (long) (amount * upgradeBonus);
+            Long balanceAfterChange = account.changeValue(amountWithUpgrades);
+            dataStore.setDirty();
+            return balanceAfterChange;
         }
         return 0L;
     }

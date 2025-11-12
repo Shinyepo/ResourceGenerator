@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class Account {
     private UUID accountId;
@@ -90,6 +91,7 @@ public class Account {
         if (registryEntry.isPresent()) {
             Upgrade upgrade = registryEntry.get().value();
             if (tier > upgrade.maxTier()) return false;
+            if (tier <= upgrades.get(id)) return false;
             long cost = upgrade.upgradeCost(tier);
             if (cost <= balance) {
                 changeValue(-cost);
@@ -111,5 +113,9 @@ public class Account {
 
     public void addUser(UUID userId) {
         this.users.put(userId, 0);
+    }
+
+    public Integer getUpgrade(Supplier<Upgrade> upgrade) {
+        return upgrades.getOrDefault(upgrade.get().id(), 0);
     }
 }

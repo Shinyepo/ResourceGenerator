@@ -34,6 +34,7 @@ public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
                 AccountController accountController = AccountController.getInstance(level);
                 Long balance = controller.getNetworksBalance(networkCapability.getNetworkId());
                 value = accountController.changeAccountBalance(accountId, balance);
+                value = accountController.addBalanceFromMachines(accountId, balance);
                 controller.resetNetworksBalance(networkCapability.getNetworkId());
             }
         }

@@ -2,11 +2,13 @@ package dev.shinyepo.resourcegenerator.registries;
 
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.data.Upgrade;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
@@ -107,4 +109,8 @@ public class UpgradeRegistry {
                     .build());
 
 
+    public static Upgrade getUpgradeData(Supplier<Upgrade> upgrade) {
+        Optional<Holder.Reference<Upgrade>> upgradeData = UpgradeRegistry.UPGRADE_REGISTRY.get(upgrade.get().id());
+        return upgradeData.map(Holder.Reference::value).orElse(null);
+    }
 }
