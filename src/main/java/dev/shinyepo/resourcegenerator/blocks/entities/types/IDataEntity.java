@@ -1,7 +1,7 @@
 package dev.shinyepo.resourcegenerator.blocks.entities.types;
 
-import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.ContainerData;
 
 public interface IDataEntity {
-    DataSlot getDataSlot();
+    ContainerData getDataSlot();
 }

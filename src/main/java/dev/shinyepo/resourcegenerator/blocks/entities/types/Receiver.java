@@ -21,6 +21,7 @@ public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
     private UUID accountId;
     protected String ownerName = "";
     protected Long value = 0L;
+    protected Long prevValue = 0L;
 
     public Receiver(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -33,7 +34,7 @@ public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
                 DeviceNetworkController controller = DeviceNetworkController.getInstance(level);
                 AccountController accountController = AccountController.getInstance(level);
                 Long balance = controller.getNetworksBalance(networkCapability.getNetworkId());
-                value = accountController.changeAccountBalance(accountId, balance);
+                prevValue = value;
                 value = accountController.addBalanceFromMachines(accountId, balance);
                 controller.resetNetworksBalance(networkCapability.getNetworkId());
             }

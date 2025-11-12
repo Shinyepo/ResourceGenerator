@@ -10,10 +10,9 @@ import dev.shinyepo.resourcegenerator.registries.TagRegistry;
 import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,22 +24,32 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class ControllerEntity extends Receiver implements IDataEntity {
     private final ItemStackHandler cardHandler;
     public static List<TagKey<Item>> validInputs = List.of(TagRegistry.ID_CARDS);
 
-    private final DataSlot dataSlot = new DataSlot() {
+    private final ContainerData dataSlot = new ContainerData() {
         @Override
-        public int get() {
-            return Math.toIntExact(value);
+        public int get(int index) {
+            return switch (index) {
+                case 0 -> Math.toIntExact(value);
+                case 1 -> Math.toIntExact(value - prevValue);
+                default -> 0;
+            };
         }
 
         @Override
-        public void set(int i) {
-            value = (long) i;
+        public void set(int index, int pValue) {
+            switch (index) {
+                case 0 -> value = (long) pValue;
+                case 1 -> prevValue = (long) pValue;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
         }
     };
 
@@ -98,7 +107,7 @@ public class ControllerEntity extends Receiver implements IDataEntity {
         }
     }
 
-    public DataSlot getDataSlot() {
+    public ContainerData getDataSlot() {
         return dataSlot;
     }
 

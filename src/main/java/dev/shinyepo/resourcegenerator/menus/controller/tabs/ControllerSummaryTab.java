@@ -32,6 +32,9 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
         }
         graphics.drawString(getFont(), Component.literal("Owner: " + owner), 10, 24, BASIC, false);
         graphics.drawString(getFont(), Component.literal("Value: " + getMenu().getValue()), 10, 34, BASIC, false);
+
+        long valueChange = getMenu().getValueChange();
+        graphics.drawString(getFont(), Component.literal("Change: " + valueChange), 10, 44, valueChange > 0 ? GREEN : RED, false);
     }
 
     @Override
