@@ -4,6 +4,8 @@
   "item.resourcegenerator.controller": "Controller",
   "block.resourcegenerator.solar_panel": "Solar Panel",
   "item.resourcegenerator.solar_panel": "Solar Panel",
+  "block.resourcegenerator.water_absorber": "Water Absorber",
+  "item.resourcegenerator.water_absorber": "Water Absorber",
   "block.resourcegenerator.pipe": "Pipe",
   "item.resourcegenerator.pipe": "Pipe",
   "item.resourcegenerator.id_card": "Id Card",

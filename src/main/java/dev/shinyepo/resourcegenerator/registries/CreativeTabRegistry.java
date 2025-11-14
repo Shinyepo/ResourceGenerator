@@ -17,8 +17,10 @@ public class CreativeTabRegistry {
             .icon(() -> ItemRegistry.CONTROLLER_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(ItemRegistry.ID_CARD.get());
+                output.accept(ItemRegistry.INSPECTOR.get());
                 output.accept(ItemRegistry.CONTROLLER_ITEM.get());
                 output.accept(ItemRegistry.SOLAR_ITEM.get());
+                output.accept(ItemRegistry.WATER_ABSORBER_ITEM.get());
                 output.accept(ItemRegistry.PIPE_ITEM.get());
             }).build());
 }

@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "resourcegenerator:block/water_absorber"
+  }
+}

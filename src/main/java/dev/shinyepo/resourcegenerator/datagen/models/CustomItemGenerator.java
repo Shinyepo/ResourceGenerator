@@ -22,6 +22,7 @@ public class CustomItemGenerator extends ItemModelGenerators {
     @Override
     public void run() {
         generateItemWithExistingParent(ItemRegistry.SOLAR_ITEM.get(), "solar_panel");
+        generateItemWithExistingParent(ItemRegistry.WATER_ABSORBER_ITEM.get(), "water_absorber");
         generateItemWithExistingParent(ItemRegistry.CONTROLLER_ITEM.get(), "controller");
         generateItemWithExistingParent(ItemRegistry.PIPE_ITEM.get(), "pipe");
         generateFlatItem(ItemRegistry.ID_CARD.get(), ModelTemplates.FLAT_ITEM);

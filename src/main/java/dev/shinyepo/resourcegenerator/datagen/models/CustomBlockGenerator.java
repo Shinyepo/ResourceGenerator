@@ -27,6 +27,7 @@ public class CustomBlockGenerator extends BlockModelGenerators {
         generateHorizontalBlockWithExistingModel(BlockRegistry.CONTROLLER);
         generateBlockWithExistingModel(BlockRegistry.PIPE);
         generateBlockWithExistingModel(BlockRegistry.SOLAR_PANEL);
+        generateBlockWithExistingModel(BlockRegistry.WATER_ABSORBER);
         generateAirLikeBlock(BlockRegistry.DUMMY_EXTENSION);
 
     }
