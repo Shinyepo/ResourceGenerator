@@ -11,7 +11,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
-import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 public record SyncOwnerS2C(String ownerName, BlockPos pos) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<SyncOwnerS2C> TYPE = new Type<>(fromNamespaceAndPath(ResourceGenerator.MODID, "sync.owner.s2c"));

@@ -8,8 +8,8 @@ import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerato
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.model.ModelInstance;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
-import net.minecraft.client.renderer.block.model.Variant;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.block.Block;
 
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class CustomBlockGenerator extends BlockModelGenerators {
-    public CustomBlockGenerator(Consumer<BlockModelDefinitionGenerator> blockStateOutput, ItemModelOutput itemModelOutput, BiConsumer<ResourceLocation, ModelInstance> modelOutput) {
+    public CustomBlockGenerator(Consumer<BlockModelDefinitionGenerator> blockStateOutput, ItemModelOutput itemModelOutput, BiConsumer<Identifier, ModelInstance> modelOutput) {
         super(blockStateOutput, itemModelOutput, modelOutput);
     }
 
@@ -26,13 +26,14 @@ public class CustomBlockGenerator extends BlockModelGenerators {
     public void run() {
         generateHorizontalBlockWithExistingModel(BlockRegistry.CONTROLLER);
         generateBlockWithExistingModel(BlockRegistry.PIPE);
+        generateBlockWithExistingModel(BlockRegistry.BASIC_CONSUMER);
         generateBlockWithExistingModel(BlockRegistry.SOLAR_PANEL);
         generateBlockWithExistingModel(BlockRegistry.WATER_ABSORBER);
         generateAirLikeBlock(BlockRegistry.DUMMY_EXTENSION);
 
     }
 
-    private void generateBlockWithExistingModel(Block block, ResourceLocation modelLocation) {
+    private void generateBlockWithExistingModel(Block block, Identifier modelLocation) {
         blockStateOutput.accept(
                 MultiVariantGenerator.dispatch(block,
                         new MultiVariant(
@@ -42,7 +43,7 @@ public class CustomBlockGenerator extends BlockModelGenerators {
                 ));
     }
 
-    private void generateHorizontalBlockWithExistingModel(Block block, ResourceLocation modelLocation) {
+    private void generateHorizontalBlockWithExistingModel(Block block, Identifier modelLocation) {
         blockStateOutput.accept(
                 MultiVariantGenerator.dispatch(block,
                         new MultiVariant(
@@ -61,6 +62,6 @@ public class CustomBlockGenerator extends BlockModelGenerators {
     }
 
     private void generateAirLikeBlock(Supplier<Block> block) {
-        blockStateOutput.accept(createSimpleBlock(block.get(), plainVariant(ResourceLocation.parse("block/air"))));
+        blockStateOutput.accept(createSimpleBlock(block.get(), plainVariant(Identifier.parse("block/air"))));
     }
 }

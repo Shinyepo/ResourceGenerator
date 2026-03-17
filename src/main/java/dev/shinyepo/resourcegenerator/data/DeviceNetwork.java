@@ -9,8 +9,8 @@ import dev.shinyepo.resourcegenerator.blocks.entities.types.Transmitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 import java.util.HashSet;
@@ -32,7 +32,7 @@ public class DeviceNetwork {
                     BlockPos.CODEC.listOf().xmap(HashSet::new, List::copyOf).fieldOf("producers").forGetter(DeviceNetwork::getProducers),
                     BlockPos.CODEC.listOf().xmap(HashSet::new, List::copyOf).fieldOf("transmitters").forGetter(DeviceNetwork::getTransmitters),
                     BlockPos.CODEC.listOf().xmap(HashSet::new, List::copyOf).fieldOf("receivers").forGetter(DeviceNetwork::getReceivers),
-                    ResourceLocation.CODEC.xmap(loc -> ResourceKey.create(Registries.DIMENSION, loc), ResourceKey::location).fieldOf("dimension").forGetter(DeviceNetwork::getDimension)
+                    Identifier.CODEC.xmap(loc -> ResourceKey.create(Registries.DIMENSION, loc), ResourceKey::identifier).fieldOf("dimension").forGetter(DeviceNetwork::getDimension)
             ).apply(instance, DeviceNetwork::new));
 
     public DeviceNetwork(ResourceKey<Level> dimension, INetworkDevice device, BlockPos pos) {

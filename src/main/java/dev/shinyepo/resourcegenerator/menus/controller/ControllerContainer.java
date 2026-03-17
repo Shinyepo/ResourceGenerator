@@ -8,11 +8,11 @@ import dev.shinyepo.resourcegenerator.networking.packets.RequestUpgradesSyncC2S;
 import dev.shinyepo.resourcegenerator.registries.BlockRegistry;
 import dev.shinyepo.resourcegenerator.registries.MenuRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ public class ControllerContainer extends ContainerBase {
         this.data = data;
         if (player.level().getBlockEntity(pos) instanceof ControllerEntity controller) {
             this.controllerEntity = controller;
-            addSlot(new SlotItemHandler(controller.getCardHandler(), 0, 152, 8));
+            addSlot(new ResourceHandlerSlot(controller.getCardHandler(), controller.getCardHandler()::set, 0, 152, 8));
             addDataSlots(data);
 
             layoutPlayerInventorySlots(player.getInventory(), 8, 84);
@@ -52,7 +52,7 @@ public class ControllerContainer extends ContainerBase {
         return (long) data.get(1);
     }
 
-    public void buyUpgrade(ResourceLocation id, Integer tier) {
+    public void buyUpgrade(Identifier id, Integer tier) {
         UUID accountId = this.controllerEntity.getAccountId();
         if (accountId != null) {
             CustomMessages.sendToServer(new BuyAccountUpgradeC2S(accountId, id, tier));

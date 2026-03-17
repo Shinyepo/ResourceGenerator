@@ -4,7 +4,7 @@ import dev.shinyepo.resourcegenerator.util.GuiMouseUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class TabManager {
     public void renderTabs(GuiGraphics graphics, int leftPos, int topPos) {
         for (IScreenTab tab : tabs) {
             boolean isActiveTab = activeTab == tab.getIndex();
-            ResourceLocation tabTexture = isActiveTab ? tab.getActiveTexture() : tab.getInactiveTexture();
+            Identifier tabTexture = isActiveTab ? tab.getActiveTexture() : tab.getInactiveTexture();
             int tabWidth = isActiveTab ? 21 : 23;
 
             int tabX = isActiveTab ? 173 : 175;

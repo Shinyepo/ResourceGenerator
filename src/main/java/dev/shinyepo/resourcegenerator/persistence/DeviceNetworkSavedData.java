@@ -6,6 +6,7 @@ import dev.shinyepo.resourcegenerator.blocks.entities.types.INetworkDevice;
 import dev.shinyepo.resourcegenerator.data.DeviceNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public class DeviceNetworkSavedData extends SavedData {
     private HashMap<UUID, DeviceNetwork> networks = new HashMap<>();
     public static final SavedDataType<DeviceNetworkSavedData> TYPE = new SavedDataType<>(
-            "resource_generator_networks",
+            Identifier.parse("resource_generator_networks"),
             DeviceNetworkSavedData::new,
             RecordCodecBuilder.create(instance -> instance.group(
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, DeviceNetwork.CODEC).fieldOf("networks").forGetter(DeviceNetworkSavedData::getNetworks)

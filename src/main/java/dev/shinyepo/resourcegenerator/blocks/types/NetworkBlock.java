@@ -103,12 +103,13 @@ public class NetworkBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        if (level.isClientSide()) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
+        if (level.isClientSide())
+            return super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid);
 
         DeviceNetworkController networkController = DeviceNetworkController.getInstance((ServerLevel) level);
         networkController.handleNetworkOnDestroy((ServerLevel) level, pos);
 
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid);
     }
 }

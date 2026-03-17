@@ -6,16 +6,16 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
-public record SyncAccountUpgradesS2C(Map<ResourceLocation, Integer> upgrades) implements CustomPacketPayload {
+public record SyncAccountUpgradesS2C(Map<Identifier, Integer> upgrades) implements CustomPacketPayload {
     public static final Type<SyncAccountUpgradesS2C> TYPE = new Type<>(fromNamespaceAndPath(ResourceGenerator.MODID, "sync.account.upgrades.s2c"));
 
     @Override
@@ -26,7 +26,7 @@ public record SyncAccountUpgradesS2C(Map<ResourceLocation, Integer> upgrades) im
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncAccountUpgradesS2C> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(
                     HashMap::new,
-                    ResourceLocation.STREAM_CODEC,
+                    Identifier.STREAM_CODEC,
                     ByteBufCodecs.INT
             ),
             SyncAccountUpgradesS2C::upgrades,

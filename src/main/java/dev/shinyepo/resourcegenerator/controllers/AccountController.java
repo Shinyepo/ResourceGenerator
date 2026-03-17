@@ -5,7 +5,7 @@ import dev.shinyepo.resourcegenerator.data.Account;
 import dev.shinyepo.resourcegenerator.data.Upgrade;
 import dev.shinyepo.resourcegenerator.persistence.AccountSavedData;
 import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 
 import java.util.Map;
@@ -48,7 +48,7 @@ public class AccountController {
         return 0L;
     }
 
-    public Map<ResourceLocation, Integer> getUpgrades(UUID accountId) {
+    public Map<Identifier, Integer> getUpgrades(UUID accountId) {
         Account account = dataStore.getAccount(accountId);
         if (account != null) {
             return account.getUpgrades();
@@ -56,7 +56,7 @@ public class AccountController {
         return null;
     }
 
-    public boolean buyUpgrade(UUID accountId, ResourceLocation id, Integer tier) {
+    public boolean buyUpgrade(UUID accountId, Identifier id, Integer tier) {
         Account account = dataStore.getAccount(accountId);
         if (account != null) {
             return account.buyUpgrade(id, tier);
@@ -64,7 +64,7 @@ public class AccountController {
         return false;
     }
 
-    public void removeUpgrade(UUID accountId, ResourceLocation id) {
+    public void removeUpgrade(UUID accountId, Identifier id) {
         Account account = dataStore.getAccount(accountId);
         if (account != null) {
             account.removeUpgrade(id);

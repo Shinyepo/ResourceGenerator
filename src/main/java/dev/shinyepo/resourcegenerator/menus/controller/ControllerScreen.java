@@ -11,21 +11,20 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 public class ControllerScreen extends TabContainerScreen<ControllerContainer> {
-    private final ResourceLocation GUI = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/controller.png");
+    private final Identifier GUI = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/controller.png");
     private ScrollableUpgradeList.UpgradeEntry selected;
 
     public ControllerScreen(ControllerContainer menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        this.imageWidth = 196;
+        super(menu, playerInventory, title, 196, 166);
     }
 
     @Override

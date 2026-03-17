@@ -27,7 +27,7 @@ public class SolarPanelEntity extends Producer {
     }
 
     private boolean isDayTime(ServerLevel level) {
-        long dayTime = level.getDayTime() % 24000L;
+        long dayTime = level.getGameTime() % 24000L;
         return dayTime >= 0 && dayTime < 12000;
     }
 }

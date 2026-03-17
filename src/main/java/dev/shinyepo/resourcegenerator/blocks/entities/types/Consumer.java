@@ -1,14 +1,16 @@
 package dev.shinyepo.resourcegenerator.blocks.entities.types;
 
 import com.mojang.serialization.Codec;
+import dev.shinyepo.resourcegenerator.configs.ConsumerConfig;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
-import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
 import dev.shinyepo.resourcegenerator.networking.CustomMessages;
 import dev.shinyepo.resourcegenerator.networking.packets.SyncOwnerS2C;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -17,27 +19,21 @@ import net.minecraft.world.level.storage.ValueOutput;
 import java.util.Map;
 import java.util.UUID;
 
-public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
+public class Consumer extends NetworkDeviceEntity implements IAccountEntity {
     private UUID accountId;
-    protected String ownerName = "";
-    protected Long value = 0L;
-    protected Long prevValue = 0L;
+    private String ownerName = "";
+    protected ItemStack product = new ItemStack(Items.IRON_INGOT);
+    private ConsumerConfig config;
 
-    public Receiver(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+    public Consumer(BlockEntityType<?> type, ConsumerConfig config, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+        this.config = config;
     }
 
     @Override
     public void tick(ServerLevel level) {
         if (level.getGameTime() % 20 == 0) {
-            if (accountId != null && networkCapability.getNetworkId() != null) {
-                DeviceNetworkController controller = DeviceNetworkController.getInstance(level);
-                AccountController accountController = AccountController.getInstance(level);
-                Long balance = controller.getNetworksBalance(networkCapability.getNetworkId());
-                prevValue = value;
-                value = accountController.addBalanceFromMachines(accountId, balance);
-                controller.resetNetworksBalance(networkCapability.getNetworkId());
-            }
+
         }
     }
 
@@ -55,7 +51,7 @@ public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
 
     @Override
     public String getOwnerName() {
-        return ownerName;
+        return "";
     }
 
     public Map<Identifier, Integer> getUpgrades() {

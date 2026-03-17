@@ -7,15 +7,15 @@ import dev.shinyepo.resourcegenerator.menus.types.ScreenTab;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 public class ControllerSummaryTab extends ScreenTab<ControllerContainer, ControllerScreen> {
-    private static final ResourceLocation ACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/summary_on.png");
-    private static final ResourceLocation INACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/summary_off.png");
-    private static final ResourceLocation CARD_SLOT = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/card_slot.png");
-    private static final ResourceLocation INVENTORY_SLOTS = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/inventory_slots.png");
+    private static final Identifier ACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/summary_on.png");
+    private static final Identifier INACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/summary_off.png");
+    private static final Identifier CARD_SLOT = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/card_slot.png");
+    private static final Identifier INVENTORY_SLOTS = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/inventory_slots.png");
 
     public ControllerSummaryTab(ControllerScreen parent, ControllerContainer menu, int index, boolean isInventoryTab) {
         super("Summary", parent, menu, index, isInventoryTab);
@@ -61,12 +61,12 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
     }
 
     @Override
-    public ResourceLocation getInactiveTexture() {
+    public Identifier getInactiveTexture() {
         return INACTIVE_TAB;
     }
 
     @Override
-    public ResourceLocation getActiveTexture() {
+    public Identifier getActiveTexture() {
         return ACTIVE_TAB;
     }
 }

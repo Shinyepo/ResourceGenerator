@@ -18,15 +18,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ControllerEntity extends Receiver implements IDataEntity {
-    private final ItemStackHandler cardHandler;
+    private final ItemStacksResourceHandler cardHandler;
     public static List<TagKey<Item>> validInputs = List.of(TagRegistry.ID_CARDS);
 
     private final ContainerData dataSlot = new ContainerData() {
@@ -60,29 +59,30 @@ public class ControllerEntity extends Receiver implements IDataEntity {
     }
 
     @Nonnull
-    public ItemStackHandler createInputItemHandler(int slots) {
-        return new ItemStackHandler(slots) {
+    public ItemStacksResourceHandler createInputItemHandler(int slots) {
+        return new ItemStacksResourceHandler(slots) {
+
             @Override
-            protected void onContentsChanged(int slot) {
+            protected void onContentsChanged(int slot, ItemStack previousContents) {
                 setChanged();
             }
 
             @Override
-            public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            public boolean isValid(int slot, ItemResource resource) {
                 if (!validInputs.isEmpty()) {
-                    return stack.getTags().anyMatch((tag) -> validInputs.contains(tag));
+                    return resource.tags().anyMatch((tag) -> validInputs.contains(tag));
                 }
                 return true;
             }
         };
     }
 
-    public IItemHandler getCardHandler() {
+    public ItemStacksResourceHandler getCardHandler() {
         return cardHandler;
     }
 
     private void assignAccount() {
-        ItemStack card = cardHandler.getStackInSlot(0);
+        ItemResource card = cardHandler.getResource(0);
         IdCardData cardData = card.get(DataComponentRegistry.ID_CARD.get());
         if (cardData != null && cardData.userId() != null && getAccountId() == null) {
             ServerLevel serverLevel = (ServerLevel) level;
@@ -98,7 +98,7 @@ public class ControllerEntity extends Receiver implements IDataEntity {
     public void tick(ServerLevel level) {
         super.tick(level);
         if (level.getGameTime() % 5 != 0) return;
-        if (!cardHandler.getStackInSlot(0).isEmpty()) assignAccount();
+        if (!cardHandler.getResource(0).isEmpty()) assignAccount();
         if (getAccountId() != null) {
             AccountController controller = AccountController.getInstance(level);
             var upgrades = controller.getUpgrades(getAccountId());

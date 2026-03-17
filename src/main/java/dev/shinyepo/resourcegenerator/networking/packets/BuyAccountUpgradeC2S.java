@@ -8,7 +8,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -16,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
-public record BuyAccountUpgradeC2S(UUID accountId, ResourceLocation id, Integer tier) implements CustomPacketPayload {
+public record BuyAccountUpgradeC2S(UUID accountId, Identifier id, Integer tier) implements CustomPacketPayload {
     public static final Type<BuyAccountUpgradeC2S> TYPE = new Type<>(fromNamespaceAndPath(ResourceGenerator.MODID, "buy.account.upgrade.c2s"));
 
     @Override
@@ -29,7 +29,7 @@ public record BuyAccountUpgradeC2S(UUID accountId, ResourceLocation id, Integer 
     public static final StreamCodec<RegistryFriendlyByteBuf, BuyAccountUpgradeC2S> STREAM_CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC,
             BuyAccountUpgradeC2S::accountId,
-            ResourceLocation.STREAM_CODEC,
+            Identifier.STREAM_CODEC,
             BuyAccountUpgradeC2S::id,
             ByteBufCodecs.INT,
             BuyAccountUpgradeC2S::tier,

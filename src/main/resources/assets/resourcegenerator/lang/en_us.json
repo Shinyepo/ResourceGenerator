@@ -8,6 +8,8 @@
   "item.resourcegenerator.water_absorber": "Water Absorber",
   "block.resourcegenerator.pipe": "Pipe",
   "item.resourcegenerator.pipe": "Pipe",
+  "block.resourcegenerator.basic_consumer": "Basic Consumer",
+  "item.resourcegenerator.basic_consumer": "Basic Consumer",
   "item.resourcegenerator.id_card": "Id Card",
   "item.resourcegenerator.inspector": "Inspector",
   "resourcegenerator.configuration.title": "Resource Generator Configs",

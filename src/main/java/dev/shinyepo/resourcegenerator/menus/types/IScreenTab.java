@@ -2,7 +2,7 @@ package dev.shinyepo.resourcegenerator.menus.types;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface IScreenTab {
     void display(GuiGraphics graphics, int mouseX, int mouseY);
@@ -19,9 +19,9 @@ public interface IScreenTab {
 
     boolean isInventoryTab();
 
-    ResourceLocation getActiveTexture();
+    Identifier getActiveTexture();
 
-    ResourceLocation getInactiveTexture();
+    Identifier getInactiveTexture();
 
     boolean handleScroll(double mouseX, double mouseY, double scrollX, double scrollY);
 

@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
-import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 public record RequestUpgradesSyncC2S(BlockPos pos) implements CustomPacketPayload {
     public static final Type<RequestUpgradesSyncC2S> TYPE = new Type<>(fromNamespaceAndPath(ResourceGenerator.MODID, "request.upgrades.sync.c2s"));

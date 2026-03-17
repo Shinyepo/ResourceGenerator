@@ -11,17 +11,17 @@ import dev.shinyepo.resourcegenerator.util.GuiMouseUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 public class ControllerDetailsTab extends ScreenTab<ControllerContainer, ControllerScreen> {
-    private static final ResourceLocation ACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/details_on.png");
-    private static final ResourceLocation INACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/details_off.png");
+    private static final Identifier ACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/details_on.png");
+    private static final Identifier INACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/details_off.png");
     private ScrollableUpgradeList widget;
 
     public ControllerDetailsTab(ControllerScreen parent, ControllerContainer menu, int index) {
@@ -42,7 +42,7 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
                 ScrollableUpgradeList.UpgradeEntry upgradeEntry = getParent().getSelected();
                 if (upgradeEntry != null) {
                     Upgrade upgrade = upgradeEntry.getUpgrade();
-                    Map<ResourceLocation, Integer> playerUpgrades = AccountUpgradeData.get();
+                    Map<Identifier, Integer> playerUpgrades = AccountUpgradeData.get();
                     int playerTier = playerUpgrades.getOrDefault(upgradeEntry.getUpgrade().id(), 0);
                     long upgradeCost = upgrade.upgradeCost(playerUpgrades.getOrDefault(upgrade.id(), 0) + 1);
                     boolean maxTierFlag = upgrade.maxTier() >= playerTier + 1;
@@ -60,7 +60,7 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
         ScrollableUpgradeList.UpgradeEntry upgradeEntry = getParent().getSelected();
         if (upgradeEntry != null) {
             Upgrade upgrade = upgradeEntry.getUpgrade();
-            Map<ResourceLocation, Integer> playerUpgrades = AccountUpgradeData.get();
+            Map<Identifier, Integer> playerUpgrades = AccountUpgradeData.get();
             int currentTier = playerUpgrades.getOrDefault(upgrade.id(), 0);
             boolean maxTierFlag = currentTier == upgrade.maxTier();
             String upgradeCost = maxTierFlag ? "MAX TIER" : String.valueOf(upgrade.upgradeCost(currentTier + 1));
@@ -99,12 +99,12 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
     }
 
     @Override
-    public ResourceLocation getInactiveTexture() {
+    public Identifier getInactiveTexture() {
         return INACTIVE_TAB;
     }
 
     @Override
-    public ResourceLocation getActiveTexture() {
+    public Identifier getActiveTexture() {
         return ACTIVE_TAB;
     }
 }

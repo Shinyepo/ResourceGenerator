@@ -4,18 +4,18 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-public record Upgrade(ResourceLocation id, int tier, int maxTier, int baseCost, float costMultiplier,
+public record Upgrade(Identifier id, int tier, int maxTier, int baseCost, float costMultiplier,
                       int baseBonus,
                       int bonusMultiplier) {
 
     public static final Codec<Upgrade> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(Upgrade::id),
+            Identifier.CODEC.fieldOf("id").forGetter(Upgrade::id),
             Codec.INT.fieldOf("tier").forGetter(Upgrade::tier)
     ).apply(instance, Upgrade::new));
 
-    public Upgrade(ResourceLocation id, int tier) {
+    public Upgrade(Identifier id, int tier) {
         this(id, tier, 0, 0, 0, 0, 0);
     }
 
@@ -41,7 +41,7 @@ public record Upgrade(ResourceLocation id, int tier, int maxTier, int baseCost, 
 
 
     public static class Builder {
-        private ResourceLocation id;
+        private Identifier id;
         private int tier = 0;
         private int maxTier;
         private int baseCost = 0;
@@ -50,7 +50,7 @@ public record Upgrade(ResourceLocation id, int tier, int maxTier, int baseCost, 
         private int bonusMultiplier = 0;
 
         public Builder setId(String id) {
-            this.id = ResourceLocation.fromNamespaceAndPath(ResourceGenerator.MODID, id);
+            this.id = Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, id);
             return this;
         }
 

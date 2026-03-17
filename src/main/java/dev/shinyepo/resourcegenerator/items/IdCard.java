@@ -27,7 +27,7 @@ public class IdCard extends Item {
             IdCardData data = item.get(DataComponentRegistry.ID_CARD.get());
             System.out.println("item data : " + data);
             if (data != null) return InteractionResult.FAIL;
-            IdCardData newData = new IdCardData(player.getGameProfile().getName(), player.getGameProfile().getId());
+            IdCardData newData = new IdCardData(player.nameAndId().name(), player.nameAndId().id());
             item.set(DataComponentRegistry.ID_CARD.get(), newData);
             System.out.println("new data : " + newData);
             player.getInventory().setChanged();

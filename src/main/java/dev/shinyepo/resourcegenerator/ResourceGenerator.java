@@ -8,10 +8,10 @@ import dev.shinyepo.resourcegenerator.registries.PacketRegistry;
 import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
@@ -108,14 +108,14 @@ public class ResourceGenerator {
         dispatcher.register(
                 Commands.literal("upgrade")
                         .then(Commands.literal("buy")
-                                .then(Commands.argument("id", ResourceLocationArgument.id())
+                                .then(Commands.argument("id", IdentifierArgument.id())
                                         .then(Commands.argument("tier", integer())
                                                 .executes(ctx -> {
                                                     CommandSourceStack source = ctx.getSource();
                                                     AccountController controller = AccountController.getInstance(source.getLevel());
-                                                    UUID accId = controller.getOrCreateAccount(source.getPlayer().getGameProfile().getId());
+                                                    UUID accId = controller.getOrCreateAccount(source.getPlayer().nameAndId().id());
 
-                                                    ResourceLocation id = ResourceLocationArgument.getId(ctx, "id");
+                                                    Identifier id = IdentifierArgument.getId(ctx, "id");
                                                     Integer tier = getInteger(ctx, "tier");
                                                     boolean result = controller.buyUpgrade(accId, id, tier);
                                                     if (result) {
@@ -128,13 +128,13 @@ public class ResourceGenerator {
                                                 })))
                         )
                         .then(Commands.literal("remove")
-                                .then(Commands.argument("id", ResourceLocationArgument.id())
+                                .then(Commands.argument("id", IdentifierArgument.id())
                                         .executes(ctx -> {
                                             CommandSourceStack source = ctx.getSource();
                                             AccountController controller = AccountController.getInstance(source.getLevel());
-                                            UUID accId = controller.getOrCreateAccount(source.getPlayer().getGameProfile().getId());
+                                            UUID accId = controller.getOrCreateAccount(source.getPlayer().nameAndId().id());
 
-                                            ResourceLocation id = ResourceLocationArgument.getId(ctx, "id");
+                                            Identifier id = IdentifierArgument.getId(ctx, "id");
                                             controller.removeUpgrade(accId, id);
                                             source.sendSuccess(() -> Component.literal("Removed upgrade: ").append(Component.translatable("gui." + id.toLanguageKey())), true);
                                             return 1;
@@ -144,7 +144,7 @@ public class ResourceGenerator {
 
     private static long changeAccountAmount(ServerLevel level, ServerPlayer player, long amount) {
         AccountController controller = AccountController.getInstance(level);
-        UUID accid = controller.getOrCreateAccount(player.getGameProfile().getId());
+        UUID accid = controller.getOrCreateAccount(player.nameAndId().id());
         if (accid != null) {
             controller.changeAccountBalance(accid, amount);
         }

@@ -3,9 +3,10 @@ package dev.shinyepo.resourcegenerator.menus.types;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +18,8 @@ import java.util.List;
 public abstract class TabContainerScreen<T extends ContainerBase> extends AbstractContainerScreen<T> {
     protected TabManager tabManager;
 
-    public TabContainerScreen(T menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
+    public TabContainerScreen(T menu, Inventory playerInventory, Component title, int imageWidth, int imageHeight) {
+        super(menu, playerInventory, title, imageWidth, imageHeight);
         tabManager = new TabManager();
     }
 
@@ -53,14 +54,14 @@ public abstract class TabContainerScreen<T extends ContainerBase> extends Abstra
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        boolean result = tabManager.handleClick(leftPos, topPos, mouseX, mouseY);
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        boolean result = tabManager.handleClick(leftPos, topPos, event.x(), event.y());
         if (result) {
             clearWidgets();
             return true;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
@@ -70,15 +71,15 @@ public abstract class TabContainerScreen<T extends ContainerBase> extends Abstra
     }
 
     @Override
-    protected void renderSlot(GuiGraphics guiGraphics, Slot slot) {
+    protected void renderSlot(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY) {
         if (tabManager.tabShouldRenderInventory())
-            super.renderSlot(guiGraphics, slot);
+            super.renderSlot(guiGraphics, slot, mouseX, mouseY);
     }
 
     @Override
-    protected void renderSlots(GuiGraphics guiGraphics) {
+    protected void renderSlots(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (tabManager.tabShouldRenderInventory())
-            super.renderSlots(guiGraphics);
+            super.renderSlots(guiGraphics, mouseX, mouseY);
     }
 
     @Override
@@ -101,9 +102,9 @@ public abstract class TabContainerScreen<T extends ContainerBase> extends Abstra
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ContainerInput containerInput) {
         if (tabManager.tabShouldRenderInventory())
-            super.slotClicked(slot, slotId, mouseButton, type);
+            super.slotClicked(slot, slotId, mouseButton, containerInput);
     }
 
     @Override

@@ -13,9 +13,12 @@ public class BlockRegistry {
     //Dummy block for multi-blocks
     public static final DeferredBlock<Block> DUMMY_EXTENSION = BLOCKS.register("dummy_extension", DummyExtension::new);
 
-    public static final DeferredBlock<Block> CONTROLLER = BLOCKS.registerBlock("controller", Controller::new, BlockBehaviour.Properties.of());
-    public static final DeferredBlock<Block> SOLAR_PANEL = BLOCKS.registerBlock("solar_panel", SolarPanel::new, BlockBehaviour.Properties.of());
-    public static final DeferredBlock<Block> WATER_ABSORBER = BLOCKS.registerBlock("water_absorber", WaterAbsorber::new, BlockBehaviour.Properties.of());
-    public static final DeferredBlock<Block> PIPE = BLOCKS.registerBlock("pipe", Pipe::new, BlockBehaviour.Properties.of());
+    public static final DeferredBlock<Block> CONTROLLER = BLOCKS.registerBlock("controller", Controller::new, BlockBehaviour.Properties::of);
+    public static final DeferredBlock<Block> SOLAR_PANEL = BLOCKS.registerBlock("solar_panel", SolarPanel::new, BlockBehaviour.Properties::of);
+    public static final DeferredBlock<Block> WATER_ABSORBER = BLOCKS.registerBlock("water_absorber", WaterAbsorber::new, BlockBehaviour.Properties::of);
+    public static final DeferredBlock<Block> PIPE = BLOCKS.registerBlock("pipe", Pipe::new, BlockBehaviour.Properties::of);
+
+
+    public static final DeferredBlock<Block> BASIC_CONSUMER = BLOCKS.registerBlock("basic_consumer", BasicConsumer::new, BlockBehaviour.Properties::of);
 
 }

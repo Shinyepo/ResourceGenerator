@@ -10,8 +10,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 public class ContainerBase extends AbstractContainerMenu {
     private final BlockPos pos;
@@ -27,11 +27,11 @@ public class ContainerBase extends AbstractContainerMenu {
         this.INPUT_RANGE = inputRange;
     }
 
-    protected void addItemSlotRange(IItemHandler handler, int row, int column, int x, int y) {
+    protected void addItemSlotRange(ItemStacksResourceHandler handler, int row, int column, int x, int y) {
         int index = 0;
         for (int i = 0; i < column; i++) {
             for (int j = 0; j < row; j++) {
-                addSlot(new SlotItemHandler(handler, index, x + (y * j), y + (y * i)));
+                addSlot(new ResourceHandlerSlot(handler, handler::set, index, x + (y * j), y + (y * i)));
                 index++;
             }
         }

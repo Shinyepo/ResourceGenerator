@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.shinyepo.resourcegenerator.data.Account;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class AccountSavedData extends SavedData {
     private HashMap<UUID, Account> accounts = new HashMap<>();
     public static final SavedDataType<AccountSavedData> TYPE = new SavedDataType<>(
-            "resource_generator_accounts",
+            Identifier.parse("resource_generator_accounts"),
             AccountSavedData::new,
             RecordCodecBuilder.create(instance -> instance.group(
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Account.CODEC).fieldOf("accounts").forGetter(AccountSavedData::getAccounts)

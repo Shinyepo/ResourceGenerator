@@ -7,7 +7,7 @@ import net.minecraft.client.data.models.ItemModelOutput;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelInstance;
 import net.minecraft.client.data.models.model.ModelTemplates;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 
 import java.util.function.BiConsumer;
@@ -15,7 +15,7 @@ import java.util.function.BiConsumer;
 public class CustomItemGenerator extends ItemModelGenerators {
 
 
-    public CustomItemGenerator(ItemModelOutput itemModelOutput, BiConsumer<ResourceLocation, ModelInstance> modelOutput) {
+    public CustomItemGenerator(ItemModelOutput itemModelOutput, BiConsumer<Identifier, ModelInstance> modelOutput) {
         super(itemModelOutput, modelOutput);
     }
 
@@ -25,15 +25,16 @@ public class CustomItemGenerator extends ItemModelGenerators {
         generateItemWithExistingParent(ItemRegistry.WATER_ABSORBER_ITEM.get(), "water_absorber");
         generateItemWithExistingParent(ItemRegistry.CONTROLLER_ITEM.get(), "controller");
         generateItemWithExistingParent(ItemRegistry.PIPE_ITEM.get(), "pipe");
+        generateItemWithExistingParent(ItemRegistry.BASIC_CONSUMER_ITEM.get(), "basic_consumer");
         generateFlatItem(ItemRegistry.ID_CARD.get(), ModelTemplates.FLAT_ITEM);
         generateFlatItem(ItemRegistry.INSPECTOR.get(), ModelTemplates.FLAT_ITEM);
     }
 
     private void generateItemWithExistingParent(Item item, String parent) {
-        generateItemWithExistingModel(item, ResourceLocation.fromNamespaceAndPath(ResourceGenerator.MODID, "block/" + parent));
+        generateItemWithExistingModel(item, Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "block/" + parent));
     }
 
-    private void generateItemWithExistingModel(Item item, ResourceLocation modelLocation) {
+    private void generateItemWithExistingModel(Item item, Identifier modelLocation) {
         itemModelOutput.accept(
                 item,
                 ItemModelUtils.plainModel(modelLocation)

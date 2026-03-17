@@ -1,9 +1,11 @@
-// 1.21.8	2025-11-14T14:08:25.3937584	Model Definitions - resourcegenerator
+// 1.21.8	2026-03-17T15:30:50.4426007	Model Definitions - resourcegenerator
+e24546adc9d464a7b3e8215289faae2a24201307 assets/resourcegenerator/blockstates/basic_consumer.json
 3901d1bc04bef8188ce388fe37427c51e36e706b assets/resourcegenerator/blockstates/controller.json
 3dff9e1ec59415779195d2abfa9f07bc17b428a1 assets/resourcegenerator/blockstates/dummy_extension.json
 27cc336ecf8fbcf68fb83faeb63b3c85382f2156 assets/resourcegenerator/blockstates/pipe.json
 7482c30090123725b05ebac1dcb8ed46d8925f08 assets/resourcegenerator/blockstates/solar_panel.json
 ae42b7fbcd19a4607193bc31881d9bae700b2b42 assets/resourcegenerator/blockstates/water_absorber.json
+d26301ba2f81244e50e4163af652a43c5c22d6cf assets/resourcegenerator/items/basic_consumer.json
 59795a53c42fc86239878d93a99bb561bdf390f6 assets/resourcegenerator/items/controller.json
 86ae4def8ad75e638e4d1caf67c27ef65da59842 assets/resourcegenerator/items/id_card.json
 8a35b2c77f249fe1d2fc0e043bd770e1c08319f4 assets/resourcegenerator/items/inspector.json

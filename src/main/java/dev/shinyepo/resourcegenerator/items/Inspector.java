@@ -33,7 +33,7 @@ public class Inspector extends Item {
         ServerLevel level = (ServerLevel) context.getLevel();
         INetworkCapability targetCap = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, clickedPos, null);
         if (targetCap != null) {
-            context.getPlayer().displayClientMessage(Component.literal(targetCap.getNetworkId().toString()), false);
+            context.getPlayer().sendOverlayMessage(Component.literal(targetCap.getNetworkId().toString()));
         }
         return super.useOn(context);
     }

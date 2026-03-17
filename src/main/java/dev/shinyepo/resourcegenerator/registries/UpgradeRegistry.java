@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 public class UpgradeRegistry {
     public static final ResourceKey<Registry<Upgrade>> UPGRADE_REGISTRY_KEY = ResourceKey.createRegistryKey(fromNamespaceAndPath(ResourceGenerator.MODID, "upgrades"));

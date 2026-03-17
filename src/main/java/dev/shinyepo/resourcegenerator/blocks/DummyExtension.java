@@ -3,8 +3,8 @@ package dev.shinyepo.resourcegenerator.blocks;
 import dev.shinyepo.resourcegenerator.blocks.entities.DummyExtensionEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +31,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class DummyExtension extends Block implements EntityBlock {
-    public DummyExtension(ResourceLocation registry) {
+    public DummyExtension(Identifier registry) {
         super(BlockBehaviour.Properties.of().noOcclusion().pushReaction(PushReaction.BLOCK).setId(ResourceKey.create(Registries.BLOCK, registry)));
 
         registerDefaultState(getStateDefinition().any());
@@ -88,7 +88,7 @@ public class DummyExtension extends Block implements EntityBlock {
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
         if (willHarvest) {
             return true;
         }
@@ -97,10 +97,10 @@ public class DummyExtension extends Block implements EntityBlock {
             BlockState mainState = level.getBlockState(mainPos);
             if (!mainState.isAir()) {
                 //Set the main block to air, which will invalidate the rest of the bounding blocks
-                mainState.onDestroyedByPlayer(level, mainPos, player, false, mainState.getFluidState());
+                mainState.onDestroyedByPlayer(level, mainPos, player, toolStack, false, mainState.getFluidState());
             }
         }
-        return super.onDestroyedByPlayer(state, level, pos, player, false, fluid);
+        return super.onDestroyedByPlayer(state, level, pos, player, toolStack, false, fluid);
     }
 
     @NotNull

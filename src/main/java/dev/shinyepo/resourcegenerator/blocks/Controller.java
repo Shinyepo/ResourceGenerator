@@ -66,7 +66,7 @@ public class Controller extends HorizontalNetworkBlock {
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
         Direction facing = state.getValue(FACING);
         BlockPos leftPos = pos.relative(facing.getCounterClockWise());
         BlockPos rightPos = pos.relative(facing.getClockWise());
@@ -78,7 +78,7 @@ public class Controller extends HorizontalNetworkBlock {
         if (!level.getBlockState(rightPos).isAir()) {
             level.removeBlock(rightPos, false);
         }
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class Controller extends HorizontalNetworkBlock {
         level.setBlock(leftPos, dummyExtension.defaultBlockState(), Block.UPDATE_ALL);
         level.setBlock(rightPos, dummyExtension.defaultBlockState(), Block.UPDATE_ALL);
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             DummyExtensionEntity leftEntity = (DummyExtensionEntity) level.getBlockEntity(leftPos);
             DummyExtensionEntity rightEntity = (DummyExtensionEntity) level.getBlockEntity(rightPos);
             if (leftEntity != null && rightEntity != null) {

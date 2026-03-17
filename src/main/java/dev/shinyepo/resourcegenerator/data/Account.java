@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class Account {
     private Long balance;
     private UUID ownerId;
     private Map<UUID, Integer> users = new HashMap<>();
-    private Map<ResourceLocation, Integer> upgrades = new HashMap<>();
+    private Map<Identifier, Integer> upgrades = new HashMap<>();
 
 
     public static final Codec<Account> CODEC = RecordCodecBuilder.create(instance ->
@@ -27,10 +27,10 @@ public class Account {
                     Codec.LONG.fieldOf("value").forGetter(Account::getBalance),
                     UUIDUtil.CODEC.fieldOf("ownerId").forGetter(Account::getOwnerId),
                     Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.INT).fieldOf("users").forGetter(Account::getUsers),
-                    Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("upgrades").forGetter(Account::getUpgrades)
+                    Codec.unboundedMap(Identifier.CODEC, Codec.INT).fieldOf("upgrades").forGetter(Account::getUpgrades)
             ).apply(instance, (id, value, ownerId, users, upgrades) -> new Account(id, value, ownerId, new HashMap<>(users), new HashMap<>(upgrades))));
 
-    public Account(UUID accountId, Long balance, UUID ownerId, Map<UUID, Integer> users, Map<ResourceLocation, Integer> upgrades) {
+    public Account(UUID accountId, Long balance, UUID ownerId, Map<UUID, Integer> users, Map<Identifier, Integer> upgrades) {
         this.accountId = accountId;
         this.balance = balance;
         this.ownerId = ownerId;
@@ -43,6 +43,7 @@ public class Account {
         balance = 0L;
         ownerId = userId;
         users.put(userId, Permissions.OWNER.ordinal());
+        upgrades = new HashMap<>();
     }
 
     public void setOwnerId(UUID ownerId) {
@@ -77,21 +78,21 @@ public class Account {
         return users;
     }
 
-    public Map<ResourceLocation, Integer> getUpgrades() {
+    public Map<Identifier, Integer> getUpgrades() {
         return upgrades;
     }
 
-    public void removeUpgrade(ResourceLocation id) {
+    public void removeUpgrade(Identifier id) {
         upgrades.remove(id);
     }
 
-    public boolean buyUpgrade(ResourceLocation id, Integer tier) {
+    public boolean buyUpgrade(Identifier id, Integer tier) {
         Optional<Holder.Reference<Upgrade>> registryEntry = UpgradeRegistry.UPGRADE_REGISTRY.get(id);
 
         if (registryEntry.isPresent()) {
             Upgrade upgrade = registryEntry.get().value();
             if (tier > upgrade.maxTier()) return false;
-            if (tier <= upgrades.get(id)) return false;
+            if (upgrades.get(id) != null && tier <= upgrades.get(id)) return false;
             long cost = upgrade.upgradeCost(tier);
             if (cost <= balance) {
                 changeValue(-cost);
