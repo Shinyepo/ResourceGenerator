@@ -7,7 +7,7 @@ import dev.shinyepo.resourcegenerator.menus.controller.tabs.ControllerSummaryTab
 import dev.shinyepo.resourcegenerator.menus.types.TabContainerScreen;
 import dev.shinyepo.resourcegenerator.menus.widgets.ScrollableUpgradeList;
 import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -45,10 +45,10 @@ public class ControllerScreen extends TabContainerScreen<ControllerContainer> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float v, int i, int i1) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int i, int i1, float a) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 
-        super.renderBg(graphics, v, i, i1);
+        super.extractBackground(graphics, a, i, i1);
     }
 
     public <T extends ObjectSelectionList.Entry<T>> void buildList(Consumer<T> modListViewConsumer, Function<Upgrade, T> newEntry) {

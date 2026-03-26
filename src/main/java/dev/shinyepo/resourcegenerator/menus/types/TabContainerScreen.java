@@ -1,6 +1,6 @@
 package dev.shinyepo.resourcegenerator.menus.types;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -31,20 +31,19 @@ public abstract class TabContainerScreen<T extends ContainerBase> extends Abstra
         tabManager.createTabs(tabs);
     }
 
-    @Override
-    protected void renderBg(GuiGraphics graphics, float v, int i, int i1) {
+    protected void extractBackground(GuiGraphicsExtractor graphics, float v, int i, int i1) {
         tabManager.renderTabs(graphics, leftPos, topPos);
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         List<Slot> backup = null;
         if (!tabManager.tabShouldRenderInventory()) {
             backup = new ArrayList<>(this.menu.slots);
             this.menu.slots.clear();
         }
-        super.render(graphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(graphics, mouseX, mouseY);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        this.extractTooltip(graphics, mouseX, mouseY);
         tabManager.renderTooltips(graphics, leftPos, topPos, mouseX, mouseY);
 
         if (backup != null) {
@@ -65,27 +64,27 @@ public abstract class TabContainerScreen<T extends ContainerBase> extends Abstra
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, -12566464, false);
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, -12566464, false);
         tabManager.displayTab(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderSlot(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY) {
+    protected void extractSlot(GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY) {
         if (tabManager.tabShouldRenderInventory())
-            super.renderSlot(guiGraphics, slot, mouseX, mouseY);
+            super.extractSlot(guiGraphics, slot, mouseX, mouseY);
     }
 
     @Override
-    protected void renderSlots(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void extractSlots(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (tabManager.tabShouldRenderInventory())
-            super.renderSlots(guiGraphics, mouseX, mouseY);
+            super.extractSlots(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
+    protected void extractTooltip(GuiGraphicsExtractor guiGraphics, int x, int y) {
         if (tabManager.tabShouldRenderInventory())
-            super.renderTooltip(guiGraphics, x, y);
+            super.extractTooltip(guiGraphics, x, y);
     }
 
     @Override
@@ -96,7 +95,7 @@ public abstract class TabContainerScreen<T extends ContainerBase> extends Abstra
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
+    protected void renderSlotContents(GuiGraphicsExtractor guiGraphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
         if (tabManager.tabShouldRenderInventory())
             super.renderSlotContents(guiGraphics, itemstack, slot, countString);
     }

@@ -1,7 +1,7 @@
 package dev.shinyepo.resourcegenerator.menus.types;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 public abstract class ScreenTab<T extends ContainerBase, P extends TabContainerScreen<T>> extends GuiElement implements IScreenTab {
@@ -25,13 +25,13 @@ public abstract class ScreenTab<T extends ContainerBase, P extends TabContainerS
 
 
     @Override
-    public abstract void display(GuiGraphics graphics, int mouseX, int mouseY);
+    public abstract void display(GuiGraphicsExtractor graphics, int mouseX, int mouseY);
 
     @Override
     public abstract boolean handleScroll(double mouseX, double mouseY, double scrollX, double scrollY);
 
     @Override
-    public abstract void renderTabTooltips(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY);
+    public abstract void renderTabTooltips(GuiGraphicsExtractor graphics, int leftPos, int topPos, int mouseX, int mouseY);
 
     @Override
     public abstract Identifier getActiveTexture();

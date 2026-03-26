@@ -8,7 +8,7 @@ import dev.shinyepo.resourcegenerator.menus.controller.ControllerScreen;
 import dev.shinyepo.resourcegenerator.menus.types.ScreenTab;
 import dev.shinyepo.resourcegenerator.menus.widgets.ScrollableUpgradeList;
 import dev.shinyepo.resourcegenerator.util.GuiMouseUtil;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -29,7 +29,7 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
     }
 
     @Override
-    public void display(GuiGraphics graphics, int mouseX, int mouseY) {
+    public void display(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 
         ControllerScreen parent = getParent();
         int topPos = parent.getGuiTop();
@@ -65,13 +65,13 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
             boolean maxTierFlag = currentTier == upgrade.maxTier();
             String upgradeCost = maxTierFlag ? "MAX TIER" : String.valueOf(upgrade.upgradeCost(currentTier + 1));
             String nextBonus = maxTierFlag ? "MAX TIER" : String.valueOf(upgrade.totalBonus(currentTier + 1));
-            graphics.drawString(getFont(), Component.literal("Balance: " + this.getMenu().getValue()), 6, 92, BASIC, false);
-            graphics.drawString(getFont(), Component.literal("Tier: " + currentTier), 6, 102, BASIC, false);
-            graphics.drawString(getFont(), Component.literal("Current bonus: " + upgrade.totalBonus(currentTier)), 6, 112, BASIC, false);
-            graphics.drawString(getFont(), Component.literal("Upgrade Cost: " + upgradeCost), 6, 122, BASIC, false);
-            graphics.drawString(getFont(), Component.literal("Next bonus: " + nextBonus), 6, 132, BASIC, false);
+            graphics.text(getFont(), Component.literal("Balance: " + this.getMenu().getValue()), 6, 92, BASIC, false);
+            graphics.text(getFont(), Component.literal("Tier: " + currentTier), 6, 102, BASIC, false);
+            graphics.text(getFont(), Component.literal("Current bonus: " + upgrade.totalBonus(currentTier)), 6, 112, BASIC, false);
+            graphics.text(getFont(), Component.literal("Upgrade Cost: " + upgradeCost), 6, 122, BASIC, false);
+            graphics.text(getFont(), Component.literal("Next bonus: " + nextBonus), 6, 132, BASIC, false);
 
-            graphics.drawString(getFont(), Component.literal("?"), 6, 152, BASIC, false);
+            graphics.text(getFont(), Component.literal("?"), 6, 152, BASIC, false);
             if (GuiMouseUtil.isMouseOver(mouseX, mouseY, leftPos + 6, topPos + 152, 7)) {
                 graphics.setTooltipForNextFrame(getFont(), List.of(Component.translatable("gui." + upgrade.id().toLanguageKey() + ".desc")), Optional.empty(), mouseX, mouseY);
             }
@@ -85,7 +85,7 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
     }
 
     @Override
-    public void renderTabTooltips(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY) {
+    public void renderTabTooltips(GuiGraphicsExtractor graphics, int leftPos, int topPos, int mouseX, int mouseY) {
     }
 
     @Override

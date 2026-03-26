@@ -4,7 +4,7 @@ import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerContainer;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerScreen;
 import dev.shinyepo.resourcegenerator.menus.types.ScreenTab;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -22,7 +22,7 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
     }
 
     @Override
-    public void display(GuiGraphics graphics, int mouseX, int mouseY) {
+    public void display(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, CARD_SLOT, 151, 7, 0, 0, 18, 18, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, INVENTORY_SLOTS, 7, 83, 0, 0, 162, 76, 256, 256);
         String owner = getMenu().getOwnerName();
@@ -30,11 +30,11 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
             displayNotAssigned(graphics);
             return;
         }
-        graphics.drawString(getFont(), Component.literal("Owner: " + owner), 10, 24, BASIC, false);
-        graphics.drawString(getFont(), Component.literal("Value: " + getMenu().getValue()), 10, 34, BASIC, false);
+        graphics.text(getFont(), Component.literal("Owner: " + owner), 10, 24, BASIC, false);
+        graphics.text(getFont(), Component.literal("Value: " + getMenu().getValue()), 10, 34, BASIC, false);
 
         long valueChange = getMenu().getValueChange();
-        graphics.drawString(getFont(), Component.literal("Change: " + valueChange), 10, 44, valueChange > 0 ? GREEN : RED, false);
+        graphics.text(getFont(), Component.literal("Change: " + valueChange), 10, 44, valueChange > 0 ? GREEN : RED, false);
     }
 
     @Override
@@ -52,12 +52,12 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
     }
 
     @Override
-    public void renderTabTooltips(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY) {
+    public void renderTabTooltips(GuiGraphicsExtractor graphics, int leftPos, int topPos, int mouseX, int mouseY) {
 
     }
 
-    private void displayNotAssigned(GuiGraphics graphics) {
-        graphics.drawString(getFont(), Component.literal("Owner not assigned!"), 8, 20, RED, false);
+    private void displayNotAssigned(GuiGraphicsExtractor graphics) {
+        graphics.text(getFont(), Component.literal("Owner not assigned!"), 8, 20, RED, false);
     }
 
     @Override

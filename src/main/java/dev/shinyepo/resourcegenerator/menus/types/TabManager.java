@@ -1,7 +1,7 @@
 package dev.shinyepo.resourcegenerator.menus.types;
 
 import dev.shinyepo.resourcegenerator.util.GuiMouseUtil;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -33,7 +33,7 @@ public class TabManager {
         return tabs.get(activeTab).isInventoryTab();
     }
 
-    public void displayTab(GuiGraphics graphics, int mouseX, int mouseY) {
+    public void displayTab(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         tabs.get(activeTab).display(graphics, mouseX, mouseY);
 
     }
@@ -42,7 +42,7 @@ public class TabManager {
         return tabs.get(activeTab).handleScroll(mouseX, mouseY, scrollX, scrollY);
     }
 
-    public void renderTabs(GuiGraphics graphics, int leftPos, int topPos) {
+    public void renderTabs(GuiGraphicsExtractor graphics, int leftPos, int topPos) {
         for (IScreenTab tab : tabs) {
             boolean isActiveTab = activeTab == tab.getIndex();
             Identifier tabTexture = isActiveTab ? tab.getActiveTexture() : tab.getInactiveTexture();
@@ -56,7 +56,7 @@ public class TabManager {
         }
     }
 
-    public void renderTooltips(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY) {
+    public void renderTooltips(GuiGraphicsExtractor graphics, int leftPos, int topPos, int mouseX, int mouseY) {
         int tabX = leftPos + 174;
         for (IScreenTab tab : tabs) {
             if (activeTab == tab.getIndex())
