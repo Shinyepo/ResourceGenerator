@@ -2,10 +2,7 @@ package dev.shinyepo.resourcegenerator.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.shinyepo.resourcegenerator.blocks.entities.types.INetworkDevice;
-import dev.shinyepo.resourcegenerator.blocks.entities.types.Producer;
-import dev.shinyepo.resourcegenerator.blocks.entities.types.Receiver;
-import dev.shinyepo.resourcegenerator.blocks.entities.types.Transmitter;
+import dev.shinyepo.resourcegenerator.blocks.entities.types.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
@@ -23,6 +20,7 @@ public class DeviceNetwork {
     private HashSet<BlockPos> producers = new HashSet<>();
     private HashSet<BlockPos> transmitters = new HashSet<>();
     private HashSet<BlockPos> receivers = new HashSet<>();
+    private HashSet<BlockPos> consumers = new HashSet<>();
     private ResourceKey<Level> dimension;
     private transient Long balance = 0L;
 
@@ -32,6 +30,7 @@ public class DeviceNetwork {
                     BlockPos.CODEC.listOf().xmap(HashSet::new, List::copyOf).fieldOf("producers").forGetter(DeviceNetwork::getProducers),
                     BlockPos.CODEC.listOf().xmap(HashSet::new, List::copyOf).fieldOf("transmitters").forGetter(DeviceNetwork::getTransmitters),
                     BlockPos.CODEC.listOf().xmap(HashSet::new, List::copyOf).fieldOf("receivers").forGetter(DeviceNetwork::getReceivers),
+                    BlockPos.CODEC.listOf().xmap(HashSet::new, List::copyOf).fieldOf("consumers").forGetter(DeviceNetwork::getConsumers),
                     Identifier.CODEC.xmap(loc -> ResourceKey.create(Registries.DIMENSION, loc), ResourceKey::identifier).fieldOf("dimension").forGetter(DeviceNetwork::getDimension)
             ).apply(instance, DeviceNetwork::new));
 
@@ -41,11 +40,12 @@ public class DeviceNetwork {
         addNetworkDevice(device, pos);
     }
 
-    public DeviceNetwork(UUID networkId, HashSet<BlockPos> producers, HashSet<BlockPos> transmitters, HashSet<BlockPos> receivers, ResourceKey<Level> dimension) {
+    public DeviceNetwork(UUID networkId, HashSet<BlockPos> producers, HashSet<BlockPos> transmitters, HashSet<BlockPos> receivers, HashSet<BlockPos> consumers, ResourceKey<Level> dimension) {
         this.networkId = networkId;
         this.producers = producers;
         this.transmitters = transmitters;
         this.receivers = receivers;
+        this.consumers = consumers;
         this.dimension = dimension;
     }
 
@@ -113,6 +113,18 @@ public class DeviceNetwork {
         this.receivers.addAll(receivers);
     }
 
+    public HashSet<BlockPos> getConsumers() {
+        return consumers;
+    }
+
+    public void setConsumers(HashSet<BlockPos> consumers) {
+        this.consumers = consumers;
+    }
+
+    public void addConsumers(HashSet<BlockPos> pos) {
+        consumers.addAll(pos);
+    }
+
     public void addNetworkDevice(INetworkDevice device, BlockPos pos) {
         if (device instanceof Producer) {
             producers.add(pos);
@@ -123,11 +135,14 @@ public class DeviceNetwork {
         if (device instanceof Receiver) {
             receivers.add(pos);
         }
+        if (device instanceof Consumer) {
+            consumers.add(pos);
+        }
         //TODO: Throw exception?
     }
 
     public boolean isMarkedForDeletion() {
-        int devices = producers.size() + transmitters.size() + receivers.size();
+        int devices = producers.size() + transmitters.size() + receivers.size() + consumers.size();
         return devices <= 0;
     }
 
@@ -141,6 +156,9 @@ public class DeviceNetwork {
         if (device instanceof Receiver) {
             receivers.remove(pos);
         }
+        if (device instanceof Consumer) {
+            consumers.remove(pos);
+        }
 
     }
 
@@ -149,6 +167,7 @@ public class DeviceNetwork {
         devices.addAll(producers);
         devices.addAll(transmitters);
         devices.addAll(receivers);
+        devices.addAll(consumers);
         return devices;
     }
 }

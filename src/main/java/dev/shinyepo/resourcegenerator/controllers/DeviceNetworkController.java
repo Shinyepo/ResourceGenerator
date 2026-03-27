@@ -93,6 +93,7 @@ public class DeviceNetworkController {
             newNetwork.addTransmitters(existingNetwork.getTransmitters());
             newNetwork.addProducers(existingNetwork.getProducers());
             newNetwork.addReceivers(existingNetwork.getReceivers());
+            newNetwork.addConsumers(existingNetwork.getConsumers());
 
             newNetwork.addBalance(existingNetwork.getBalance());
             dataStore.removeNetwork(nId);
@@ -101,6 +102,7 @@ public class DeviceNetworkController {
         newNetwork.getReceivers().forEach((dev) -> notifyDevicesOfNetworkChange(level, dev, networkId));
         newNetwork.getTransmitters().forEach((dev) -> notifyDevicesOfNetworkChange(level, dev, networkId));
         newNetwork.getProducers().forEach((dev) -> notifyDevicesOfNetworkChange(level, dev, networkId));
+        newNetwork.getConsumers().forEach((dev) -> notifyDevicesOfNetworkChange(level, dev, networkId));
 
         dataStore.setDirty();
 
