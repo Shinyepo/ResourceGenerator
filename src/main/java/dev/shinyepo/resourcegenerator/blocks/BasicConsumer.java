@@ -2,6 +2,7 @@ package dev.shinyepo.resourcegenerator.blocks;
 
 import dev.shinyepo.resourcegenerator.blocks.entities.BasicConsumerEntity;
 import dev.shinyepo.resourcegenerator.blocks.types.NetworkBlock;
+import dev.shinyepo.resourcegenerator.menus.consumer.ConsumerContainer;
 import dev.shinyepo.resourcegenerator.properties.CustomProperties;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
