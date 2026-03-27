@@ -170,4 +170,11 @@ public class DeviceNetwork {
         devices.addAll(consumers);
         return devices;
     }
+
+    public BlockPos getReceiver() {
+        if (!receivers.isEmpty()) {
+            return receivers.iterator().next();
+        }
+        return null;
+    }
 }

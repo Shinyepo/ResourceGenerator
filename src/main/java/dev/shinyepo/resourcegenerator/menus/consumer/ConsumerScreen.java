@@ -13,7 +13,6 @@ public class ConsumerScreen extends AbstractScreenBase<ConsumerContainer> {
     protected void init() {
         super.init();
         createInventoryWidget();
-        createCardSlotWidget();
         createSlotWidget(80, 35);
     }
 }

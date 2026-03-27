@@ -78,6 +78,14 @@ public class DeviceNetworkController {
         }
     }
 
+    public BlockPos getReceiverFromNetwork(UUID networkId) {
+        DeviceNetwork network = dataStore.getNetwork(networkId);
+        if (network != null) {
+            return network.getReceiver();
+        }
+        return null;
+    }
+
     public void removeNetwork(UUID networkId) {
         dataStore.removeNetwork(networkId);
         dataStore.setDirty();
