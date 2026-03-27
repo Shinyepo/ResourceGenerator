@@ -7,7 +7,6 @@ import dev.shinyepo.resourcegenerator.datacomponents.IdCardData;
 import dev.shinyepo.resourcegenerator.registries.BlockEntityRegistry;
 import dev.shinyepo.resourcegenerator.registries.DataComponentRegistry;
 import dev.shinyepo.resourcegenerator.registries.TagRegistry;
-import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
 import dev.shinyepo.resourcegenerator.util.ItemStacksHandlerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -79,12 +78,6 @@ public class ControllerEntity extends Receiver implements IDataEntity {
         super.tick(level);
         if (level.getGameTime() % 5 != 0) return;
         if (!cardHandler.getResource(0).isEmpty()) assignAccount();
-        if (getAccountId() != null) {
-            AccountController controller = AccountController.getInstance(level);
-            var upgrades = controller.getUpgrades(getAccountId());
-            if (upgrades != null && upgrades.isEmpty())
-                AccountController.getInstance(level).buyUpgrade(getAccountId(), UpgradeRegistry.MAX_ABSORBERS.get().id(), 2);
-        }
     }
 
     public ContainerData getDataSlot() {
