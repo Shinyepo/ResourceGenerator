@@ -1,5 +1,6 @@
 package dev.shinyepo.resourcegenerator;
 
+import dev.shinyepo.resourcegenerator.menus.consumer.ConsumerScreen;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerScreen;
 import dev.shinyepo.resourcegenerator.registries.MenuRegistry;
 import net.neoforged.api.distmarker.Dist;
@@ -21,5 +22,6 @@ public class ResourceGeneratorClient {
     @SubscribeEvent
     public static void registerMenus(RegisterMenuScreensEvent event) {
         event.register(MenuRegistry.CONTROLLER_MENU.get(), ControllerScreen::new);
+        event.register(MenuRegistry.CONSUMER_MENU.get(), ConsumerScreen::new);
     }
 }

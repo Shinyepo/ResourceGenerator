@@ -20,7 +20,7 @@ import java.util.function.Function;
 import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 public class ControllerScreen extends TabContainerScreen<ControllerContainer> {
-    private final Identifier GUI = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/controller.png");
+    private final Identifier GUI = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/shared/blank.png");
     private ScrollableUpgradeList.UpgradeEntry selected;
 
     public ControllerScreen(ControllerContainer menu, Inventory playerInventory, Component title) {

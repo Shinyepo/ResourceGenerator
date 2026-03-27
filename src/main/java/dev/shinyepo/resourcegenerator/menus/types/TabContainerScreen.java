@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TabContainerScreen<T extends ContainerBase> extends AbstractContainerScreen<T> {
+public abstract class TabContainerScreen<T extends AbstractContainerBase> extends AbstractContainerScreen<T> {
     protected TabManager tabManager;
 
     public TabContainerScreen(T menu, Inventory playerInventory, Component title, int imageWidth, int imageHeight) {

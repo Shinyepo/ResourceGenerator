@@ -8,20 +8,19 @@ import dev.shinyepo.resourcegenerator.registries.BlockEntityRegistry;
 import dev.shinyepo.resourcegenerator.registries.DataComponentRegistry;
 import dev.shinyepo.resourcegenerator.registries.TagRegistry;
 import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
+import dev.shinyepo.resourcegenerator.util.ItemStacksHandlerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ControllerEntity extends Receiver implements IDataEntity {
@@ -54,27 +53,8 @@ public class ControllerEntity extends Receiver implements IDataEntity {
 
     public ControllerEntity(BlockPos pos, BlockState blockState) {
         super(BlockEntityRegistry.CONTROLLER_ENTITY.get(), pos, blockState);
-        cardHandler = createInputItemHandler(1);
+        cardHandler = ItemStacksHandlerUtil.createInputItemHandler(1, this::setChanged, validInputs);
         configureSides(Direction.DOWN, Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH);
-    }
-
-    @Nonnull
-    public ItemStacksResourceHandler createInputItemHandler(int slots) {
-        return new ItemStacksResourceHandler(slots) {
-
-            @Override
-            protected void onContentsChanged(int slot, ItemStack previousContents) {
-                setChanged();
-            }
-
-            @Override
-            public boolean isValid(int slot, ItemResource resource) {
-                if (!validInputs.isEmpty()) {
-                    return resource.tags().anyMatch((tag) -> validInputs.contains(tag));
-                }
-                return true;
-            }
-        };
     }
 
     public ItemStacksResourceHandler getCardHandler() {

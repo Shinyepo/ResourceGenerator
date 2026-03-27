@@ -32,6 +32,7 @@ public class BasicConsumer extends NetworkBlock {
 
         registerDefaultState(getStateDefinition().any()
                 .setValue(OPERATIONAL, false));
+        setBasicContainerFactory(ConsumerContainer::new);
     }
 
     @Override

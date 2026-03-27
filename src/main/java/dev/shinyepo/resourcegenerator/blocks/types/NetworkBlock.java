@@ -1,10 +1,11 @@
 package dev.shinyepo.resourcegenerator.blocks.types;
 
+import com.mojang.datafixers.util.Function3;
 import com.mojang.datafixers.util.Function4;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.IDataEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.NetworkDeviceEntity;
 import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
-import dev.shinyepo.resourcegenerator.menus.types.ContainerBase;
+import dev.shinyepo.resourcegenerator.menus.types.AbstractContainerBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -34,7 +35,8 @@ import java.util.function.BiFunction;
 
 public class NetworkBlock extends Block implements EntityBlock {
     private final BiFunction<BlockPos, BlockState, ? extends NetworkDeviceEntity> BLOCK_ENTITY;
-    private Function4<Integer, Player, BlockPos, ContainerData, ? extends ContainerBase> DATA_CONTAINER;
+    private Function4<Integer, Player, BlockPos, ContainerData, ? extends AbstractContainerBase> DATA_CONTAINER;
+    private Function3<Integer, Player, BlockPos, ? extends AbstractContainerBase> BASIC_CONTAINER;
     public VoxelShape SHAPE;
 
     public NetworkBlock(BiFunction<BlockPos, BlockState, ? extends NetworkDeviceEntity> blockEntityFactory, Properties properties) {
@@ -52,8 +54,12 @@ public class NetworkBlock extends Block implements EntityBlock {
         return BLOCK_ENTITY.apply(blockPos, blockState);
     }
 
-    protected void setDataContainerFactory(Function4<Integer, Player, BlockPos, ContainerData, ? extends ContainerBase> factory) {
+    protected void setDataContainerFactory(Function4<Integer, Player, BlockPos, ContainerData, ? extends AbstractContainerBase> factory) {
         DATA_CONTAINER = factory;
+    }
+
+    protected void setBasicContainerFactory(Function3<Integer, Player, BlockPos, ? extends AbstractContainerBase> factory) {
+        BASIC_CONTAINER = factory;
     }
 
     @Override
@@ -89,6 +95,11 @@ public class NetworkBlock extends Block implements EntityBlock {
                                 DATA_CONTAINER.apply(windowId, player, pos, dataEntity.getDataSlot()), Component.translatable(this.getDescriptionId())
                 );
             }
+        } else if (BASIC_CONTAINER != null) {
+            return new SimpleMenuProvider(
+                    (windowId, inv, player) ->
+                            BASIC_CONTAINER.apply(windowId, player, pos), Component.translatable(this.getDescriptionId())
+            );
         }
         return null;
     }

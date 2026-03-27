@@ -1,7 +1,7 @@
 package dev.shinyepo.resourcegenerator.menus.controller;
 
 import dev.shinyepo.resourcegenerator.blocks.entities.ControllerEntity;
-import dev.shinyepo.resourcegenerator.menus.types.ContainerBase;
+import dev.shinyepo.resourcegenerator.menus.types.AbstractContainerBase;
 import dev.shinyepo.resourcegenerator.networking.CustomMessages;
 import dev.shinyepo.resourcegenerator.networking.packets.BuyAccountUpgradeC2S;
 import dev.shinyepo.resourcegenerator.networking.packets.RequestUpgradesSyncC2S;
@@ -12,11 +12,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
-import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 import java.util.UUID;
 
-public class ControllerContainer extends ContainerBase {
+public class ControllerContainer extends AbstractContainerBase {
     private ControllerEntity controllerEntity;
     private final ContainerData data;
 
@@ -29,7 +28,7 @@ public class ControllerContainer extends ContainerBase {
         this.data = data;
         if (player.level().getBlockEntity(pos) instanceof ControllerEntity controller) {
             this.controllerEntity = controller;
-            addSlot(new ResourceHandlerSlot(controller.getCardHandler(), controller.getCardHandler()::set, 0, 152, 8));
+            addSlot(controller.getCardHandler(), 0, 152, 8);
             addDataSlots(data);
 
             layoutPlayerInventorySlots(player.getInventory(), 8, 84);
