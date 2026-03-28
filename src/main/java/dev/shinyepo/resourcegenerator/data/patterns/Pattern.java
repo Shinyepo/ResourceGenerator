@@ -48,6 +48,16 @@ public class Pattern {
         return tier;
     }
 
+    public boolean matches(BlockPos pos, BlockState block) {
+        var isMatching = false;
+        var element = elements.stream().filter(x -> x.offset().equals(pos)).findFirst();
+        if (element.isPresent()) {
+            PatternElement patternElement = element.get();
+            isMatching = block.is(patternElement.allowedBlocks());
+        }
+        return isMatching;
+    }
+
     public static class BasePatternBuilder {
         private int tier;
         private int size;
