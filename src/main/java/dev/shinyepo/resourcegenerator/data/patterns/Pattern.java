@@ -5,6 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,43 +54,46 @@ public class Pattern {
         private int depth;
         private final List<PatternElement> elements = new ArrayList<>();
 
-        private int currentRow = 0;
-
         public BasePatternBuilder withTier(int tier) {
             this.tier = tier;
+            this.size = tier * 2 + 1;
+            this.depth = tier;
             return this;
         }
 
-        public BasePatternBuilder withSize(int size) {
-            this.size = size;
-            return this;
-        }
+        /*
+            [-2, -2, 2]    [-1, -2, 2] [0, -2, 2] [1, -2, 2] [2, -2, 2]
+            [-2, -2, 1]    [-1,-1,1]   [0,-1,1]   [1,-1,1]   [2, -2, 1]
+            [-2, -2, -0]   [-1,-1,0]   [0,0,0]    [1,-1,0]   [2, -2, 0]
+            [-2, -2, -1]   [-1,-1,-1]  [0,-1,-1]  [1,-1,-1]  [2, -2, -1]
+            [-2,-2,-2]     [-1,-2,-2]  [0,-2,-2]  [1,-2,-2]  [2,-2,-2]
+         */
 
-        public BasePatternBuilder withDepth(int depth) {
-            this.depth = depth;
-            return this;
-        }
-
-        public BasePatternBuilder pattern(List<TagKey<Block>> blocks) {
-            if (blocks.size() != size || currentRow > size - 1) {
-                throw new IllegalArgumentException("Number of blocks provided does not match pattern size");
-            }
+        private void buildLayout() {
             int half = (size - 1) / 2;
-            int offsetZ = half - currentRow;
+            TagKey<Block> resource = Tags.Blocks.ORES;
+            TagKey<Block> upgrade = Tags.Blocks.STORAGE_BLOCKS_GOLD;
 
-            for (int x = 0; x < blocks.size(); x++) {
-                int offsetX = x - half;
-                elements.add(new PatternElement(new BlockPos(offsetX, 0, offsetZ), blocks.get(x)));
+            for (int z = half; z >= -half; z--) {
+                for (int x = -half; x <= half; x++) {
+                    int ring = Math.max(Math.abs(x), Math.abs(z));
+                    int y = -ring;
+                    BlockPos offset = new BlockPos(x, y, z);
+
+                    if (ring == 0) continue;
+
+                    boolean useResource = (x + z) % 2 == 0;
+                    elements.add(new PatternElement(
+                            offset,
+                            useResource ? resource : upgrade,
+                            useResource ? PatternElementType.RESOURCE : PatternElementType.UPGRADE
+                    ));
+                }
             }
-
-            currentRow++;
-            return this;
         }
 
         public Pattern build() {
-            if (currentRow != size) {
-                throw new IllegalStateException("Pattern not fully defined, missing rows");
-            }
+            buildLayout();
             return new Pattern(tier, size, depth, elements);
         }
     }

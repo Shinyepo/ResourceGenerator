@@ -1,2 +1,4 @@
-// 26.1	2026-03-28T12:58:10.3237669	Registries
-70c29b8c0df8f8bfd2945908b456e9d88dbb4b20 data/resourcegenerator/resourcegenerator/patterns/base_pattern.json
+// 26.1	2026-03-28T18:16:24.6256079	Registries
+33616298fb99a38e4032b21ee590f34563b56946 data/resourcegenerator/resourcegenerator/patterns/tier_1_pattern.json
+a22669ef9d85bfe2adb081480ca5324eccb34988 data/resourcegenerator/resourcegenerator/patterns/tier_2_pattern.json
+8f7f4937adc66f6174f8061bdb3ebe9c42b6e7ba data/resourcegenerator/resourcegenerator/patterns/tier_3_pattern.json

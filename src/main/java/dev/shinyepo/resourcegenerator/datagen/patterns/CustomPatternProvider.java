@@ -5,28 +5,29 @@ import dev.shinyepo.resourcegenerator.data.patterns.Pattern;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.BlockTags;
-import net.neoforged.neoforge.common.Tags;
-
-import java.util.List;
 
 import static dev.shinyepo.resourcegenerator.registries.DataPackRegistry.PATTERN_REGISTRY_KEY;
 
 public class CustomPatternProvider {
-    public static final ResourceKey<Pattern> BASE_PATTERN = ResourceKey.create(PATTERN_REGISTRY_KEY, Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "base_pattern"));
+    public static final ResourceKey<Pattern> TIER_1_PATTERN = ResourceKey.create(PATTERN_REGISTRY_KEY, Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "tier_1_pattern"));
+    public static final ResourceKey<Pattern> TIER_2_PATTERN = ResourceKey.create(PATTERN_REGISTRY_KEY, Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "tier_2_pattern"));
+    public static final ResourceKey<Pattern> TIER_3_PATTERN = ResourceKey.create(PATTERN_REGISTRY_KEY, Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "tier_3_pattern"));
 
     public static RegistrySetBuilder register() {
         RegistrySetBuilder builder = new RegistrySetBuilder();
 
         builder.add(PATTERN_REGISTRY_KEY, bootstrap -> {
-            bootstrap.register(BASE_PATTERN,
+            bootstrap.register(TIER_1_PATTERN,
                     new Pattern.BasePatternBuilder()
-                            .withTier(0)
-                            .withDepth(1)
-                            .withSize(3)
-                            .pattern(List.of(BlockTags.IRON_ORES, Tags.Blocks.STORAGE_BLOCKS_GOLD, BlockTags.IRON_ORES))
-                            .pattern(List.of(Tags.Blocks.STORAGE_BLOCKS_GOLD, BlockTags.AIR, Tags.Blocks.STORAGE_BLOCKS_GOLD))
-                            .pattern(List.of(BlockTags.IRON_ORES, Tags.Blocks.STORAGE_BLOCKS_GOLD, BlockTags.IRON_ORES))
+                            .withTier(1)
+                            .build());
+            bootstrap.register(TIER_2_PATTERN,
+                    new Pattern.BasePatternBuilder()
+                            .withTier(2)
+                            .build());
+            bootstrap.register(TIER_3_PATTERN,
+                    new Pattern.BasePatternBuilder()
+                            .withTier(3)
                             .build());
         });
 

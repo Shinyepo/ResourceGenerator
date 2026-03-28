@@ -1,0 +1,223 @@
+{
+  "depth": 2,
+  "elements": [
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        -2,
+        -2,
+        2
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        -1,
+        -2,
+        2
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        0,
+        -2,
+        2
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        1,
+        -2,
+        2
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        2,
+        -2,
+        2
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        -2,
+        -2,
+        1
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        -1,
+        -1,
+        1
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        0,
+        -1,
+        1
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        1,
+        -1,
+        1
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        2,
+        -2,
+        1
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        -2,
+        -2,
+        0
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        -1,
+        -1,
+        0
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        1,
+        -1,
+        0
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        2,
+        -2,
+        0
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        -2,
+        -2,
+        -1
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        -1,
+        -1,
+        -1
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        0,
+        -1,
+        -1
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        1,
+        -1,
+        -1
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        2,
+        -2,
+        -1
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        -2,
+        -2,
+        -2
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        -1,
+        -2,
+        -2
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        0,
+        -2,
+        -2
+      ]
+    },
+    {
+      "type": "upgrade",
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        1,
+        -2,
+        -2
+      ]
+    },
+    {
+      "type": "resource",
+      "allowedBlocks": "c:ores",
+      "offset": [
+        2,
+        -2,
+        -2
+      ]
+    }
+  ],
+  "size": 5,
+  "tier": 2
+}

@@ -2,78 +2,78 @@
   "depth": 1,
   "elements": [
     {
-      "allowedBlocks": "minecraft:iron_ores",
+      "type": "resource",
+      "allowedBlocks": "c:ores",
       "offset": [
         -1,
-        0,
+        -1,
         1
       ]
     },
     {
+      "type": "upgrade",
       "allowedBlocks": "c:storage_blocks/gold",
       "offset": [
         0,
-        0,
+        -1,
         1
       ]
     },
     {
-      "allowedBlocks": "minecraft:iron_ores",
+      "type": "resource",
+      "allowedBlocks": "c:ores",
       "offset": [
         1,
-        0,
+        -1,
         1
       ]
     },
     {
+      "type": "upgrade",
       "allowedBlocks": "c:storage_blocks/gold",
       "offset": [
         -1,
-        0,
+        -1,
         0
       ]
     },
     {
-      "allowedBlocks": "minecraft:air",
-      "offset": [
-        0,
-        0,
-        0
-      ]
-    },
-    {
+      "type": "upgrade",
       "allowedBlocks": "c:storage_blocks/gold",
       "offset": [
         1,
-        0,
+        -1,
         0
       ]
     },
     {
-      "allowedBlocks": "minecraft:iron_ores",
+      "type": "resource",
+      "allowedBlocks": "c:ores",
       "offset": [
         -1,
-        0,
+        -1,
         -1
       ]
     },
     {
+      "type": "upgrade",
       "allowedBlocks": "c:storage_blocks/gold",
       "offset": [
         0,
-        0,
+        -1,
         -1
       ]
     },
     {
-      "allowedBlocks": "minecraft:iron_ores",
+      "type": "resource",
+      "allowedBlocks": "c:ores",
       "offset": [
         1,
-        0,
+        -1,
         -1
       ]
     }
   ],
   "size": 3,
-  "tier": 0
+  "tier": 1
 }
