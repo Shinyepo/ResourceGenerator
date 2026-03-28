@@ -3,9 +3,11 @@ package dev.shinyepo.resourcegenerator.blocks.entities.types;
 import dev.shinyepo.resourcegenerator.configs.ConsumerConfig;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
 import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
+import dev.shinyepo.resourcegenerator.data.patterns.Pattern;
 import dev.shinyepo.resourcegenerator.util.ItemStacksHandlerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -17,10 +19,39 @@ import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 import java.util.UUID;
 
-public class Consumer extends NetworkDeviceEntity {
+import static dev.shinyepo.resourcegenerator.datagen.patterns.CustomPatternProvider.*;
+
+public class Consumer extends NetworkDeviceEntity implements IDataEntity {
     protected ItemStack product = new ItemStack(Items.IRON_INGOT);
     private ConsumerConfig config;
     private final ItemStacksResourceHandler outputHandler;
+    protected boolean patternValid = false;
+    protected Pattern pattern;
+
+    private final ContainerData dataSlot = new ContainerData() {
+        @Override
+        public int get(int index) {
+            return switch (index) {
+                case 0 -> pattern.tier;
+                case 1 -> patternValid ? 1 : 0;
+                default -> 0;
+            };
+        }
+
+        @Override
+        public void set(int index, int pValue) {
+            switch (index) {
+                case 0 -> pattern.setTier(pValue);
+                case 1 -> patternValid = pValue == 1;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+    };
+
 
     public Consumer(BlockEntityType<?> type, ConsumerConfig config, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -53,6 +84,19 @@ public class Consumer extends NetworkDeviceEntity {
         }
     }
 
+    public void cyclePattern() {
+        if (level.isClientSide()) return;
+        if (pattern == null) return;
+        if (pattern.getTier() == 1) {
+            pattern = level.registryAccess().get(TIER_2_PATTERN).get().value();
+        } else if (pattern.getTier() == 2) {
+            pattern = level.registryAccess().get(TIER_3_PATTERN).get().value();
+        } else if (pattern.getTier() == 3) {
+            pattern = level.registryAccess().get(TIER_1_PATTERN).get().value();
+        }
+        setChanged();
+    }
+
     private boolean canProduce() {
         return outputHandler.getAmountAsInt(0) < 64;
     }
@@ -65,6 +109,10 @@ public class Consumer extends NetworkDeviceEntity {
             outputHandler.set(0, ItemResource.of(product), toInput);
             setChanged();
         }
+    }
+
+    public ContainerData getDataSlot() {
+        return dataSlot;
     }
 
     @Override

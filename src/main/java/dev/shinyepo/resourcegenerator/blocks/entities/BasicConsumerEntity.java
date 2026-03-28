@@ -2,7 +2,6 @@ package dev.shinyepo.resourcegenerator.blocks.entities;
 
 import dev.shinyepo.resourcegenerator.blocks.entities.types.Consumer;
 import dev.shinyepo.resourcegenerator.configs.ConsumerConfig;
-import dev.shinyepo.resourcegenerator.data.patterns.Pattern;
 import dev.shinyepo.resourcegenerator.data.patterns.PatternElement;
 import dev.shinyepo.resourcegenerator.data.patterns.PatternElementType;
 import dev.shinyepo.resourcegenerator.properties.CustomProperties;
@@ -14,12 +13,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import static dev.shinyepo.resourcegenerator.datagen.patterns.CustomPatternProvider.TIER_2_PATTERN;
+import static dev.shinyepo.resourcegenerator.datagen.patterns.CustomPatternProvider.TIER_1_PATTERN;
 
 public class BasicConsumerEntity extends Consumer {
-    private Pattern pattern;
     private boolean initialized = false;
-    private boolean patternValid = false;
 
     public BasicConsumerEntity(BlockPos pos, BlockState blockState) {
         super(BlockEntityRegistry.BASIC_CONSUMER_ENTITY.get(), ConsumerConfig.BASIC_CONSUMER, pos, blockState);
@@ -29,7 +26,7 @@ public class BasicConsumerEntity extends Consumer {
     @Override
     public void tick(ServerLevel level) {
         if (!initialized) {
-            level.registryAccess().get(TIER_2_PATTERN).ifPresent(pattern -> {
+            level.registryAccess().get(TIER_1_PATTERN).ifPresent(pattern -> {
                 this.pattern = pattern.value();
             });
             validatePattern(level);
@@ -79,5 +76,4 @@ public class BasicConsumerEntity extends Consumer {
         level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, false), Block.UPDATE_ALL);
         setChanged();
     }
-
 }

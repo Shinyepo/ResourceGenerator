@@ -23,17 +23,17 @@ public class BasicConsumer extends NetworkBlock {
                 Block.box(2, 2, 2, 14, 3, 14),
                 Block.box(3, 3, 3, 13, 4, 13),
                 Block.box(3.25, 4, 3.25, 4.75, 5, 4.75),
-                Block.box(10.9, 4.999999999999999, 3.6757359312880715, 11.9, 6.199999999999999, 4.67573593128807),
+                Block.box(10.9, 5, 3.7, 11.9, 6.2, 4.7),
                 Block.box(11.25, 4, 11.25, 12.75, 5, 12.75),
-                Block.box(10.9, 4.999999999999999, 10.475735931288076, 11.9, 6.199999999999999, 11.475735931288074),
+                Block.box(10.9, 5, 10.5, 11.9, 6.2, 11.5),
                 Block.box(11.25, 4, 3.25, 12.75, 5, 4.75),
-                Block.box(4.099999999999999, 4.999999999999999, 10.475735931288071, 5.099999999999998, 6.199999999999999, 11.47573593128807),
+                Block.box(4, 5, 10.5, 5, 6.2, 11.5),
                 Block.box(3.25, 4, 11.25, 4.75, 5, 12.75),
-                Block.box(4.099999999999999, 4.999999999999999, 3.6757359312880715, 5.099999999999998, 6.199999999999999, 4.67573593128807));
+                Block.box(5, 5, 3.7, 5, 6.2, 4.7));
 
         registerDefaultState(getStateDefinition().any()
                 .setValue(OPERATIONAL, false));
-        setBasicContainerFactory(ConsumerContainer::new);
+        setDataContainerFactory(ConsumerContainer::new);
     }
 
     @Override

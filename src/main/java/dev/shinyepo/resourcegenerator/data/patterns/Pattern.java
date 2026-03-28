@@ -58,6 +58,10 @@ public class Pattern {
         return isMatching;
     }
 
+    public void setTier(int pValue) {
+        tier = pValue;
+    }
+
     public static class BasePatternBuilder {
         private int tier;
         private int size;
