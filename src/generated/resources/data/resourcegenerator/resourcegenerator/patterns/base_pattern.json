@@ -1,0 +1,79 @@
+{
+  "depth": 1,
+  "elements": [
+    {
+      "allowedBlocks": "minecraft:iron_ores",
+      "offset": [
+        -1,
+        0,
+        1
+      ]
+    },
+    {
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "allowedBlocks": "minecraft:iron_ores",
+      "offset": [
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        -1,
+        0,
+        0
+      ]
+    },
+    {
+      "allowedBlocks": "minecraft:air",
+      "offset": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "allowedBlocks": "minecraft:iron_ores",
+      "offset": [
+        -1,
+        0,
+        -1
+      ]
+    },
+    {
+      "allowedBlocks": "c:storage_blocks/gold",
+      "offset": [
+        0,
+        0,
+        -1
+      ]
+    },
+    {
+      "allowedBlocks": "minecraft:iron_ores",
+      "offset": [
+        1,
+        0,
+        -1
+      ]
+    }
+  ],
+  "size": 3,
+  "tier": 0
+}

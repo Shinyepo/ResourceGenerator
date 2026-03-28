@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
 import dev.shinyepo.resourcegenerator.registries.CapabilityRegistry;
+import dev.shinyepo.resourcegenerator.registries.DataPackRegistry;
 import dev.shinyepo.resourcegenerator.registries.PacketRegistry;
 import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
 import net.minecraft.commands.CommandSourceStack;
@@ -55,6 +56,7 @@ public class ResourceGenerator {
         modEventBus.addListener(ResourceGenerator::registerRegistries);
         modEventBus.addListener(CapabilityRegistry::registerCapabilities);
         modEventBus.addListener(PacketRegistry::registerPayloadHandler);
+        modEventBus.addListener(DataPackRegistry::registerDatapackRegistries);
         NeoForge.EVENT_BUS.addListener(this::onServerStopping);
         NeoForge.EVENT_BUS.addListener(ResourceGenerator::registerCommands);
 
