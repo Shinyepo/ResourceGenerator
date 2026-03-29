@@ -2,11 +2,11 @@ package dev.shinyepo.resourcegenerator.data.patterns;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.shinyepo.resourcegenerator.registries.TagRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,8 +85,8 @@ public class Pattern {
 
         private void buildLayout() {
             int half = (size - 1) / 2;
-            TagKey<Block> resource = Tags.Blocks.ORES;
-            TagKey<Block> upgrade = Tags.Blocks.STORAGE_BLOCKS_GOLD;
+            TagKey<Block> resource = TagRegistry.CONSUMER_RESOURCES;
+            TagKey<Block> upgrade = TagRegistry.UPGRADE_BLOCKS;
 
             for (int z = half; z >= -half; z--) {
                 for (int x = -half; x <= half; x++) {

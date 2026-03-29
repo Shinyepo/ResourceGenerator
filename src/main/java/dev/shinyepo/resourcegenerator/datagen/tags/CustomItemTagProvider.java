@@ -9,8 +9,8 @@ import net.neoforged.neoforge.common.data.ItemTagsProvider;
 
 import java.util.concurrent.CompletableFuture;
 
-public class CustomTagProvider extends ItemTagsProvider {
-    public CustomTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+public class CustomItemTagProvider extends ItemTagsProvider {
+    public CustomItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, lookupProvider, ResourceGenerator.MODID);
     }
 

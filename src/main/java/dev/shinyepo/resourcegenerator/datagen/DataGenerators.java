@@ -15,7 +15,8 @@ public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent.Client event) {
         event.createProvider(CustomModelProvider::new);
-        event.createProvider(CustomTagProvider::new);
+        event.createProvider(CustomItemTagProvider::new);
+        event.createProvider(CustomBlockTagProvider::new);
 
         event.createDatapackRegistryObjects(
                 CustomPatternProvider.register(),
