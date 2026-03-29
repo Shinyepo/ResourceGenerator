@@ -130,6 +130,8 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
             pattern = level.registryAccess().get(TIER_1_PATTERN).get().value();
         }
         syncData.setPatternTier(pattern.getTier());
+        verifyPattern((ServerLevel) level);
+        syncData.flushSync();
     }
 
     public void setSyncData(ConsumerEntitySyncData syncData) {
