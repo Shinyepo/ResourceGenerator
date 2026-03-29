@@ -55,7 +55,7 @@ public class ItemStacksHandlerUtil {
 
             @Override
             protected void onContentsChanged(int slot, ItemStack previousContents) {
-                onChange.run();
+//                onChange.run();
             }
         };
     }

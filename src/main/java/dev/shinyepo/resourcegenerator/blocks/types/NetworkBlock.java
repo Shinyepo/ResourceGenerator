@@ -3,6 +3,7 @@ package dev.shinyepo.resourcegenerator.blocks.types;
 import com.mojang.datafixers.util.Function3;
 import com.mojang.datafixers.util.Function4;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.IDataEntity;
+import dev.shinyepo.resourcegenerator.blocks.entities.types.IVerboseDataEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.NetworkDeviceEntity;
 import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
 import dev.shinyepo.resourcegenerator.menus.types.AbstractContainerBase;
@@ -77,6 +78,9 @@ public class NetworkBlock extends Block implements EntityBlock {
         if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             MenuProvider menu = state.getMenuProvider(level, pos);
             if (menu != null) {
+                if (level.getBlockEntity(pos) instanceof IVerboseDataEntity verboseDataEntity) {
+                    verboseDataEntity.syncDataToClient(serverPlayer);
+                }
                 serverPlayer.openMenu(state.getMenuProvider(level, pos), buf -> buf.writeBlockPos(pos));
                 return InteractionResult.SUCCESS;
             }

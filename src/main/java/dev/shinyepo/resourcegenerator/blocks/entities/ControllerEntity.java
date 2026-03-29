@@ -3,6 +3,7 @@ package dev.shinyepo.resourcegenerator.blocks.entities;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.IDataEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.Receiver;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
+import dev.shinyepo.resourcegenerator.data.ContainerDataWrapper;
 import dev.shinyepo.resourcegenerator.datacomponents.IdCardData;
 import dev.shinyepo.resourcegenerator.registries.BlockEntityRegistry;
 import dev.shinyepo.resourcegenerator.registries.DataComponentRegistry;
@@ -26,29 +27,10 @@ public class ControllerEntity extends Receiver implements IDataEntity {
     private final ItemStacksResourceHandler cardHandler;
     public static List<TagKey<Item>> validInputs = List.of(TagRegistry.ID_CARDS);
 
-    private final ContainerData dataSlot = new ContainerData() {
-        @Override
-        public int get(int index) {
-            return switch (index) {
-                case 0 -> Math.toIntExact(value);
-                case 1 -> Math.toIntExact(value - prevValue);
-                default -> 0;
-            };
-        }
-
-        @Override
-        public void set(int index, int pValue) {
-            switch (index) {
-                case 0 -> value = (long) pValue;
-                case 1 -> prevValue = (long) pValue;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-    };
+    private final ContainerData dataSlot = new ContainerDataWrapper(
+            new ContainerDataWrapper.Entry(() -> Math.toIntExact(value), v -> value = (long) v),
+            new ContainerDataWrapper.Entry(() -> Math.toIntExact(value - prevValue), v -> prevValue = (long) v)
+    );
 
     public ControllerEntity(BlockPos pos, BlockState blockState) {
         super(BlockEntityRegistry.CONTROLLER_ENTITY.get(), pos, blockState);

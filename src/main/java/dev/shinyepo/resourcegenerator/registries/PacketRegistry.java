@@ -15,6 +15,7 @@ public class PacketRegistry {
         //TO CLIENT
         registrar.playToClient(SyncOwnerS2C.TYPE, SyncOwnerS2C.STREAM_CODEC, SyncOwnerS2C::handler);
         registrar.playToClient(SyncAccountUpgradesS2C.TYPE, SyncAccountUpgradesS2C.STREAM_CODEC, SyncAccountUpgradesS2C::handler);
+        registrar.playToClient(SyncConsumerEntityDataS2TCC.TYPE, SyncConsumerEntityDataS2TCC.STREAM_CODEC, SyncConsumerEntityDataS2TCC::handler);
 
 
         //TO SERVER

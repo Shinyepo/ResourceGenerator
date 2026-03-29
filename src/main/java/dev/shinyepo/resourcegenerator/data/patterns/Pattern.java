@@ -4,12 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.shinyepo.resourcegenerator.registries.TagRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Pattern {
     public int tier;
@@ -48,15 +50,43 @@ public class Pattern {
         return tier;
     }
 
+    public void verifyPattern(ServerLevel level, BlockPos entityPos, Runnable onInvalid, Consumer<BlockState> onValid) {
+        boolean shouldInvalidate = false;
+        BlockState productBlock = null;
+        for (PatternElement element : this.elements) {
+            BlockPos offsetPos = entityPos.offset(element.offset().getX(), element.offset().getY(), element.offset().getZ());
+            BlockState offsetBlock = level.getBlockState(offsetPos);
+            boolean isOffsetValid = this.matches(element.offset(), offsetBlock);
+            if (!isOffsetValid) {
+                shouldInvalidate = true;
+                break;
+            }
+            if (element.type() == PatternElementType.RESOURCE) {
+                if (productBlock == null)
+                    productBlock = offsetBlock;
+                else if (!offsetBlock.is(productBlock.getBlock())) {
+                    shouldInvalidate = true;
+                    break;
+                }
+            }
+        }
+        if (shouldInvalidate) {
+            onInvalid.run();
+        } else {
+            onValid.accept(productBlock);
+        }
+    }
+
+
     public boolean matches(BlockPos pos, BlockState block) {
-        var isMatching = false;
         var element = elements.stream().filter(x -> x.offset().equals(pos)).findFirst();
         if (element.isPresent()) {
             PatternElement patternElement = element.get();
-            isMatching = block.is(patternElement.allowedBlocks());
+            return block.is(patternElement.allowedBlocks());
         }
-        return isMatching;
+        return false;
     }
+
 
     public void setTier(int pValue) {
         tier = pValue;
