@@ -2,6 +2,7 @@ package dev.shinyepo.resourcegenerator.data.pricing;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.shinyepo.resourcegenerator.registries.PriceDefinitionRegistry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
@@ -29,5 +30,24 @@ public record ResourcePriceDefinition(Identifier resource, long price, PriceRule
 
     public static ResourcePriceDefinition reference(Identifier resource, Identifier reference, float multiplier) {
         return new ResourcePriceDefinition(resource, 0, PriceRuleType.REFERENCE_MULTIPLIER, reference, multiplier);
+    }
+
+    public long getPrice() {
+        long resultPrice = 0L;
+        switch (type) {
+            case FIXED:
+                resultPrice = price;
+                break;
+            case REFERENCE_MULTIPLIER:
+                if (reference == null) break;
+                ResourcePriceDefinition referencePrice = PriceDefinitionRegistry.getPriceData(reference);
+                if (referencePrice == null) break;
+                resultPrice = (long) (referencePrice.getPrice() * multiplier);
+                break;
+            default:
+                break;
+        }
+
+        return resultPrice;
     }
 }

@@ -23,6 +23,7 @@ import static dev.shinyepo.resourcegenerator.datagen.patterns.CustomPatternProvi
 
 public class Consumer extends NetworkDeviceEntity implements IDataEntity {
     protected ItemStack product = new ItemStack(Items.IRON_INGOT);
+    protected long price = 0;
     private ConsumerConfig config;
     private final ItemStacksResourceHandler outputHandler;
     protected boolean patternValid = false;
@@ -75,7 +76,7 @@ public class Consumer extends NetworkDeviceEntity implements IDataEntity {
                     UUID accountId = receiver.getAccountId();
                     AccountController accController = AccountController.getInstance(level);
                     long balance = accController.getAccountBalance(accountId);
-                    long result = accController.changeAccountBalance(accountId, -1L);
+                    long result = accController.changeAccountBalance(accountId, -price);
                     if (result >= 0 && balance != result) {
                         generateProduct();
                     }
@@ -98,7 +99,7 @@ public class Consumer extends NetworkDeviceEntity implements IDataEntity {
     }
 
     private boolean canProduce() {
-        return outputHandler.getAmountAsInt(0) < 64;
+        return outputHandler.getAmountAsInt(0) < 64 && (outputHandler.getResource(0).isEmpty() || outputHandler.getResource(0).is(product.getItem()));
     }
 
     private void generateProduct() {

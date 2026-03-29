@@ -4,8 +4,10 @@ import dev.shinyepo.resourcegenerator.blocks.entities.types.Consumer;
 import dev.shinyepo.resourcegenerator.configs.ConsumerConfig;
 import dev.shinyepo.resourcegenerator.data.patterns.PatternElement;
 import dev.shinyepo.resourcegenerator.data.patterns.PatternElementType;
+import dev.shinyepo.resourcegenerator.data.pricing.ResourcePriceDefinition;
 import dev.shinyepo.resourcegenerator.properties.CustomProperties;
 import dev.shinyepo.resourcegenerator.registries.BlockEntityRegistry;
+import dev.shinyepo.resourcegenerator.registries.PriceDefinitionRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -20,7 +22,7 @@ public class BasicConsumerEntity extends Consumer {
 
     public BasicConsumerEntity(BlockPos pos, BlockState blockState) {
         super(BlockEntityRegistry.BASIC_CONSUMER_ENTITY.get(), ConsumerConfig.BASIC_CONSUMER, pos, blockState);
-        configureSides(Direction.DOWN);
+        configureSides(Direction.DOWN, Direction.UP);
     }
 
     @Override
@@ -65,9 +67,13 @@ public class BasicConsumerEntity extends Consumer {
             invalidatePattern(level);
         } else if (!shouldInvalidate && !patternValid) {
             product = new ItemStack(productBlock.getBlock());
-            patternValid = true;
-            level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, true), Block.UPDATE_ALL);
-            setChanged();
+            ResourcePriceDefinition priceData = PriceDefinitionRegistry.getPriceData(productBlock.getBlock());
+            if (priceData != null) {
+                price = priceData.getPrice();
+                patternValid = true;
+                level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, true), Block.UPDATE_ALL);
+                setChanged();
+            }
         }
     }
 
