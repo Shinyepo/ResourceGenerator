@@ -3,10 +3,7 @@ package dev.shinyepo.resourcegenerator;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
-import dev.shinyepo.resourcegenerator.registries.CapabilityRegistry;
-import dev.shinyepo.resourcegenerator.registries.DataPackRegistry;
-import dev.shinyepo.resourcegenerator.registries.PacketRegistry;
-import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
+import dev.shinyepo.resourcegenerator.registries.*;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.IdentifierArgument;
@@ -71,8 +68,8 @@ public class ResourceGenerator {
     }
 
     public static void registerRegistries(NewRegistryEvent event) {
-        System.out.println("registering");
         event.register(UpgradeRegistry.UPGRADE_REGISTRY);
+        event.register(PriceDefinitionRegistry.PRICE_REGISTRY);
     }
 
     public static void registerCommands(RegisterCommandsEvent event) {
