@@ -1,4 +1,5 @@
-// 26.1	2026-03-28T18:16:24.6256079	Registries
+// 26.1	2026-03-29T13:55:06.3737128	Registries
 33616298fb99a38e4032b21ee590f34563b56946 data/resourcegenerator/resourcegenerator/patterns/tier_1_pattern.json
 a22669ef9d85bfe2adb081480ca5324eccb34988 data/resourcegenerator/resourcegenerator/patterns/tier_2_pattern.json
 8f7f4937adc66f6174f8061bdb3ebe9c42b6e7ba data/resourcegenerator/resourcegenerator/patterns/tier_3_pattern.json
+556a7d3237df06cb583cdd1e207836f57b42d618 data/resourcegenerator/resourcegenerator/resource_price_definitions/iron_ore.json
