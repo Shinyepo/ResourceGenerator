@@ -33,6 +33,7 @@ import static dev.shinyepo.resourcegenerator.registries.CreativeTabRegistry.CREA
 import static dev.shinyepo.resourcegenerator.registries.DataComponentRegistry.DATA_COMPONENTS;
 import static dev.shinyepo.resourcegenerator.registries.ItemRegistry.ITEMS;
 import static dev.shinyepo.resourcegenerator.registries.MenuRegistry.MENUS;
+import static dev.shinyepo.resourcegenerator.registries.PriceDefinitionRegistry.PRICES;
 import static dev.shinyepo.resourcegenerator.registries.UpgradeRegistry.UPGRADES;
 
 @Mod(ResourceGenerator.MODID)
@@ -48,6 +49,7 @@ public class ResourceGenerator {
         ENTITIES.register(modEventBus);
         MENUS.register(modEventBus);
         UPGRADES.register(modEventBus);
+        PRICES.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(ResourceGenerator::registerRegistries);
