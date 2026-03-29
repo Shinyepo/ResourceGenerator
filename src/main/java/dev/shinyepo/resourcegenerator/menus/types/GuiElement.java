@@ -1,8 +1,18 @@
 package dev.shinyepo.resourcegenerator.menus.types;
 
-public class GuiElement {
-    public static final int BACKGROUND = 0xFFC6C6C6;
-    public static final int BASIC = 0xFF404040;
-    public static final int RED = 0xFF800000;
-    public static final int GREEN = 0xFF6AA84F;
+public enum GuiElement {
+    BACKGROUND(0xFFC6C6C6),
+    BASIC(0xFF404040),
+    RED(0xFF800000),
+    GREEN(0xFF6AA84F);
+
+    private final int color;
+
+    GuiElement(int color) {
+        this.color = color;
+    }
+
+    public int getColor() {
+        return color;
+    }
 }

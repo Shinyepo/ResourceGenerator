@@ -1,6 +1,7 @@
 package dev.shinyepo.resourcegenerator.menus.consumer;
 
 import dev.shinyepo.resourcegenerator.menus.types.AbstractScreenBase;
+import dev.shinyepo.resourcegenerator.menus.types.GuiElement;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -31,10 +32,11 @@ public class ConsumerScreen extends AbstractScreenBase<ConsumerContainer> {
     @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
         super.extractLabels(graphics, xm, ym);
-        graphics.text(this.font, "Tier: " + menu.getTier(), 16, 20, -12566464, false);
+        graphics.text(this.font, "Tier: " + menu.getTier(), 16, 20, GuiElement.BASIC.getColor(), false);
         int validState = this.menu.getValidState();
         String validStateString = validState == 0 ? "Invalid" : "Valid";
-        graphics.text(this.font, validStateString, 16, 30, -12566464, false);
+        int color = validState == 0 ? GuiElement.RED.getColor() : GuiElement.GREEN.getColor();
+        graphics.text(this.font, validStateString, 16, 30, color, false);
     }
 
 

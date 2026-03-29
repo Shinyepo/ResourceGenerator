@@ -4,7 +4,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
-public abstract class ScreenTab<T extends AbstractContainerBase, P extends TabContainerScreen<T>> extends GuiElement implements IScreenTab {
+public abstract class ScreenTab<T extends AbstractContainerBase, P extends TabContainerScreen<T>> implements IScreenTab {
     private final String name;
     private final T menu;
     private final P parent;

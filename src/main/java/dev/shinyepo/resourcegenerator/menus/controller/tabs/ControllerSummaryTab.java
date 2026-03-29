@@ -3,6 +3,7 @@ package dev.shinyepo.resourcegenerator.menus.controller.tabs;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerContainer;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerScreen;
+import dev.shinyepo.resourcegenerator.menus.types.GuiElement;
 import dev.shinyepo.resourcegenerator.menus.types.ScreenTab;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -30,11 +31,11 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
             displayNotAssigned(graphics);
             return;
         }
-        graphics.text(getFont(), Component.literal("Owner: " + owner), 10, 24, BASIC, false);
-        graphics.text(getFont(), Component.literal("Value: " + getMenu().getValue()), 10, 34, BASIC, false);
+        graphics.text(getFont(), Component.literal("Owner: " + owner), 10, 24, GuiElement.BASIC.getColor(), false);
+        graphics.text(getFont(), Component.literal("Value: " + getMenu().getValue()), 10, 34, GuiElement.BASIC.getColor(), false);
 
         long valueChange = getMenu().getValueChange();
-        graphics.text(getFont(), Component.literal("Change: " + valueChange), 10, 44, valueChange > 0 ? GREEN : RED, false);
+        graphics.text(getFont(), Component.literal("Change: " + valueChange), 10, 44, valueChange > 0 ? GuiElement.GREEN.getColor() : GuiElement.RED.getColor(), false);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
     }
 
     private void displayNotAssigned(GuiGraphicsExtractor graphics) {
-        graphics.text(getFont(), Component.literal("Owner not assigned!"), 8, 20, RED, false);
+        graphics.text(getFont(), Component.literal("Owner not assigned!"), 8, 20, GuiElement.RED.getColor(), false);
     }
 
     @Override
