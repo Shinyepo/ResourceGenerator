@@ -70,7 +70,7 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
 
     private void validatePattern(BlockState productState) {
         if (isPatternValid) return;
-        ResourcePriceDefinition priceData = PriceDefinitionRegistry.getPriceData(productState.getBlock());
+        ResourcePriceDefinition priceData = PriceDefinitionRegistry.getPriceData(productState);
         if (priceData != null) {
             product = new ItemStack(productState.getBlock());
             syncData.setProduct(product);
