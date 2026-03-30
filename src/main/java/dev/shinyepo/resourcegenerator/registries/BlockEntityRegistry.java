@@ -29,4 +29,7 @@ public class BlockEntityRegistry {
     public static final Supplier<BlockEntityType<BasicConsumerEntity>> BASIC_CONSUMER_ENTITY = ENTITIES.register("basic_consumer_entity",
             () -> new BlockEntityType<>(BasicConsumerEntity::new, BlockRegistry.BASIC_CONSUMER.get()));
 
+    public static final Supplier<BlockEntityType<OutputUpgradeEntity>> OUTPUT_UPGRADE_ENTITY = ENTITIES.register("output_upgrade_entity",
+            () -> new BlockEntityType<>(OutputUpgradeEntity::new, BlockRegistry.OUTPUT_UPGRADE.get()));
+
 }

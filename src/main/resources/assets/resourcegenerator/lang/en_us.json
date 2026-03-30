@@ -6,6 +6,8 @@
   "item.resourcegenerator.solar_panel": "Solar Panel",
   "block.resourcegenerator.water_absorber": "Water Absorber",
   "item.resourcegenerator.water_absorber": "Water Absorber",
+  "block.resourcegenerator.output_upgrade": "Output Upgrade",
+  "item.resourcegenerator.output_upgrade": "Output Upgrade",
   "block.resourcegenerator.pipe": "Pipe",
   "item.resourcegenerator.pipe": "Pipe",
   "block.resourcegenerator.basic_consumer": "Basic Consumer",

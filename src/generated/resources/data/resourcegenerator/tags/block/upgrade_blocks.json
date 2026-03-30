@@ -1,5 +1,6 @@
 {
   "values": [
+    "resourcegenerator:output_upgrade",
     "#c:storage_blocks/gold"
   ]
 }

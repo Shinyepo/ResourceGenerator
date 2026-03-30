@@ -18,4 +18,5 @@ public class ItemRegistry {
     public static final DeferredItem<BlockItem> BASIC_CONSUMER_ITEM = ITEMS.registerSimpleBlockItem("basic_consumer", BlockRegistry.BASIC_CONSUMER);
     public static final DeferredItem<Item> ID_CARD = ITEMS.registerItem("id_card", IdCard::new, () -> new Item.Properties().stacksTo(1));
     public static final DeferredItem<Item> INSPECTOR = ITEMS.registerItem("inspector", Inspector::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredItem<BlockItem> OUTPUT_UPGRADE_ITEM = ITEMS.registerSimpleBlockItem("output_upgrade", BlockRegistry.OUTPUT_UPGRADE);
 }

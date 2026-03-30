@@ -1,11 +1,11 @@
 package dev.shinyepo.resourcegenerator.blocks.types;
 
 import com.mojang.serialization.MapCodec;
-import dev.shinyepo.resourcegenerator.blocks.entities.types.NetworkDeviceEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -20,7 +20,7 @@ public class HorizontalNetworkBlock extends NetworkBlock {
     protected HashMap<Direction, VoxelShape> SHAPES = new HashMap<>();
     protected static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public HorizontalNetworkBlock(BiFunction<BlockPos, BlockState, ? extends NetworkDeviceEntity> blockEntityFactory, Properties properties) {
+    public HorizontalNetworkBlock(BiFunction<BlockPos, BlockState, BlockEntity> blockEntityFactory, Properties properties) {
         super(blockEntityFactory, properties);
     }
 

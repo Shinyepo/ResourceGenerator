@@ -19,7 +19,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class NetworkDeviceEntity extends BlockEntity implements INetworkDevice {
+public abstract class NetworkDeviceEntity extends BlockEntity implements INetworkDevice, ITickableEntity {
     protected INetworkCapability networkCapability = new NetworkCapability() {
         @Override
         public void markDirty() {

@@ -1,6 +1,7 @@
 package dev.shinyepo.resourcegenerator.datagen.tags;
 
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
+import dev.shinyepo.resourcegenerator.registries.BlockRegistry;
 import dev.shinyepo.resourcegenerator.registries.TagRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -22,6 +23,7 @@ public class CustomBlockTagProvider extends BlockTagsProvider {
                 .replace(false);
 
         tag(TagRegistry.UPGRADE_BLOCKS)
+                .add(BlockRegistry.OUTPUT_UPGRADE.get())
                 .addTag(Tags.Blocks.STORAGE_BLOCKS_GOLD)
                 .replace(false);
 
