@@ -8,6 +8,8 @@
   "item.resourcegenerator.water_absorber": "Water Absorber",
   "block.resourcegenerator.output_upgrade": "Output Upgrade",
   "item.resourcegenerator.output_upgrade": "Output Upgrade",
+  "block.resourcegenerator.resource_imitator": "Resource Imitator",
+  "item.resourcegenerator.resource_imitator": "Resource Imitator",
   "block.resourcegenerator.pipe": "Pipe",
   "item.resourcegenerator.pipe": "Pipe",
   "block.resourcegenerator.basic_consumer": "Basic Consumer",

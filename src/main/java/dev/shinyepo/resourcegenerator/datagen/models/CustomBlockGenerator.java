@@ -31,6 +31,7 @@ public class CustomBlockGenerator extends BlockModelGenerators {
         generateBlockWithExistingModel(BlockRegistry.WATER_ABSORBER);
         generateAirLikeBlock(BlockRegistry.DUMMY_EXTENSION);
         generateBlockWithExistingModel(BlockRegistry.OUTPUT_UPGRADE);
+        generateBlockWithExistingModel(BlockRegistry.RESOURCE_IMITATOR);
 
     }
 

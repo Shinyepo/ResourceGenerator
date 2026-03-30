@@ -26,6 +26,8 @@ public class CustomItemGenerator extends ItemModelGenerators {
         generateItemWithExistingParent(ItemRegistry.CONTROLLER_ITEM.get(), "controller");
         generateItemWithExistingParent(ItemRegistry.PIPE_ITEM.get(), "pipe");
         generateItemWithExistingParent(ItemRegistry.BASIC_CONSUMER_ITEM.get(), "basic_consumer");
+        generateItemWithExistingParent(ItemRegistry.OUTPUT_UPGRADE_ITEM.get(), "output_upgrade");
+        generateItemWithExistingParent(ItemRegistry.RESOURCE_IMITATOR_ITEM.get(), "resource_imitator");
         generateFlatItem(ItemRegistry.ID_CARD.get(), ModelTemplates.FLAT_ITEM);
         generateFlatItem(ItemRegistry.INSPECTOR.get(), ModelTemplates.FLAT_ITEM);
     }

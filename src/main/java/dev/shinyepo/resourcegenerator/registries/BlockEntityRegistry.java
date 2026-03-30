@@ -32,4 +32,7 @@ public class BlockEntityRegistry {
     public static final Supplier<BlockEntityType<OutputUpgradeEntity>> OUTPUT_UPGRADE_ENTITY = ENTITIES.register("output_upgrade_entity",
             () -> new BlockEntityType<>(OutputUpgradeEntity::new, BlockRegistry.OUTPUT_UPGRADE.get()));
 
+    public static final Supplier<BlockEntityType<ResourceImitatorEntity>> RESOURCE_IMITATOR_ENTITY = ENTITIES.register("resource_imitator_entity",
+            () -> new BlockEntityType<>(ResourceImitatorEntity::new, BlockRegistry.RESOURCE_IMITATOR.get()));
+
 }

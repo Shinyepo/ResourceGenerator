@@ -24,5 +24,6 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.PIPE_ITEM.get());
                 output.accept(ItemRegistry.BASIC_CONSUMER_ITEM.get());
                 output.accept(ItemRegistry.OUTPUT_UPGRADE_ITEM.get());
+                output.accept(ItemRegistry.RESOURCE_IMITATOR_ITEM.get());
             }).build());
 }

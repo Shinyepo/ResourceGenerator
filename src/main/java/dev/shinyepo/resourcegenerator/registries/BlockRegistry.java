@@ -22,4 +22,5 @@ public class BlockRegistry {
     public static final DeferredBlock<Block> BASIC_CONSUMER = BLOCKS.registerBlock("basic_consumer", BasicConsumer::new, BlockBehaviour.Properties::of);
 
     public static final DeferredBlock<Block> OUTPUT_UPGRADE = BLOCKS.registerBlock("output_upgrade", OutputUpgradeBlock::new, BlockBehaviour.Properties::of);
+    public static final DeferredBlock<Block> RESOURCE_IMITATOR = BLOCKS.registerBlock("resource_imitator", ResourceImitator::new, BlockBehaviour.Properties::of);
 }
