@@ -2,14 +2,20 @@ package dev.shinyepo.resourcegenerator.data.patterns;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.shinyepo.resourcegenerator.blocks.entities.ResourceImitatorEntity;
+import dev.shinyepo.resourcegenerator.blocks.entities.types.UpgradeEntity;
 import dev.shinyepo.resourcegenerator.registries.TagRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -18,6 +24,7 @@ public class Pattern {
     public int size;
     public int depth;
     public List<PatternElement> elements;
+    private final HashMap<BlockPos, UpgradeEntity> upgrades = new HashMap<>();
 
     public static final Codec<Pattern> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -50,9 +57,9 @@ public class Pattern {
         return tier;
     }
 
-    public void verifyPattern(ServerLevel level, BlockPos entityPos, Runnable onInvalid, Consumer<BlockState> onValid) {
+    public void verifyPattern(ServerLevel level, BlockPos entityPos, Runnable onInvalid, Consumer<Item> onValid) {
+        Item productItem = null;
         boolean shouldInvalidate = false;
-        BlockState productBlock = null;
         for (PatternElement element : this.elements) {
             BlockPos offsetPos = entityPos.offset(element.offset().getX(), element.offset().getY(), element.offset().getZ());
             BlockState offsetBlock = level.getBlockState(offsetPos);
@@ -62,9 +69,13 @@ public class Pattern {
                 break;
             }
             if (element.type() == PatternElementType.RESOURCE) {
-                if (productBlock == null)
-                    productBlock = offsetBlock;
-                else if (!offsetBlock.is(productBlock.getBlock())) {
+                ItemStack imitatorStack = getResourceFromImitator(level, offsetPos);
+                if (imitatorStack == null) {
+                    shouldInvalidate = true;
+                    break;
+                }
+                productItem = isResourceValid(productItem, imitatorStack.getItem());
+                if (productItem == null) {
                     shouldInvalidate = true;
                     break;
                 }
@@ -73,10 +84,26 @@ public class Pattern {
         if (shouldInvalidate) {
             onInvalid.run();
         } else {
-            onValid.accept(productBlock);
+            onValid.accept(productItem);
         }
     }
 
+    private Item isResourceValid(Item cachedResource, Item resource) {
+        if (cachedResource == null) {
+            return resource;
+        } else if (!cachedResource.equals(resource)) {
+            return null;
+        }
+        return resource;
+    }
+
+    private ItemStack getResourceFromImitator(ServerLevel level, BlockPos imitatorPos) {
+        BlockEntity entity = level.getBlockEntity(imitatorPos);
+        if (entity instanceof ResourceImitatorEntity imitatorEntity) {
+            return imitatorEntity.getImitatedResource();
+        }
+        return null;
+    }
 
     public boolean matches(BlockPos pos, BlockState block) {
         var element = elements.stream().filter(x -> x.offset().equals(pos)).findFirst();
@@ -87,9 +114,16 @@ public class Pattern {
         return false;
     }
 
+    public HashMap<BlockPos, UpgradeEntity> getUpgrades() {
+        return upgrades;
+    }
 
     public void setTier(int pValue) {
         tier = pValue;
+    }
+
+    public void clearUpgrades() {
+        upgrades.clear();
     }
 
     public static class BasePatternBuilder {
@@ -115,7 +149,7 @@ public class Pattern {
 
         private void buildLayout() {
             int half = (size - 1) / 2;
-            TagKey<Block> resource = TagRegistry.CONSUMER_RESOURCES;
+            TagKey<Block> resource = TagRegistry.RESOURCE_BLOCKS;
             TagKey<Block> upgrade = TagRegistry.UPGRADE_BLOCKS;
 
             for (int z = half; z >= -half; z--) {

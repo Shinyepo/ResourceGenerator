@@ -33,12 +33,19 @@ public class ConsumerScreen extends AbstractScreenBase<ConsumerContainer> {
     protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
         super.extractLabels(graphics, xm, ym);
         graphics.text(this.font, "Tier: " + menu.getPatternTier(), 16, 20, GuiElement.BASIC.getColor(), false);
-        boolean validState = this.menu.getValidState();
+        boolean validState = this.menu.getPatternValidState();
         String validStateString = validState ? "Valid" : "Invalid";
         int color = validState ? GuiElement.GREEN.getColor() : GuiElement.RED.getColor();
         graphics.text(this.font, validStateString, 16, 30, color, false);
 
         graphics.item(this.menu.getProduct(), 16, 40);
+        graphics.text(this.font, Component.literal("Price " + this.menu.getPrice()), 32, 40, color, false);
+
+        boolean productValidState = this.menu.getProductValidState();
+        String productValidStateString = productValidState ? "Valid" : "Invalid";
+        int ProductColor = productValidState ? GuiElement.GREEN.getColor() : GuiElement.RED.getColor();
+
+        graphics.text(this.font, productValidStateString, 16, 50, ProductColor, false);
     }
 
 

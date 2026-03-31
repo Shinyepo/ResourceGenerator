@@ -2,10 +2,14 @@ package dev.shinyepo.resourcegenerator.data.pricing;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.shinyepo.resourcegenerator.blocks.entities.types.IPriceUpgrade;
+import dev.shinyepo.resourcegenerator.blocks.entities.types.UpgradeEntity;
 import dev.shinyepo.resourcegenerator.registries.PriceDefinitionRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 public record ResourcePriceDefinition(Identifier resource, long price, PriceRuleType type,
@@ -32,22 +36,24 @@ public record ResourcePriceDefinition(Identifier resource, long price, PriceRule
         return new ResourcePriceDefinition(resource, 0, PriceRuleType.REFERENCE_MULTIPLIER, reference, multiplier);
     }
 
-    public long getPrice() {
-        long resultPrice = 0L;
-        switch (type) {
-            case FIXED:
-                resultPrice = price;
-                break;
-            case REFERENCE_MULTIPLIER:
-                if (reference == null) break;
+    public long getPrice(HashMap<BlockPos, UpgradeEntity> upgrades) {
+        long priceValue = switch (type) {
+            case FIXED -> price;
+            case REFERENCE_MULTIPLIER -> {
+                if (reference == null) yield 0;
                 ResourcePriceDefinition referencePrice = PriceDefinitionRegistry.getPriceData(reference);
-                if (referencePrice == null) break;
-                resultPrice = (long) (referencePrice.getPrice() * multiplier);
-                break;
-            default:
-                break;
+                if (referencePrice == null) yield 0;
+                yield (long) (referencePrice.getPrice(new HashMap<>()) * multiplier);
+            }
+        };
+
+        //TODO: Better way of checking upgrades and applying their effect
+        for (UpgradeEntity upgrade : upgrades.values()) {
+            if (upgrade instanceof IPriceUpgrade priceUpgrade) {
+                priceValue = priceUpgrade.apply(priceValue);
+            }
         }
 
-        return resultPrice;
+        return priceValue;
     }
 }

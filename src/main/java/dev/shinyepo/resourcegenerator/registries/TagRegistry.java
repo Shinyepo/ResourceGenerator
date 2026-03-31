@@ -10,7 +10,10 @@ import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 public class TagRegistry {
     public static final TagKey<Item> ID_CARDS = TagKey.create(Registries.ITEM, fromNamespaceAndPath("c", "id_cards"));
-    public static final TagKey<Block> CONSUMER_RESOURCES = TagKey.create(Registries.BLOCK, fromNamespaceAndPath("c", "consumer_resources"));
+    public static final TagKey<Item> CONSUMER_RESOURCES = TagKey.create(Registries.ITEM, fromNamespaceAndPath("c", "consumer_resources"));
+
+    //Consumer allowed blocks
     public static final TagKey<Block> UPGRADE_BLOCKS = TagKey.create(Registries.BLOCK, fromNamespaceAndPath(ResourceGenerator.MODID, "upgrade_blocks"));
+    public static final TagKey<Block> RESOURCE_BLOCKS = TagKey.create(Registries.BLOCK, fromNamespaceAndPath(ResourceGenerator.MODID, "resource_blocks"));
 
 }

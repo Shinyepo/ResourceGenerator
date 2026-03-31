@@ -35,7 +35,15 @@ public class ConsumerContainer extends AbstractContainerBase {
         return consumerEntity.getSyncData().getPatternTier();
     }
 
-    public boolean getValidState() {
+    public boolean getPatternValidState() {
         return consumerEntity.getSyncData().isPatternValid();
+    }
+
+    public boolean getProductValidState() {
+        return consumerEntity.getSyncData().isProductValid();
+    }
+
+    public long getPrice() {
+        return consumerEntity.getSyncData().getPrice();
     }
 }

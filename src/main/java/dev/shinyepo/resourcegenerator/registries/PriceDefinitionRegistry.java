@@ -6,9 +6,10 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -65,17 +66,18 @@ public class PriceDefinitionRegistry {
         return BuiltInRegistries.BLOCK.getKey(block);
     }
 
-    public static ResourcePriceDefinition getPriceData(BlockState blockState) {
-        Identifier key = BuiltInRegistries.BLOCK.getKey(blockState.getBlock());
+    public static ResourcePriceDefinition getPriceData(Item item) {
+
+        Identifier key = BuiltInRegistries.ITEM.getKey(item);
         Identifier id = fromNamespaceAndPath(ResourceGenerator.MODID, key.getPath());
         if (getPriceData(id) == null) {
-            return getDefaultPriceData(blockState);
+            return getDefaultPriceData(item);
         }
         return getPriceData(id);
     }
 
-    public static ResourcePriceDefinition getDefaultPriceData(BlockState blockState) {
-        var isOre = blockState.is(Tags.Blocks.ORES);
+    public static ResourcePriceDefinition getDefaultPriceData(Item item) {
+        var isOre = new ItemStack(item).is(Tags.Items.ORES);
         if (isOre) {
             return DEFAULT_ORE.get();
         } else {

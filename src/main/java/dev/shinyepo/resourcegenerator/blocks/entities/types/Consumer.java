@@ -9,10 +9,12 @@ import dev.shinyepo.resourcegenerator.networking.CustomMessages;
 import dev.shinyepo.resourcegenerator.networking.packets.SyncConsumerEntityDataS2TCC;
 import dev.shinyepo.resourcegenerator.properties.CustomProperties;
 import dev.shinyepo.resourcegenerator.registries.PriceDefinitionRegistry;
+import dev.shinyepo.resourcegenerator.registries.TagRegistry;
 import dev.shinyepo.resourcegenerator.util.ItemStacksHandlerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -33,6 +35,7 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
     protected long price = 0;
     private final ItemStacksResourceHandler outputHandler;
     protected boolean isPatternValid = false;
+    protected boolean isProductValid = false;
     protected Pattern pattern;
 
 
@@ -48,7 +51,7 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
             verifyPattern(level);
             syncData.flushSync();
 
-            if (!isPatternValid || !canProduce()) return;
+            if (!isProductValid || !isPatternValid || !canProduce()) return;
             if (networkCapability.getNetworkId() == null) return;
             startProduction();
         }
@@ -64,25 +67,36 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
             syncData.setPatternValid(isPatternValid);
             syncData.setProduct(ItemStack.EMPTY);
             syncData.setPrice(0L);
+            pattern.clearUpgrades();
+
             level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, false), Block.UPDATE_ALL);
         }
     }
 
-    private void validatePattern(BlockState productState) {
+    private void validatePattern(Item resource) {
         if (isPatternValid) return;
-        ResourcePriceDefinition priceData = PriceDefinitionRegistry.getPriceData(productState);
-        if (priceData != null) {
-            product = new ItemStack(productState.getBlock());
-            syncData.setProduct(product);
-
-            price = priceData.getPrice();
-            syncData.setPrice(price);
-
-            isPatternValid = true;
-            syncData.setPatternValid(isPatternValid);
-
-            level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, true), Block.UPDATE_ALL);
+        ItemStack resourceStack = new ItemStack(resource);
+        if (!resourceStack.isEmpty()) {
+            if (resourceStack.is(TagRegistry.CONSUMER_RESOURCES)) {
+                ResourcePriceDefinition priceData = PriceDefinitionRegistry.getPriceData(resource);
+                if (priceData != null) {
+                    price = priceData.getPrice(pattern.getUpgrades());
+                    syncData.setPrice(price);
+                    isProductValid = true;
+                }
+            } else {
+                isProductValid = false;
+            }
+        } else {
+            isProductValid = false;
         }
+        product = resourceStack;
+        syncData.setProduct(product);
+
+        isPatternValid = true;
+        syncData.setPatternValid(isPatternValid);
+        
+        level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, true), Block.UPDATE_ALL);
     }
 
     private boolean canProduce() {

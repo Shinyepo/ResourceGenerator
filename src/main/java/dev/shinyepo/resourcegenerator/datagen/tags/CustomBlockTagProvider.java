@@ -17,14 +17,13 @@ public class CustomBlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(TagRegistry.CONSUMER_RESOURCES)
-                .addTag(Tags.Blocks.ORES)
-                .addTag(Tags.Blocks.STORAGE_BLOCKS_IRON)
-                .replace(false);
-
         tag(TagRegistry.UPGRADE_BLOCKS)
                 .add(BlockRegistry.OUTPUT_UPGRADE.get())
                 .addTag(Tags.Blocks.STORAGE_BLOCKS_GOLD)
+                .replace(false);
+
+        tag(TagRegistry.RESOURCE_BLOCKS)
+                .add(BlockRegistry.RESOURCE_IMITATOR.get())
                 .replace(false);
 
     }

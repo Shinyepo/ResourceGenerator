@@ -10,6 +10,7 @@ public class ConsumerEntitySyncData {
     private long price = 0;
     private int patternTier = 1;
     private boolean isPatternValid = false;
+    private boolean isProductValid = false;
 
     private Runnable setChanged;
     private boolean isDirty = false;
@@ -17,6 +18,8 @@ public class ConsumerEntitySyncData {
     public static final StreamCodec<RegistryFriendlyByteBuf, ConsumerEntitySyncData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL,
             ConsumerEntitySyncData::isPatternValid,
+            ByteBufCodecs.BOOL,
+            ConsumerEntitySyncData::isProductValid,
             ByteBufCodecs.INT,
             ConsumerEntitySyncData::getPatternTier,
             ByteBufCodecs.LONG,
@@ -25,12 +28,17 @@ public class ConsumerEntitySyncData {
             ConsumerEntitySyncData::getProduct,
             ConsumerEntitySyncData::new);
 
+    public Boolean isProductValid() {
+        return isProductValid;
+    }
+
     public ConsumerEntitySyncData(Runnable setChanged) {
         this.setChanged = setChanged;
     }
 
-    private ConsumerEntitySyncData(boolean isPatternValid, int patternTier, long price, ItemStack product) {
+    private ConsumerEntitySyncData(boolean isPatternValid, boolean isProductValid, int patternTier, long price, ItemStack product) {
         this.isPatternValid = isPatternValid;
+        this.isProductValid = isProductValid;
         this.patternTier = patternTier;
         this.price = price;
         this.product = product;
