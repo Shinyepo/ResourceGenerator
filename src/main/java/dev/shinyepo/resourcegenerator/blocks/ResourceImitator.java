@@ -2,6 +2,16 @@ package dev.shinyepo.resourcegenerator.blocks;
 
 import dev.shinyepo.resourcegenerator.blocks.entities.ResourceImitatorEntity;
 import dev.shinyepo.resourcegenerator.blocks.types.BasicBlock;
+import dev.shinyepo.resourcegenerator.registries.TagRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -38,5 +48,19 @@ public class ResourceImitator extends BasicBlock {
         shape = Shapes.join(shape, Shapes.box(0.0625, 0.0625, 0.0625, 0.9375, 0.9375, 0.9375), BooleanOp.OR);
 
         return shape;
+    }
+
+    @Override
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
+        BlockEntity targetBlockEntity = level.getBlockEntity(pos);
+        if (targetBlockEntity instanceof ResourceImitatorEntity resourceImitatorEntity) {
+            if (itemStack.is(TagRegistry.CONSUMER_RESOURCES)) {
+                //TODO: remove item from players inventory
+                resourceImitatorEntity.setImitatedResource(new ItemStack(itemStack.getItem()));
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
     }
 }
