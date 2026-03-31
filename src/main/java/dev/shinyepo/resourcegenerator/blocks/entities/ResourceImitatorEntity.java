@@ -17,6 +17,7 @@ public class ResourceImitatorEntity extends BasicEntity {
 
     public void setImitatedResource(ItemStack imitatedResource) {
         this.imitatedResource = imitatedResource;
+        setChanged();
     }
 
     public ItemStack getImitatedResource() {

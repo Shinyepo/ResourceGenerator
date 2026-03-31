@@ -64,7 +64,9 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
     private void invalidatePattern() {
         if (isPatternValid) {
             isPatternValid = false;
+            isProductValid = false;
             syncData.setPatternValid(isPatternValid);
+            syncData.setProductValid(isProductValid);
             syncData.setProduct(ItemStack.EMPTY);
             syncData.setPrice(0L);
             pattern.clearUpgrades();
@@ -95,7 +97,8 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
 
         isPatternValid = true;
         syncData.setPatternValid(isPatternValid);
-        
+        syncData.setProductValid(isProductValid);
+
         level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, true), Block.UPDATE_ALL);
     }
 

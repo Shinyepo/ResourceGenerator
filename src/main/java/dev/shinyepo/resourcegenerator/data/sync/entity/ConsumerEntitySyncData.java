@@ -86,4 +86,8 @@ public class ConsumerEntitySyncData {
             setChanged.run();
         }
     }
+
+    public void setProductValid(boolean isProductValid) {
+        this.isProductValid = isProductValid;
+    }
 }

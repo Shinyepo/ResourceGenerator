@@ -69,6 +69,7 @@ public class Pattern {
                 break;
             }
             if (element.type() == PatternElementType.RESOURCE) {
+                //TODO: consider using different invalidation callback when pattern is valid but resources are not
                 ItemStack imitatorStack = getResourceFromImitator(level, offsetPos);
                 if (imitatorStack == null) {
                     shouldInvalidate = true;
