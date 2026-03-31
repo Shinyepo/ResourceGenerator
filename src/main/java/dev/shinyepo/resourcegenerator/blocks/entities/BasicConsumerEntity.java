@@ -24,6 +24,7 @@ public class BasicConsumerEntity extends Consumer {
                 this.pattern = pattern.value();
             });
             initialized = true;
+            forceVerifyPattern();
         }
         super.tick(level);
     }

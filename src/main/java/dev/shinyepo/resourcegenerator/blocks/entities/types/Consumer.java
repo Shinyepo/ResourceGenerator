@@ -48,7 +48,6 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
     @Override
     public void tick(ServerLevel level) {
         if (level.getGameTime() % 20 == 0) {
-            verifyPattern(level);
             syncData.flushSync();
 
             if (!isProductValid || !isPatternValid || !canProduce()) return;
@@ -100,6 +99,17 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
         syncData.setProductValid(isProductValid);
 
         level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, true), Block.UPDATE_ALL);
+    }
+
+    public void forceVerifyPattern() {
+        assert level != null;
+        verifyPattern((ServerLevel) level);
+    }
+
+    public void shouldReVerifyPattern(int tier) {
+        if (pattern.getTier() == tier) {
+            forceVerifyPattern();
+        }
     }
 
     private boolean canProduce() {

@@ -70,6 +70,7 @@ public class Pattern {
             }
             if (element.type() == PatternElementType.RESOURCE) {
                 //TODO: consider using different invalidation callback when pattern is valid but resources are not
+                assignConsumerToImitator(level, entityPos, offsetPos);
                 ItemStack imitatorStack = getResourceFromImitator(level, offsetPos);
                 if (imitatorStack == null) {
                     shouldInvalidate = true;
@@ -104,6 +105,15 @@ public class Pattern {
             return imitatorEntity.getImitatedResource();
         }
         return null;
+    }
+
+    private void assignConsumerToImitator(ServerLevel level, BlockPos consumerPos, BlockPos imitatorPos) {
+        BlockEntity entity = level.getBlockEntity(imitatorPos);
+        if (entity instanceof ResourceImitatorEntity imitatorEntity) {
+            imitatorEntity.assignConsumer(consumerPos);
+        } else {
+            throw new IllegalArgumentException("Block at " + imitatorPos + " is not a Resource Imitator");
+        }
     }
 
     public boolean matches(BlockPos pos, BlockState block) {
