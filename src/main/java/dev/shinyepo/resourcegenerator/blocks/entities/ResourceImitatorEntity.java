@@ -26,6 +26,7 @@ public class ResourceImitatorEntity extends BasicEntity {
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
+        if (imitatedResource.isEmpty()) return;
         output.store("imitatedResource", ItemStack.CODEC, imitatedResource);
     }
 
