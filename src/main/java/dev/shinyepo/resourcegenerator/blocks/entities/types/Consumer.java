@@ -12,6 +12,7 @@ import dev.shinyepo.resourcegenerator.registries.PriceDefinitionRegistry;
 import dev.shinyepo.resourcegenerator.registries.TagRegistry;
 import dev.shinyepo.resourcegenerator.util.ItemStacksHandlerUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -22,8 +23,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -73,6 +76,7 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
             level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, false), Block.UPDATE_ALL);
         }
     }
+
 
     private void validatePattern(Item resource) {
         if (isPatternValid) return;
@@ -196,5 +200,10 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
 
     public ConsumerEntitySyncData getSyncData() {
         return syncData;
+    }
+
+    public ResourceHandler<ItemResource> getItemCapability(@Nullable Direction direction) {
+        if (direction == Direction.DOWN) return outputHandler;
+        return null;
     }
 }
