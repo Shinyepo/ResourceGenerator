@@ -10,9 +10,10 @@ import net.minecraft.server.level.ServerLevel;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
 public class AccountController {
-    private static AccountController INSTANCE;
+    private static final Map<ServerLevel, AccountController> INSTANCES = new WeakHashMap<>();
     private final AccountSavedData dataStore;
 
     protected AccountController(ServerLevel level) {
@@ -20,8 +21,11 @@ public class AccountController {
     }
 
     public static AccountController getInstance(ServerLevel level) {
-        if (INSTANCE == null) INSTANCE = new AccountController(level);
-        return INSTANCE;
+        return INSTANCES.computeIfAbsent(level, AccountController::new);
+    }
+
+    public static void unloadData(ServerLevel level) {
+        INSTANCES.remove(level);
     }
 
     public Long changeAccountBalance(UUID accountId, Long amount) {

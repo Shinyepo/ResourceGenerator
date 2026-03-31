@@ -3,6 +3,7 @@ package dev.shinyepo.resourcegenerator;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
+import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
 import dev.shinyepo.resourcegenerator.registries.*;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -67,6 +68,11 @@ public class ResourceGenerator {
     }
 
     public void onServerStopping(ServerStoppingEvent event) {
+        event.getServer().getAllLevels()
+                .forEach(level -> {
+                    DeviceNetworkController.unloadData(level);
+                    AccountController.unloadData(level);
+                });
     }
 
     public static void registerRegistries(NewRegistryEvent event) {

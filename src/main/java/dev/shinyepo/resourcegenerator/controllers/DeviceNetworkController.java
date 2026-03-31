@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import java.util.*;
 
 public class DeviceNetworkController {
-    private static DeviceNetworkController INSTANCE;
+    private static final Map<ServerLevel, DeviceNetworkController> INSTANCES = new WeakHashMap<>();
     private final DeviceNetworkSavedData dataStore;
 
     protected DeviceNetworkController(ServerLevel level) {
@@ -23,8 +23,11 @@ public class DeviceNetworkController {
     }
 
     public static DeviceNetworkController getInstance(ServerLevel level) {
-        if (INSTANCE == null) INSTANCE = new DeviceNetworkController(level);
-        return INSTANCE;
+        return INSTANCES.computeIfAbsent(level, DeviceNetworkController::new);
+    }
+
+    public static void unloadData(ServerLevel level) {
+        INSTANCES.remove(level);
     }
 
     public void increaseNetworksBalance(UUID networkId, Long amount) {
