@@ -133,10 +133,9 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
             AccountController accController = AccountController.getInstance((ServerLevel) level);
 
             long balance = accController.getAccountBalance(accountId);
-            long result = accController.changeAccountBalance(accountId, -price);
-            if (result >= 0 && balance != result) {
-                generateProduct();
-            }
+            if (balance < price) return;
+            accController.changeAccountBalance(accountId, -price);
+            generateProduct();
         }
     }
 

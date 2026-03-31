@@ -71,6 +71,8 @@ public class Account {
     }
 
     public Long changeValue(long amount) {
+        long sim = balance + amount;
+        if (sim < 0 && sim < balance) return balance;
         return this.balance = balance + amount;
     }
 
