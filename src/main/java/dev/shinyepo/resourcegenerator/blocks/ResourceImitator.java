@@ -55,17 +55,22 @@ public class ResourceImitator extends BasicBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(ItemStack usedItemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
-        BlockEntity targetBlockEntity = level.getBlockEntity(pos);
-        if (targetBlockEntity instanceof ResourceImitatorEntity resourceImitatorEntity) {
-            if (itemStack.is(TagRegistry.CONSUMER_RESOURCES)) {
-                //TODO: remove item from players inventory
-                resourceImitatorEntity.setImitatedResource(new ItemStack(itemStack.getItem()));
+        BlockEntity usedOnEntity = level.getBlockEntity(pos);
+        if (usedOnEntity instanceof ResourceImitatorEntity resourceImitatorEntity) {
+            if (usedItemStack.is(TagRegistry.CONSUMER_RESOURCES)) {
+                ItemStack result = resourceImitatorEntity.setImitatedResource(new ItemStack(usedItemStack.getItem(), 1));
+                if (result.isEmpty()) {
+                    usedItemStack.shrink(1);
+                } else if (!result.is(usedItemStack.getItem())) {
+                    usedItemStack.shrink(1);
+                    player.addItem(result);
+                }
                 return InteractionResult.SUCCESS;
             }
         }
-        return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
+        return super.useItemOn(usedItemStack, state, level, pos, player, hand, hitResult);
     }
 
     @Override

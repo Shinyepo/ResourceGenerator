@@ -17,10 +17,40 @@ public class ResourceImitatorEntity extends BasicEntity {
         super(BlockEntityRegistry.RESOURCE_IMITATOR_ENTITY.get(), worldPosition, blockState);
     }
 
-    public void setImitatedResource(ItemStack imitatedResource) {
-        this.imitatedResource = imitatedResource;
+
+    /*
+        Returns
+        - ItemStack.EMPTY - if the resource was successfully set
+        - resourceToImitate - if the resource is already imitated
+        - replacedResource - if the resource was successfully replaced
+     */
+    public ItemStack setImitatedResource(ItemStack resourceToImitate) {
+        //This resource is already imitated
+        if (this.imitatedResource.is(resourceToImitate.getItem())) {
+            return resourceToImitate;
+        }
+
+        ItemStack imitationResult = ItemStack.EMPTY;
+
+        if (this.imitatedResource.isEmpty()) {
+            setResource(resourceToImitate);
+        } else {
+            imitationResult = replaceResource(resourceToImitate);
+        }
+
         setChanged();
         notifyConsumer();
+        return imitationResult;
+    }
+
+    private void setResource(ItemStack resource) {
+        this.imitatedResource = resource;
+    }
+
+    private ItemStack replaceResource(ItemStack resource) {
+        ItemStack replacedResource = this.imitatedResource;
+        this.imitatedResource = resource;
+        return replacedResource;
     }
 
     public ItemStack getImitatedResource() {
