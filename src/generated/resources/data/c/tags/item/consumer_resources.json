@@ -1,6 +1,18 @@
 {
   "values": [
     "#c:ores",
-    "#c:ingots"
+    "#c:raw_materials",
+    "#c:ingots",
+    "#c:nuggets",
+    "#c:storage_blocks",
+    "#c:gems",
+    "#c:dusts",
+    "#c:gravels",
+    "#c:sands",
+    "#c:stones",
+    "#c:cobblestones",
+    "#c:sandstone/blocks",
+    "minecraft:coal",
+    "minecraft:charcoal"
   ]
 }
