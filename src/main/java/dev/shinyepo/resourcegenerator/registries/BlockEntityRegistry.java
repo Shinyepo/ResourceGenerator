@@ -35,4 +35,7 @@ public class BlockEntityRegistry {
     public static final Supplier<BlockEntityType<ResourceImitatorEntity>> RESOURCE_IMITATOR_ENTITY = ENTITIES.register("resource_imitator_entity",
             () -> new BlockEntityType<>(ResourceImitatorEntity::new, BlockRegistry.RESOURCE_IMITATOR.get()));
 
+    public static final Supplier<BlockEntityType<SculkAbsorberEntity>> SCULK_ABSORBER_ENTITY = ENTITIES.register("sculk_absorber_entity",
+            () -> new BlockEntityType<>(SculkAbsorberEntity::new, BlockRegistry.SCULK_ABSORBER.get()));
+
 }

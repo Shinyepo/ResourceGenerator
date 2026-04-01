@@ -23,4 +23,5 @@ public class BlockRegistry {
 
     public static final DeferredBlock<Block> OUTPUT_UPGRADE = BLOCKS.registerBlock("output_upgrade", OutputUpgradeBlock::new, BlockBehaviour.Properties::of);
     public static final DeferredBlock<Block> RESOURCE_IMITATOR = BLOCKS.registerBlock("resource_imitator", ResourceImitator::new, BlockBehaviour.Properties::of);
+    public static final DeferredBlock<Block> SCULK_ABSORBER = BLOCKS.registerBlock("sculk_absorber", SculkAbsorber::new, BlockBehaviour.Properties::of);
 }

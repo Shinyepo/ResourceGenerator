@@ -23,9 +23,10 @@ public class CapabilityRegistry {
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.CONTROLLER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.PIPE_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.BASIC_CONSUMER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BlockEntityRegistry.BASIC_CONSUMER_ENTITY.get(), Consumer::getItemCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.SOLAR_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.WATER_ABSORBER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
+        event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.SCULK_ABSORBER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
 
-        event.registerBlockEntity(Capabilities.Item.BLOCK, BlockEntityRegistry.BASIC_CONSUMER_ENTITY.get(), Consumer::getItemCapability);
     }
 }

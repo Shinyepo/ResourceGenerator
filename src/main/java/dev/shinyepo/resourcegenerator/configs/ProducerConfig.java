@@ -2,7 +2,8 @@ package dev.shinyepo.resourcegenerator.configs;
 
 public enum ProducerConfig {
     SOLAR_PANEL(6L),
-    WATER_ABSORBER(4L);
+    WATER_ABSORBER(4L),
+    SCULK_ABSORBER(40L);
 
     private final Long produces;
 
