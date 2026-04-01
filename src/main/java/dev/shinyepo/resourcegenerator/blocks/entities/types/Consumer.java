@@ -67,12 +67,13 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
         if (isPatternValid) {
             isPatternValid = false;
             isProductValid = false;
-            syncData.setPatternValid(isPatternValid);
-            syncData.setProductValid(isProductValid);
+            syncData.setPatternValid(false);
+            syncData.setProductValid(false);
             syncData.setProduct(ItemStack.EMPTY);
             syncData.setPrice(0L);
             pattern.clearUpgrades();
 
+            assert level != null;
             level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, false), Block.UPDATE_ALL);
         }
     }
@@ -99,9 +100,10 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
         syncData.setProduct(product);
 
         isPatternValid = true;
-        syncData.setPatternValid(isPatternValid);
-        syncData.setProductValid(isProductValid);
+        syncData.setPatternValid(true);
+        syncData.setProductValid(true);
 
+        assert level != null;
         level.setBlock(getBlockPos(), getBlockState().setValue(CustomProperties.OPERATIONAL, true), Block.UPDATE_ALL);
     }
 
@@ -150,14 +152,15 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
 
     // GUI STUFF
     public void cyclePattern() {
+        assert level != null;
         if (level.isClientSide()) return;
         if (pattern == null) return;
         if (pattern.getTier() == 1) {
-            pattern = level.registryAccess().get(TIER_2_PATTERN).get().value();
+            pattern = level.registryAccess().get(TIER_2_PATTERN).orElseThrow(() -> new IllegalStateException("Could not find tier 2 pattern")).value();
         } else if (pattern.getTier() == 2) {
-            pattern = level.registryAccess().get(TIER_3_PATTERN).get().value();
+            pattern = level.registryAccess().get(TIER_3_PATTERN).orElseThrow(() -> new IllegalStateException("Could not find tier 3 pattern")).value();
         } else if (pattern.getTier() == 3) {
-            pattern = level.registryAccess().get(TIER_1_PATTERN).get().value();
+            pattern = level.registryAccess().get(TIER_1_PATTERN).orElseThrow(() -> new IllegalStateException("Could not find tier 1 pattern")).value();
         }
         syncData.setPatternTier(pattern.getTier());
         verifyPattern((ServerLevel) level);

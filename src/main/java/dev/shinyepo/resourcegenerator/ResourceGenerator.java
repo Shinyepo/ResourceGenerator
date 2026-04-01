@@ -24,12 +24,14 @@ import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.slf4j.Logger;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
 import static dev.shinyepo.resourcegenerator.registries.BlockEntityRegistry.ENTITIES;
 import static dev.shinyepo.resourcegenerator.registries.BlockRegistry.BLOCKS;
+import static dev.shinyepo.resourcegenerator.registries.BlockTypeRegistry.BLOCK_TYPE;
 import static dev.shinyepo.resourcegenerator.registries.CreativeTabRegistry.CREATIVE_TABS;
 import static dev.shinyepo.resourcegenerator.registries.DataComponentRegistry.DATA_COMPONENTS;
 import static dev.shinyepo.resourcegenerator.registries.ItemRegistry.ITEMS;
@@ -51,6 +53,7 @@ public class ResourceGenerator {
         MENUS.register(modEventBus);
         UPGRADES.register(modEventBus);
         PRICES.register(modEventBus);
+        BLOCK_TYPE.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(ResourceGenerator::registerRegistries);
@@ -91,7 +94,7 @@ public class ResourceGenerator {
                                 .then(Commands.argument("amount", integer())
                                         .executes(context -> {
                                             CommandSourceStack source = context.getSource();
-                                            long newBalance = changeAccountAmount(source.getLevel(), source.getPlayer(), getInteger(context, "amount"));
+                                            long newBalance = changeAccountAmount(source.getLevel(), Objects.requireNonNull(source.getPlayer()), getInteger(context, "amount"));
                                             source.sendSuccess(() -> Component.literal("New account balance: " + newBalance), true);
                                             return 1;
                                         })
@@ -101,7 +104,7 @@ public class ResourceGenerator {
                                 .then(Commands.argument("amount", integer())
                                         .executes(context -> {
                                             CommandSourceStack source = context.getSource();
-                                            long newBalance = changeAccountAmount(source.getLevel(), source.getPlayer(), -getInteger(context, "amount"));
+                                            long newBalance = changeAccountAmount(source.getLevel(), Objects.requireNonNull(source.getPlayer()), -getInteger(context, "amount"));
                                             source.sendSuccess(() -> Component.literal("New account balance: " + newBalance), true);
                                             return 1;
                                         })
@@ -120,7 +123,7 @@ public class ResourceGenerator {
                                                 .executes(ctx -> {
                                                     CommandSourceStack source = ctx.getSource();
                                                     AccountController controller = AccountController.getInstance(source.getLevel());
-                                                    UUID accId = controller.getOrCreateAccount(source.getPlayer().nameAndId().id());
+                                                    UUID accId = controller.getOrCreateAccount(Objects.requireNonNull(source.getPlayer()).nameAndId().id());
 
                                                     Identifier id = IdentifierArgument.getId(ctx, "id");
                                                     Integer tier = getInteger(ctx, "tier");
@@ -139,7 +142,7 @@ public class ResourceGenerator {
                                         .executes(ctx -> {
                                             CommandSourceStack source = ctx.getSource();
                                             AccountController controller = AccountController.getInstance(source.getLevel());
-                                            UUID accId = controller.getOrCreateAccount(source.getPlayer().nameAndId().id());
+                                            UUID accId = controller.getOrCreateAccount(Objects.requireNonNull(source.getPlayer()).nameAndId().id());
 
                                             Identifier id = IdentifierArgument.getId(ctx, "id");
                                             controller.removeUpgrade(accId, id);

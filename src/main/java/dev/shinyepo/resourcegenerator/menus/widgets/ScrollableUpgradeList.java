@@ -9,10 +9,11 @@ import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.jspecify.annotations.NonNull;
 
 public class ScrollableUpgradeList extends ObjectSelectionList<ScrollableUpgradeList.UpgradeEntry> {
     private final int listWidth;
-    private ControllerScreen parent;
+    private final ControllerScreen parent;
 
     public ScrollableUpgradeList(ControllerScreen parent, int listWidth, int top, int bottom) {
         super(Minecraft.getInstance(), listWidth, bottom - top, top, 14);
@@ -37,8 +38,8 @@ public class ScrollableUpgradeList extends ObjectSelectionList<ScrollableUpgrade
     }
 
     public class UpgradeEntry extends ObjectSelectionList.Entry<UpgradeEntry> {
-        private ControllerScreen parent;
-        private Upgrade upgrade;
+        private final ControllerScreen parent;
+        private final Upgrade upgrade;
 
         public UpgradeEntry(Upgrade upgrade, ControllerScreen parent) {
             this.upgrade = upgrade;
@@ -46,7 +47,7 @@ public class ScrollableUpgradeList extends ObjectSelectionList<ScrollableUpgrade
         }
 
         @Override
-        public Component getNarration() {
+        public @NonNull Component getNarration() {
             return Component.empty();
         }
 
@@ -66,7 +67,7 @@ public class ScrollableUpgradeList extends ObjectSelectionList<ScrollableUpgrade
         }
 
         @Override
-        public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        public boolean mouseClicked(@NonNull MouseButtonEvent event, boolean doubleClick) {
             this.parent.setSelected(this.isFocused() ? null : this);
             ScrollableUpgradeList.this.setSelected(this.isFocused() ? null : this);
             return false;

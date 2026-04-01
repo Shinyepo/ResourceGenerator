@@ -18,7 +18,7 @@ public class Account {
     private Long balance;
     private UUID ownerId;
     private Map<UUID, Integer> users = new HashMap<>();
-    private Map<Identifier, Integer> upgrades = new HashMap<>();
+    private final Map<Identifier, Integer> upgrades;
 
 
     public static final Codec<Account> CODEC = RecordCodecBuilder.create(instance ->

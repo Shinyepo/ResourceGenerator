@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.NonNull;
 
 public class Inspector extends Item {
     public Inspector(Properties properties) {
@@ -18,21 +19,19 @@ public class Inspector extends Item {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public @NonNull InteractionResult use(@NonNull Level level, Player player, @NonNull InteractionHand hand) {
         if (!player.isShiftKeyDown()) return InteractionResult.FAIL;
-        if (!level.isClientSide()) {
-
-        }
         return InteractionResult.SUCCESS;
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NonNull InteractionResult useOn(UseOnContext context) {
         if (context.getLevel().isClientSide()) return super.useOn(context);
         BlockPos clickedPos = context.getClickedPos();
         ServerLevel level = (ServerLevel) context.getLevel();
         INetworkCapability targetCap = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, clickedPos, null);
         if (targetCap != null) {
+            assert context.getPlayer() != null;
             context.getPlayer().sendOverlayMessage(Component.literal(targetCap.getNetworkId().toString()));
         }
         return super.useOn(context);

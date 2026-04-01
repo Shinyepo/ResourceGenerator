@@ -44,7 +44,7 @@ public class AccountController {
             Integer productionUpgradeTier = account.getUpgrade(UpgradeRegistry.ABSORPTION_AMOUNT);
             Upgrade upgrade = UpgradeRegistry.getUpgradeData(UpgradeRegistry.ABSORPTION_AMOUNT);
             float upgradeBonus = upgrade.totalBonus(productionUpgradeTier);
-            Long amountWithUpgrades = (long) (amount * upgradeBonus);
+            long amountWithUpgrades = (long) (amount * upgradeBonus);
             Long balanceAfterChange = account.changeValue(amountWithUpgrades);
             dataStore.setDirty();
             return balanceAfterChange;

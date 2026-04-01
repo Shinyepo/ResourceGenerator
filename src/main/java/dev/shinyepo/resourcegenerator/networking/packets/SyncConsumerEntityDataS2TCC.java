@@ -6,11 +6,11 @@ import dev.shinyepo.resourcegenerator.data.sync.entity.ConsumerEntitySyncData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jspecify.annotations.NonNull;
 
 public record SyncConsumerEntityDataS2TCC(BlockPos pos, ConsumerEntitySyncData data) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<SyncConsumerEntityDataS2TCC> TYPE = new Type<>(Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "sync.consumer.entity.data.s2tcc"));
@@ -22,7 +22,7 @@ public record SyncConsumerEntityDataS2TCC(BlockPos pos, ConsumerEntitySyncData d
             SyncConsumerEntityDataS2TCC::new);
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public @NonNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
@@ -32,11 +32,6 @@ public record SyncConsumerEntityDataS2TCC(BlockPos pos, ConsumerEntitySyncData d
             if (Minecraft.getInstance().level.getBlockEntity(pos) instanceof Consumer consumer) {
                 consumer.setSyncData(data);
             }
-        }).exceptionally(e -> {
-            context.disconnect(Component.literal(e.getMessage()));
-            System.out.println(e.getLocalizedMessage());
-            return null;
         });
-        ;
     }
 }

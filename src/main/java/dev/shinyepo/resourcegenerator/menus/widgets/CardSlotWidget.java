@@ -3,8 +3,8 @@ package dev.shinyepo.resourcegenerator.menus.widgets;
 public class CardSlotWidget {
     private static final int width = 18;
     private static final int height = 18;
-    private static int x = 151;
-    private static int y = 7;
+    private static final int x = 151;
+    private static final int y = 7;
     private static final int u = 162;
     private static final int v = 0;
 

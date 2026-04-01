@@ -49,6 +49,7 @@ public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
     @Override
     public void setAccountId(UUID accountId) {
         this.accountId = accountId;
+        assert level != null;
         if (!level.isClientSide())
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 1);
     }

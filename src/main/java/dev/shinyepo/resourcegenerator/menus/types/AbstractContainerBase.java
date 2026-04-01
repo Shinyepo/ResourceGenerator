@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
+import org.jspecify.annotations.NonNull;
 
 public abstract class AbstractContainerBase extends AbstractContainerMenu {
     private final BlockPos pos;
@@ -77,14 +78,14 @@ public abstract class AbstractContainerBase extends AbstractContainerMenu {
 
 
     @Override
-    public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
+    public @NonNull ItemStack quickMoveStack(@NonNull Player player, int quickMovedSlotIndex) {
         // The quick moved slot stack
         ItemStack quickMovedStack = ItemStack.EMPTY;
         // The quick moved slot
         Slot quickMovedSlot = this.slots.get(quickMovedSlotIndex);
 
         // If the slot is in the valid range and the slot is not empty
-        if (quickMovedSlot != null && quickMovedSlot.hasItem()) {
+        if (quickMovedSlot.hasItem()) {
             // Get the raw stack to move
             ItemStack rawStack = quickMovedSlot.getItem();
             // Set the slot stack to a copy of the raw stack
@@ -108,7 +109,7 @@ public abstract class AbstractContainerBase extends AbstractContainerMenu {
                 quickMovedSlot.onQuickCraft(rawStack, quickMovedStack);
             }
             // Else if the quick move was performed on the player inventory or hotbar slot
-            else if (quickMovedSlotIndex >= SLOT_COUNT && quickMovedSlotIndex < Inventory.INVENTORY_SIZE + SLOT_COUNT) {
+            else if (quickMovedSlotIndex < Inventory.INVENTORY_SIZE + SLOT_COUNT) {
                 // Try to move the inventory/hotbar slot into the data inventory input slots
                 if (!this.moveItemStackTo(rawStack, 0, INPUT_RANGE, false)) {
                     // If cannot move and in player inventory slot, try to move to hotbar
@@ -156,7 +157,7 @@ public abstract class AbstractContainerBase extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
-        return stillValid(ContainerLevelAccess.create(pPlayer.level(), pos), pPlayer, parentBlock);
+    public boolean stillValid(@NonNull Player player) {
+        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, parentBlock);
     }
 }
