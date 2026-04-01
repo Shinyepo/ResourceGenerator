@@ -60,6 +60,7 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
     }
 
     private void verifyPattern(ServerLevel level) {
+        if (pattern == null) return;
         pattern.verifyPattern(level, getBlockPos(), this::invalidatePattern, this::validatePattern);
     }
 
