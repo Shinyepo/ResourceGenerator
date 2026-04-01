@@ -29,7 +29,7 @@ public class PriceDefinitionRegistry {
 
     public static final DeferredRegister<ResourcePriceDefinition> PRICES = DeferredRegister.create(PRICE_REGISTRY, ResourceGenerator.MODID);
 
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_ORE = registerDefault("ore", 5L);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_ORE = registerDefault("ore", 100L);
     public static final Supplier<ResourcePriceDefinition> DEFAULT_RAW = registerDefault("raw", "ore", 1F);
     public static final Supplier<ResourcePriceDefinition> DEFAULT_INGOT = registerDefault("ingot", "ore", 1F);
     public static final Supplier<ResourcePriceDefinition> DEFAULT_NUGGET = registerDefault("nugget", "ingot", 0.11F);
