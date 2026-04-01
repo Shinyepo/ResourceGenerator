@@ -86,9 +86,16 @@ public class Consumer extends NetworkDeviceEntity implements IVerboseDataEntity 
             if (resourceStack.is(TagRegistry.CONSUMER_RESOURCES)) {
                 ResourcePriceDefinition priceData = PriceDefinitionRegistry.getPriceData(resource);
                 if (priceData != null) {
-                    price = priceData.getPrice(pattern.getUpgrades());
-                    syncData.setPrice(price);
-                    isProductValid = true;
+                    long priceWithUpgrades = priceData.getPrice(pattern.getUpgrades());
+                    if (priceWithUpgrades <= 0) {
+                        isProductValid = false;
+                    } else {
+                        price = priceData.getPrice(pattern.getUpgrades());
+                        syncData.setPrice(price);
+                        isProductValid = true;
+                    }
+                } else {
+                    isProductValid = false;
                 }
             } else {
                 isProductValid = false;
