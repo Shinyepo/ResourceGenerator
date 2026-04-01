@@ -42,11 +42,13 @@ public class Controller extends HorizontalNetworkBlock {
     );
 
     public Controller(Properties properties) {
-        super(ControllerEntity::new, properties);
+        super(properties);
         registerDefaultState(getStateDefinition().any()
                 .setValue(FACING, Direction.NORTH));
         SHAPES.put(Direction.NORTH, SHAPE_N);
         SHAPES.put(Direction.WEST, SHAPE_W);
+
+        setBlockEntity(ControllerEntity::new);
         setDataContainerFactory(ControllerContainer::new);
     }
 

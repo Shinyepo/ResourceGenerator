@@ -23,8 +23,10 @@ import org.jspecify.annotations.Nullable;
 public class ResourceImitator extends BasicBlock {
 
     public ResourceImitator(Properties properties) {
-        super(ResourceImitatorEntity::new, properties);
+        super(properties);
         SHAPE = makeShape();
+
+        setBlockEntity(ResourceImitatorEntity::new);
     }
 
     public VoxelShape makeShape() {

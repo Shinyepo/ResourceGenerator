@@ -13,7 +13,7 @@ public class SolarPanel extends NetworkBlock {
     private static final BooleanProperty OPERATIONAL = CustomProperties.OPERATIONAL;
 
     public SolarPanel(Properties properties) {
-        super(SolarPanelEntity::new, properties);
+        super(properties);
 
         SHAPE = Shapes.or(Block.box(0, 0, 0, 16, 3, 16),
                 Block.box(4, 3, 3, 5, 7, 4),
@@ -22,6 +22,8 @@ public class SolarPanel extends NetworkBlock {
                 Block.box(11, 3, 3, 12, 7, 4),
                 Block.box(5.7, 6, 5.7, 10.3, 7, 10.3),
                 Block.box(0, 7, 0, 16, 8, 16));
+
+        setBlockEntity(SolarPanelEntity::new);
 
         registerDefaultState(getStateDefinition().any()
                 .setValue(OPERATIONAL, false));

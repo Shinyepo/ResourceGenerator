@@ -16,6 +16,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
@@ -23,9 +24,10 @@ public class WaterAbsorber extends NetworkBlock {
     private static final BooleanProperty OPERATIONAL = CustomProperties.OPERATIONAL;
 
     public WaterAbsorber(Properties properties) {
-        super(WaterAbsorberEntity::new, properties);
+        super(properties);
 
         SHAPE = Block.box(0, 0, 0, 16, 16, 16);
+        setBlockEntity(WaterAbsorberEntity::new);
 
         registerDefaultState(getStateDefinition().any()
                 .setValue(OPERATIONAL, false));
@@ -37,13 +39,13 @@ public class WaterAbsorber extends NetworkBlock {
     }
 
     @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+    public @Nullable BlockState getStateForPlacement(@NonNull BlockPlaceContext context) {
         return Objects.requireNonNull(super.getStateForPlacement(context))
                 .setValue(OPERATIONAL, isSurroundedByFlowingWater(context.getLevel(), context.getClickedPos()));
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, @NotNull Block neighborBlock, @NotNull Orientation orientation, boolean movedByPiston) {
+    public void neighborChanged(@NonNull BlockState state, Level level, @NonNull BlockPos pos, @NotNull Block neighborBlock, Orientation orientation, boolean movedByPiston) {
         if (level.isClientSide()) return;
         boolean foundFlowingWater = isSurroundedByFlowingWater(level, pos);
 

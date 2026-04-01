@@ -7,9 +7,11 @@ import net.minecraft.world.level.block.Block;
 public class OutputUpgradeBlock extends UpgradeBlock {
 
     public OutputUpgradeBlock(Properties properties) {
-        super(OutputUpgradeEntity::new, properties);
+        super(properties);
 
         SHAPE = Block.box(0, 0, 0, 16, 16, 16);
+
+        setBlockEntity(OutputUpgradeEntity::new);
         registerDefaultState(getStateDefinition().any());
     }
 }

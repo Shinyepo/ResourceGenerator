@@ -1,26 +1,33 @@
 package dev.shinyepo.resourcegenerator.blocks.types;
 
+import com.mojang.serialization.MapCodec;
 import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
+import dev.shinyepo.resourcegenerator.registries.BlockTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiFunction;
+import org.jspecify.annotations.NonNull;
 
 public class NetworkBlock extends BasicBlock {
-    public NetworkBlock(BiFunction<BlockPos, BlockState, BlockEntity> blockEntityFactory, Properties properties) {
-        super(blockEntityFactory, properties);
+    public NetworkBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    protected @NonNull MapCodec<? extends Block> codec() {
+        super.codec();
+        return BlockTypeRegistry.NETWORK_BLOCK.get();
+    }
+
+    @Override
+    public void setPlacedBy(@NonNull Level level, @NonNull BlockPos pos, @NonNull BlockState state, @Nullable LivingEntity placer, @NonNull ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
         if (!level.isClientSide()) {
             DeviceNetworkController networkController = DeviceNetworkController.getInstance((ServerLevel) level);
@@ -29,7 +36,7 @@ public class NetworkBlock extends BasicBlock {
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(@NonNull BlockState state, Level level, @NonNull BlockPos pos, @NonNull Player player, @NonNull ItemStack toolStack, boolean willHarvest, @NonNull FluidState fluid) {
         if (level.isClientSide())
             return super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid);
 

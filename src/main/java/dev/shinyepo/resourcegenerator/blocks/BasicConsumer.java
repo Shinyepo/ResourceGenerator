@@ -13,9 +13,11 @@ public class BasicConsumer extends NetworkBlock {
     private static final BooleanProperty OPERATIONAL = CustomProperties.OPERATIONAL;
 
     public BasicConsumer(Properties properties) {
-        super(BasicConsumerEntity::new, properties);
+        super(properties);
 
         SHAPE = Block.box(0, 0, 0, 16, 16, 16);
+
+        setBlockEntity(BasicConsumerEntity::new);
 
         registerDefaultState(getStateDefinition().any()
                 .setValue(OPERATIONAL, false));

@@ -2,10 +2,12 @@ package dev.shinyepo.resourcegenerator.blocks.types;
 
 import com.mojang.datafixers.util.Function3;
 import com.mojang.datafixers.util.Function4;
+import com.mojang.serialization.MapCodec;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.IDataEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.ITickableEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.IVerboseDataEntity;
 import dev.shinyepo.resourcegenerator.menus.types.AbstractContainerBase;
+import dev.shinyepo.resourcegenerator.registries.BlockTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -27,27 +29,36 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.BiFunction;
 
 public class BasicBlock extends Block implements EntityBlock {
-    private final BiFunction<BlockPos, BlockState, BlockEntity> BLOCK_ENTITY;
+    protected BiFunction<BlockPos, BlockState, BlockEntity> BLOCK_ENTITY;
     private Function4<Integer, Player, BlockPos, ContainerData, ? extends AbstractContainerBase> DATA_CONTAINER;
     private Function3<Integer, Player, BlockPos, ? extends AbstractContainerBase> BASIC_CONTAINER;
     public VoxelShape SHAPE;
 
-    public BasicBlock(BiFunction<BlockPos, BlockState, BlockEntity> blockEntityFactory, Properties properties) {
+    public BasicBlock(Properties properties) {
         super(properties);
-        BLOCK_ENTITY = blockEntityFactory;
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    protected @NonNull MapCodec<? extends Block> codec() {
+        return BlockTypeRegistry.BASIC_BLOCK.get();
+    }
+
+    @Override
+    protected @NonNull VoxelShape getShape(@NonNull BlockState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @NonNull CollisionContext context) {
         return SHAPE;
     }
 
+    protected void setBlockEntity(BiFunction<BlockPos, BlockState, BlockEntity> blockEntity) {
+        BLOCK_ENTITY = blockEntity;
+    }
+
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public @Nullable BlockEntity newBlockEntity(@NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         return BLOCK_ENTITY.apply(blockPos, blockState);
     }
 
@@ -60,7 +71,7 @@ public class BasicBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NonNull BlockState state, @NonNull BlockEntityType<T> blockEntityType) {
         if (level.isClientSide()) return null;
         return (entityLevel, entityPos, entityState, entityType) -> {
             if (entityType instanceof ITickableEntity tickableEntity) {
@@ -70,7 +81,7 @@ public class BasicBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected @Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+    protected @Nullable MenuProvider getMenuProvider(@NonNull BlockState state, Level level, @NonNull BlockPos pos) {
         BlockEntity entity = level.getBlockEntity(pos);
         if (DATA_CONTAINER != null) {
             if (entity instanceof IDataEntity dataEntity) {
@@ -89,7 +100,7 @@ public class BasicBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    protected @NonNull InteractionResult useWithoutItem(@NonNull BlockState state, Level level, @NonNull BlockPos pos, @NonNull Player player, @NonNull BlockHitResult hitResult) {
         if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             MenuProvider menu = state.getMenuProvider(level, pos);
             if (menu != null) {

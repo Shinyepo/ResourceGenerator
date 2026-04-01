@@ -1,44 +1,37 @@
 package dev.shinyepo.resourcegenerator.blocks.types;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
-import java.util.function.BiFunction;
 
 public class HorizontalNetworkBlock extends NetworkBlock {
     protected HashMap<Direction, VoxelShape> SHAPES = new HashMap<>();
     protected static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public HorizontalNetworkBlock(BiFunction<BlockPos, BlockState, BlockEntity> blockEntityFactory, Properties properties) {
-        super(blockEntityFactory, properties);
+    public HorizontalNetworkBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    protected @NonNull VoxelShape getShape(@NonNull BlockState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @NonNull CollisionContext context) {
         VoxelShape shape = SHAPES.get(state.getValue(FACING));
         return shape == null ? SHAPES.get(Direction.NORTH) : shape;
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    protected @NonNull VoxelShape getCollisionShape(BlockState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @NonNull CollisionContext context) {
         VoxelShape shape = SHAPES.get(state.getValue(FACING));
         return shape == null ? SHAPES.get(Direction.NORTH) : shape;
-    }
-
-    @Override
-    protected MapCodec<? extends Block> codec() {
-        return null;
     }
 
     @Override
