@@ -34,7 +34,7 @@ public class ControllerEntity extends Receiver implements IDataEntity {
 
     public ControllerEntity(BlockPos pos, BlockState blockState) {
         super(BlockEntityRegistry.CONTROLLER_ENTITY.get(), pos, blockState);
-        cardHandler = ItemStacksHandlerUtil.createInputItemHandler(1, this::setChanged, validInputs);
+        cardHandler = ItemStacksHandlerUtil.createInputItemHandler(1, this::assignAccount, validInputs);
         configureSides(Direction.DOWN, Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH);
     }
 
@@ -43,7 +43,10 @@ public class ControllerEntity extends Receiver implements IDataEntity {
     }
 
     private void assignAccount() {
+        assert level != null;
+        if (level.isClientSide()) return;
         ItemResource card = cardHandler.getResource(0);
+        if (card.isEmpty()) return;
         IdCardData cardData = card.get(DataComponentRegistry.ID_CARD.get());
         if (cardData != null && cardData.userId() != null && getAccountId() == null) {
             ServerLevel serverLevel = (ServerLevel) level;
@@ -58,8 +61,6 @@ public class ControllerEntity extends Receiver implements IDataEntity {
     @Override
     public void tick(ServerLevel level) {
         super.tick(level);
-        if (level.getGameTime() % 5 != 0) return;
-        if (!cardHandler.getResource(0).isEmpty()) assignAccount();
     }
 
     public ContainerData getDataSlot() {
