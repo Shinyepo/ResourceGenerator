@@ -11,8 +11,8 @@
       ]
     },
     {
-      "type": "upgrade",
-      "allowedBlocks": "resourcegenerator:upgrade_blocks",
+      "type": "structure",
+      "allowedBlocks": "resourcegenerator:consumer_structure",
       "offset": [
         0,
         -1,
@@ -29,8 +29,8 @@
       ]
     },
     {
-      "type": "upgrade",
-      "allowedBlocks": "resourcegenerator:upgrade_blocks",
+      "type": "structure",
+      "allowedBlocks": "resourcegenerator:consumer_structure",
       "offset": [
         -1,
         -1,
@@ -38,8 +38,8 @@
       ]
     },
     {
-      "type": "upgrade",
-      "allowedBlocks": "resourcegenerator:upgrade_blocks",
+      "type": "structure",
+      "allowedBlocks": "resourcegenerator:consumer_structure",
       "offset": [
         1,
         -1,
@@ -56,8 +56,8 @@
       ]
     },
     {
-      "type": "upgrade",
-      "allowedBlocks": "resourcegenerator:upgrade_blocks",
+      "type": "structure",
+      "allowedBlocks": "resourcegenerator:consumer_structure",
       "offset": [
         0,
         -1,

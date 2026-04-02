@@ -14,6 +14,7 @@ public class TagRegistry {
 
     //Consumer allowed blocks
     public static final TagKey<Block> UPGRADE_BLOCKS = TagKey.create(Registries.BLOCK, fromNamespaceAndPath(ResourceGenerator.MODID, "upgrade_blocks"));
+    public static final TagKey<Block> CONSUMER_STRUCTURE_BLOCKS = TagKey.create(Registries.BLOCK, fromNamespaceAndPath(ResourceGenerator.MODID, "consumer_structure"));
     public static final TagKey<Block> RESOURCE_BLOCKS = TagKey.create(Registries.BLOCK, fromNamespaceAndPath(ResourceGenerator.MODID, "resource_blocks"));
 
 }

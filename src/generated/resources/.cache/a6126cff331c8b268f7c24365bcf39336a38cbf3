@@ -1,5 +1,6 @@
-// 26.1	2026-04-01T18:08:48.7110642	Model Definitions - resourcegenerator
+// 26.1	2026-04-01T22:44:22.701771	Model Definitions - resourcegenerator
 e24546adc9d464a7b3e8215289faae2a24201307 assets/resourcegenerator/blockstates/basic_consumer.json
+e1a281da776af612ea92dbb2ed74caaeaa7d6c24 assets/resourcegenerator/blockstates/consumer_output.json
 3901d1bc04bef8188ce388fe37427c51e36e706b assets/resourcegenerator/blockstates/controller.json
 3dff9e1ec59415779195d2abfa9f07bc17b428a1 assets/resourcegenerator/blockstates/dummy_extension.json
 a03a50e12f993d1f3a7ffcc3bd21590480f63906 assets/resourcegenerator/blockstates/output_upgrade.json
@@ -9,6 +10,7 @@ e1afaa30b95fd6bf0c121835f4ec5f381746e581 assets/resourcegenerator/blockstates/sc
 7482c30090123725b05ebac1dcb8ed46d8925f08 assets/resourcegenerator/blockstates/solar_panel.json
 ae42b7fbcd19a4607193bc31881d9bae700b2b42 assets/resourcegenerator/blockstates/water_absorber.json
 d26301ba2f81244e50e4163af652a43c5c22d6cf assets/resourcegenerator/items/basic_consumer.json
+bd2631671e7b0463eb752b5725497b450dc4e6ff assets/resourcegenerator/items/consumer_output.json
 59795a53c42fc86239878d93a99bb561bdf390f6 assets/resourcegenerator/items/controller.json
 86ae4def8ad75e638e4d1caf67c27ef65da59842 assets/resourcegenerator/items/id_card.json
 8a35b2c77f249fe1d2fc0e043bd770e1c08319f4 assets/resourcegenerator/items/inspector.json

@@ -1,7 +1,6 @@
 package dev.shinyepo.resourcegenerator.blocks.entities;
 
-import dev.shinyepo.resourcegenerator.blocks.entities.types.BasicEntity;
-import dev.shinyepo.resourcegenerator.blocks.entities.types.Consumer;
+import dev.shinyepo.resourcegenerator.blocks.entities.types.ConsumerStructureEntity;
 import dev.shinyepo.resourcegenerator.registries.BlockEntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -9,9 +8,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-public class ResourceImitatorEntity extends BasicEntity {
+public class ResourceImitatorEntity extends ConsumerStructureEntity {
     private ItemStack imitatedResource = ItemStack.EMPTY;
-    private BlockPos consumerPos = null;
 
     public ResourceImitatorEntity(BlockPos worldPosition, BlockState blockState) {
         super(BlockEntityRegistry.RESOURCE_IMITATOR_ENTITY.get(), worldPosition, blockState);
@@ -55,24 +53,6 @@ public class ResourceImitatorEntity extends BasicEntity {
 
     public ItemStack getImitatedResource() {
         return imitatedResource;
-    }
-
-    public void assignConsumer(BlockPos consumerPos) {
-        this.consumerPos = consumerPos;
-    }
-
-    public void notifyConsumer() {
-        if (level == null || level.isClientSide()) return;
-        if (consumerPos == null) return;
-        if (level.getBlockEntity(consumerPos) instanceof Consumer consumerEntity) {
-            consumerEntity.forceVerifyPattern();
-        }
-    }
-
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        notifyConsumer();
     }
 
     @Override

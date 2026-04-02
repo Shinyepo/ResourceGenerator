@@ -1,17 +1,19 @@
 package dev.shinyepo.resourcegenerator.blocks;
 
-import dev.shinyepo.resourcegenerator.blocks.entities.OutputUpgradeEntity;
+import dev.shinyepo.resourcegenerator.blocks.entities.ConsumerOutputEntity;
 import dev.shinyepo.resourcegenerator.blocks.types.ConsumerStructureBlock;
 import net.minecraft.world.level.block.Block;
 
-public class OutputUpgradeBlock extends ConsumerStructureBlock {
+public class ConsumerOutput extends ConsumerStructureBlock {
 
-    public OutputUpgradeBlock(Properties properties) {
+    public ConsumerOutput(Properties properties) {
         super(properties);
 
         SHAPE = Block.box(0, 0, 0, 16, 16, 16);
 
-        setBlockEntity(OutputUpgradeEntity::new);
+        setBlockEntity(ConsumerOutputEntity::new);
         registerDefaultState(getStateDefinition().any());
     }
+
+
 }

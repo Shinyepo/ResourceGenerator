@@ -10,6 +10,8 @@
   "item.resourcegenerator.output_upgrade": "Output Upgrade",
   "block.resourcegenerator.resource_imitator": "Resource Imitator",
   "item.resourcegenerator.resource_imitator": "Resource Imitator",
+  "block.resourcegenerator.consumer_output": "Consumer Output",
+  "item.resourcegenerator.consumer_output": "Consumer Output",
   "block.resourcegenerator.sculk_absorber": "Sculk Absorber",
   "item.resourcegenerator.sculk_absorber": "Sculk Absorber",
   "block.resourcegenerator.pipe": "Pipe",

@@ -5,7 +5,7 @@ import org.jspecify.annotations.NonNull;
 
 public enum PatternElementType implements StringRepresentable {
     RESOURCE,
-    UPGRADE,
+    STRUCTURE,
     EMPTY;
 
     @Override

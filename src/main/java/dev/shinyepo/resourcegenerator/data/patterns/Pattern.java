@@ -3,6 +3,7 @@ package dev.shinyepo.resourcegenerator.data.patterns;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.shinyepo.resourcegenerator.blocks.entities.ResourceImitatorEntity;
+import dev.shinyepo.resourcegenerator.blocks.entities.types.ConsumerStructureEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.UpgradeEntity;
 import dev.shinyepo.resourcegenerator.registries.TagRegistry;
 import net.minecraft.core.BlockPos;
@@ -68,9 +69,9 @@ public class Pattern {
                 shouldInvalidate = true;
                 break;
             }
+            assignConsumerToElement(level, entityPos, offsetPos);
             if (element.type() == PatternElementType.RESOURCE) {
                 //TODO: consider using different invalidation callback when pattern is valid but resources are not
-                assignConsumerToImitator(level, entityPos, offsetPos);
                 ItemStack imitatorStack = getResourceFromImitator(level, offsetPos);
                 if (imitatorStack == null) {
                     shouldInvalidate = true;
@@ -107,12 +108,12 @@ public class Pattern {
         return null;
     }
 
-    private void assignConsumerToImitator(ServerLevel level, BlockPos consumerPos, BlockPos imitatorPos) {
-        BlockEntity entity = level.getBlockEntity(imitatorPos);
-        if (entity instanceof ResourceImitatorEntity imitatorEntity) {
-            imitatorEntity.assignConsumer(consumerPos);
+    private void assignConsumerToElement(ServerLevel level, BlockPos consumerPos, BlockPos elementPos) {
+        BlockEntity entity = level.getBlockEntity(elementPos);
+        if (entity instanceof ConsumerStructureEntity structureEntity) {
+            structureEntity.assignConsumer(consumerPos);
         } else {
-            throw new IllegalArgumentException("Block at " + imitatorPos + " is not a Resource Imitator");
+            throw new IllegalArgumentException("Block at " + elementPos + " is not a Consumer Structural Entity");
         }
     }
 
@@ -161,7 +162,7 @@ public class Pattern {
         private void buildLayout() {
             int half = (size - 1) / 2;
             TagKey<Block> resource = TagRegistry.RESOURCE_BLOCKS;
-            TagKey<Block> upgrade = TagRegistry.UPGRADE_BLOCKS;
+            TagKey<Block> upgrade = TagRegistry.CONSUMER_STRUCTURE_BLOCKS;
 
             for (int z = half; z >= -half; z--) {
                 for (int x = -half; x <= half; x++) {
@@ -175,7 +176,7 @@ public class Pattern {
                     elements.add(new PatternElement(
                             offset,
                             useResource ? resource : upgrade,
-                            useResource ? PatternElementType.RESOURCE : PatternElementType.UPGRADE
+                            useResource ? PatternElementType.RESOURCE : PatternElementType.STRUCTURE
                     ));
                 }
             }

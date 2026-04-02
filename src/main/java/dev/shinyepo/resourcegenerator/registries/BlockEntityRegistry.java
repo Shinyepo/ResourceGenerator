@@ -38,4 +38,7 @@ public class BlockEntityRegistry {
     public static final Supplier<BlockEntityType<SculkAbsorberEntity>> SCULK_ABSORBER_ENTITY = ENTITIES.register("sculk_absorber_entity",
             () -> new BlockEntityType<>(SculkAbsorberEntity::new, BlockRegistry.SCULK_ABSORBER.get()));
 
+    public static final Supplier<BlockEntityType<ConsumerOutputEntity>> CONSUMER_OUTPUT_ENTITY = ENTITIES.register("consumer_output_entity",
+            () -> new BlockEntityType<>(ConsumerOutputEntity::new, BlockRegistry.CONSUMER_OUTPUT.get()));
+
 }
