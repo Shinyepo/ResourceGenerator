@@ -34,10 +34,9 @@ public class SculkAbsorberEntity extends Producer {
         }
         if (getBlockState().getValue(CustomProperties.OPERATIONAL)) {
             super.tick(level);
-        }
-
-        if (getBlockState().getValue(CustomProperties.OPERATIONAL) && level.getGameTime() % 5 == 0) {
-            tryConsumeSculk();
+            if (level.getGameTime() % 1200 == 0) {
+                tryConsumeSculk();
+            }
         }
     }
 
