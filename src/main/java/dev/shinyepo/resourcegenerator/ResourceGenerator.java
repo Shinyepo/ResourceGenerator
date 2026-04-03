@@ -129,13 +129,10 @@ public class ResourceGenerator {
 
                                                     Identifier id = IdentifierArgument.getId(ctx, "id");
                                                     Integer tier = getInteger(ctx, "tier");
-                                                    boolean result = controller.buyUpgrade(source.getLevel(), accId, source.getPlayer().nameAndId().id(), id, tier);
-                                                    if (result) {
-                                                        MutableComponent text = Component.literal("Bought: ").append(Component.translatable("gui." + id.toLanguageKey()));
-                                                        source.sendSuccess(() -> text, true);
-                                                    } else {
-                                                        source.sendFailure(Component.literal("Not enough balance to buy ").append(Component.translatable("gui." + id.toLanguageKey())));
-                                                    }
+                                                    controller.buyUpgrade(source.getLevel(), accId, source.getPlayer().nameAndId().id(), id, tier);
+
+                                                    MutableComponent text = Component.literal("Bought: ").append(Component.translatable("gui." + id.toLanguageKey()));
+                                                    source.sendSuccess(() -> text, true);
                                                     return 1;
                                                 })))
                         )
