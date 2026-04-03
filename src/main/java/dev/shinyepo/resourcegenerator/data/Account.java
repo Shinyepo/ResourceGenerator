@@ -99,7 +99,6 @@ public class Account {
             if (cost <= balance) {
                 changeValue(-cost);
                 upgrades.put(id, tier);
-                System.out.println("bought upgrade");
                 return true;
             }
         }

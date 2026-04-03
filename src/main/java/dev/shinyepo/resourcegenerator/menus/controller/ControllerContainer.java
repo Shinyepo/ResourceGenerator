@@ -18,6 +18,7 @@ import java.util.UUID;
 public class ControllerContainer extends AbstractContainerBase {
     private ControllerEntity controllerEntity;
     private final ContainerData data;
+    private final UUID playerId;
 
     public ControllerContainer(int windowId, Player player, BlockPos pos) {
         this(windowId, player, pos, new SimpleContainerData(2));
@@ -26,6 +27,7 @@ public class ControllerContainer extends AbstractContainerBase {
     public ControllerContainer(int windowId, Player player, BlockPos pos, ContainerData data) {
         super(MenuRegistry.CONTROLLER_MENU.get(), windowId, pos, 1, 0, BlockRegistry.CONTROLLER.get());
         this.data = data;
+        this.playerId = player.getUUID();
         if (player.level().getBlockEntity(pos) instanceof ControllerEntity controller) {
             this.controllerEntity = controller;
             addSlot(controller.getCardHandler(), 0, 152, 8);
@@ -54,7 +56,7 @@ public class ControllerContainer extends AbstractContainerBase {
     public void buyUpgrade(Identifier id, Integer tier) {
         UUID accountId = this.controllerEntity.getAccountId();
         if (accountId != null) {
-            CustomMessages.sendToServer(new BuyAccountUpgradeC2S(accountId, id, tier));
+            CustomMessages.sendToServer(new BuyAccountUpgradeC2S(this.playerId, accountId, id, tier));
         }
     }
 

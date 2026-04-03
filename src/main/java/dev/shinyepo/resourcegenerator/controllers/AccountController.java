@@ -3,10 +3,14 @@ package dev.shinyepo.resourcegenerator.controllers;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.data.Account;
 import dev.shinyepo.resourcegenerator.data.Upgrade;
+import dev.shinyepo.resourcegenerator.networking.CustomMessages;
+import dev.shinyepo.resourcegenerator.networking.packets.SyncAccountUpgradesS2C;
 import dev.shinyepo.resourcegenerator.persistence.AccountSavedData;
 import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.Map;
@@ -26,6 +30,7 @@ public class AccountController {
         return INSTANCES.computeIfAbsent(level, AccountController::new);
     }
 
+    //TODO: Make the changes sync with GUI data
     public static void onServerTick(ServerTickEvent.Post event) {
         for (ServerLevel level : event.getServer().getAllLevels()) {
             AccountController controller = INSTANCES.get(level);
@@ -53,7 +58,14 @@ public class AccountController {
             }
             account.changeValue(op.balanceDelta);
 
-            op.upgrades.forEach(account::buyUpgrade);
+            op.upgrades.forEach((id, tier) -> {
+                var result = account.buyUpgrade(id, tier);
+                if (result && op.playerId != null) {
+                    Player player = level.getPlayerByUUID(op.playerId);
+                    if (player instanceof ServerPlayer serverPlayer)
+                        CustomMessages.sendToPlayer(new SyncAccountUpgradesS2C(getUpgrades(accountId)), serverPlayer);
+                }
+            });
         }
         dataStore.setDirty();
     }
@@ -90,15 +102,13 @@ public class AccountController {
         return null;
     }
 
-    public boolean buyUpgrade(ServerLevel level, UUID accountId, Identifier id, Integer tier) {
+    public void buyUpgrade(ServerLevel level, UUID playerId, UUID accountId, Identifier id, Integer tier) {
         Account account = dataStore.getAccount(accountId);
         if (account != null) {
             PENDING_OPS.computeIfAbsent(level, k -> new WeakHashMap<>())
                     .computeIfAbsent(accountId, k -> new AccountOperation(0))
-                    .buyUpgrade(id, tier);
-            return true;
+                    .buyUpgrade(playerId, id, tier);
         }
-        return false;
     }
 
     public void removeUpgrade(UUID accountId, Identifier id) {
@@ -132,6 +142,7 @@ public class AccountController {
     private static class AccountOperation {
         long balanceDelta;
         Map<Identifier, Integer> upgrades = new WeakHashMap<>();
+        UUID playerId;
 
         public AccountOperation(long value) {
             this.balanceDelta = value;
@@ -141,8 +152,9 @@ public class AccountController {
             balanceDelta += change;
         }
 
-        public void buyUpgrade(Identifier id, int tier) {
+        public void buyUpgrade(UUID playerId, Identifier id, int tier) {
             upgrades.put(id, tier);
+            this.playerId = playerId;
         }
     }
 }
