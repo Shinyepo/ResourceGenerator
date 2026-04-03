@@ -63,6 +63,7 @@ public class ResourceGenerator {
         NeoForge.EVENT_BUS.addListener(this::onServerStopping);
         NeoForge.EVENT_BUS.addListener(ResourceGenerator::registerCommands);
         NeoForge.EVENT_BUS.addListener(DeviceNetworkController::onServerTick);
+        NeoForge.EVENT_BUS.addListener(AccountController::onServerTick);
 
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -128,7 +129,7 @@ public class ResourceGenerator {
 
                                                     Identifier id = IdentifierArgument.getId(ctx, "id");
                                                     Integer tier = getInteger(ctx, "tier");
-                                                    boolean result = controller.buyUpgrade(accId, id, tier);
+                                                    boolean result = controller.buyUpgrade(source.getLevel(), accId, id, tier);
                                                     if (result) {
                                                         MutableComponent text = Component.literal("Bought: ").append(Component.translatable("gui." + id.toLanguageKey()));
                                                         source.sendSuccess(() -> text, true);
@@ -157,7 +158,7 @@ public class ResourceGenerator {
         AccountController controller = AccountController.getInstance(level);
         UUID accid = controller.getOrCreateAccount(player.nameAndId().id());
         if (accid != null) {
-            controller.changeAccountBalance(accid, amount);
+            controller.changeAccountBalance(level, accid, amount);
         }
         return controller.getAccountBalance(accid);
     }

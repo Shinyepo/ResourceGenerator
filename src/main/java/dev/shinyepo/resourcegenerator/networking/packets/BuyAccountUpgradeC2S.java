@@ -39,7 +39,7 @@ public record BuyAccountUpgradeC2S(UUID accountId, Identifier id, Integer tier) 
         context.enqueueWork(() -> {
             ServerLevel level = (ServerLevel) context.player().level();
             AccountController controller = AccountController.getInstance(level);
-            boolean result = controller.buyUpgrade(accountId, id, tier);
+            boolean result = controller.buyUpgrade(level, accountId, id, tier);
             if (result)
                 CustomMessages.sendToPlayer(new SyncAccountUpgradesS2C(controller.getUpgrades(accountId)), (ServerPlayer) context.player());
         });

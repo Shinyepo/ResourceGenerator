@@ -7,6 +7,7 @@ import dev.shinyepo.resourcegenerator.persistence.AccountSavedData;
 import dev.shinyepo.resourcegenerator.registries.UpgradeRegistry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.Map;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import java.util.WeakHashMap;
 
 public class AccountController {
     private static final Map<ServerLevel, AccountController> INSTANCES = new WeakHashMap<>();
+    private static final Map<ServerLevel, Map<UUID, AccountOperation>> PENDING_OPS = new WeakHashMap<>();
     private final AccountSavedData dataStore;
 
     protected AccountController(ServerLevel level) {
@@ -24,32 +26,60 @@ public class AccountController {
         return INSTANCES.computeIfAbsent(level, AccountController::new);
     }
 
+    public static void onServerTick(ServerTickEvent.Post event) {
+        for (ServerLevel level : event.getServer().getAllLevels()) {
+            AccountController controller = INSTANCES.get(level);
+            if (controller != null) {
+                controller.flushPendingOperations(level);
+            }
+        }
+    }
+
+    public void flushPendingOperations(ServerLevel level) {
+        Map<UUID, AccountOperation> ops = PENDING_OPS.get(level);
+        if (ops == null || ops.isEmpty()) {
+            return;
+        }
+
+        PENDING_OPS.put(level, new WeakHashMap<>());
+
+        for (Map.Entry<UUID, AccountOperation> entry : ops.entrySet()) {
+            UUID accountId = entry.getKey();
+            AccountOperation op = entry.getValue();
+
+            Account account = dataStore.getAccount(accountId);
+            if (account == null) {
+                continue;
+            }
+            account.changeValue(op.balanceDelta);
+
+            op.upgrades.forEach(account::buyUpgrade);
+        }
+        dataStore.setDirty();
+    }
+
     public static void unloadData(ServerLevel level) {
         INSTANCES.remove(level);
     }
 
-    public Long changeAccountBalance(UUID accountId, Long amount) {
+    public void changeAccountBalance(ServerLevel level, UUID accountId, Long amount) {
         Account account = dataStore.getAccount(accountId);
         if (account != null) {
-            Long balance = account.changeValue(amount);
-            dataStore.setDirty();
-            return balance;
+            PENDING_OPS.computeIfAbsent(level, k -> new WeakHashMap<>())
+                    .computeIfAbsent(accountId, k -> new AccountOperation(0))
+                    .updateBalanceDelta(amount);
         }
-        return 0L;
     }
 
-    public Long addBalanceFromMachines(UUID accountId, Long amount) {
+    public void addBalanceFromMachines(ServerLevel level, UUID accountId, Long amount) {
         Account account = dataStore.getAccount(accountId);
         if (account != null) {
             Integer productionUpgradeTier = account.getUpgrade(UpgradeRegistry.ABSORPTION_AMOUNT);
             Upgrade upgrade = UpgradeRegistry.getUpgradeData(UpgradeRegistry.ABSORPTION_AMOUNT);
             float upgradeBonus = upgrade.totalBonus(productionUpgradeTier);
             long amountWithUpgrades = (long) (amount * upgradeBonus);
-            Long balanceAfterChange = account.changeValue(amountWithUpgrades);
-            dataStore.setDirty();
-            return balanceAfterChange;
+            changeAccountBalance(level, accountId, amountWithUpgrades);
         }
-        return 0L;
     }
 
     public Map<Identifier, Integer> getUpgrades(UUID accountId) {
@@ -60,10 +90,13 @@ public class AccountController {
         return null;
     }
 
-    public boolean buyUpgrade(UUID accountId, Identifier id, Integer tier) {
+    public boolean buyUpgrade(ServerLevel level, UUID accountId, Identifier id, Integer tier) {
         Account account = dataStore.getAccount(accountId);
         if (account != null) {
-            return account.buyUpgrade(id, tier);
+            PENDING_OPS.computeIfAbsent(level, k -> new WeakHashMap<>())
+                    .computeIfAbsent(accountId, k -> new AccountOperation(0))
+                    .buyUpgrade(id, tier);
+            return true;
         }
         return false;
     }
@@ -94,5 +127,22 @@ public class AccountController {
             return createAccount(ownerId);
         }
         return account.getAccountId();
+    }
+
+    private static class AccountOperation {
+        long balanceDelta;
+        Map<Identifier, Integer> upgrades = new WeakHashMap<>();
+
+        public AccountOperation(long value) {
+            this.balanceDelta = value;
+        }
+
+        public void updateBalanceDelta(long change) {
+            balanceDelta += change;
+        }
+
+        public void buyUpgrade(Identifier id, int tier) {
+            upgrades.put(id, tier);
+        }
     }
 }
