@@ -30,7 +30,6 @@ public class AccountController {
         return INSTANCES.computeIfAbsent(level, AccountController::new);
     }
 
-    //TODO: Make the changes sync with GUI data
     public static void onServerTick(ServerTickEvent.Post event) {
         for (ServerLevel level : event.getServer().getAllLevels()) {
             AccountController controller = INSTANCES.get(level);
