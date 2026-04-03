@@ -62,6 +62,7 @@ public class ResourceGenerator {
         modEventBus.addListener(DataPackRegistry::registerDatapackRegistries);
         NeoForge.EVENT_BUS.addListener(this::onServerStopping);
         NeoForge.EVENT_BUS.addListener(ResourceGenerator::registerCommands);
+        NeoForge.EVENT_BUS.addListener(DeviceNetworkController::onServerTick);
 
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
