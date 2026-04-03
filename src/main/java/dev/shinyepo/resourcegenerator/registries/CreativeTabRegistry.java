@@ -27,5 +27,6 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.RESOURCE_IMITATOR_ITEM.get());
                 output.accept(ItemRegistry.SCULK_ABSORBER_ITEM.get());
                 output.accept(ItemRegistry.CONSUMER_OUTPUT_ITEM.get());
+                output.accept(ItemRegistry.CONDUIT_ABSORBER_ITEM.get());
             }).build());
 }

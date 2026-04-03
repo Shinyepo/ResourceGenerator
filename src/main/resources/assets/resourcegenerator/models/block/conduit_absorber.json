@@ -1,0 +1,8 @@
+{
+  "parent": "resourcegenerator:block/type/absorber",
+  "textures": {
+    "0": "resourcegenerator:block/conduit_absorber/conduit_absorber_side",
+    "1": "resourcegenerator:block/conduit_absorber/conduit_absorber_top",
+    "particle": "resourcegenerator:block/conduit_absorber/conduit_absorber_side"
+  }
+}

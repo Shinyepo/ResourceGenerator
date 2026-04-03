@@ -30,6 +30,7 @@ public class CustomItemGenerator extends ItemModelGenerators {
         generateItemWithExistingParent(ItemRegistry.RESOURCE_IMITATOR_ITEM.get(), "resource_imitator");
         generateItemWithExistingParent(ItemRegistry.SCULK_ABSORBER_ITEM.get(), "sculk_absorber");
         generateItemWithExistingParent(ItemRegistry.CONSUMER_OUTPUT_ITEM.get(), "consumer_output");
+        generateItemWithExistingParent(ItemRegistry.CONDUIT_ABSORBER_ITEM.get(), "conduit_absorber");
         generateFlatItem(ItemRegistry.ID_CARD.get(), ModelTemplates.FLAT_ITEM);
         generateFlatItem(ItemRegistry.INSPECTOR.get(), ModelTemplates.FLAT_ITEM);
     }

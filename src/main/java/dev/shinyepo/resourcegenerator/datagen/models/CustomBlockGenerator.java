@@ -34,6 +34,7 @@ public class CustomBlockGenerator extends BlockModelGenerators {
         generateBlockWithExistingModel(BlockRegistry.RESOURCE_IMITATOR);
         generateBlockWithExistingModel(BlockRegistry.SCULK_ABSORBER);
         generateBlockWithExistingModel(BlockRegistry.CONSUMER_OUTPUT);
+        generateBlockWithExistingModel(BlockRegistry.CONDUIT_ABSORBER);
     }
 
     private void generateBlockWithExistingModel(Block block, Identifier modelLocation) {

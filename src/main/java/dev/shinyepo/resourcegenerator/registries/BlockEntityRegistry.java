@@ -41,4 +41,7 @@ public class BlockEntityRegistry {
     public static final Supplier<BlockEntityType<ConsumerOutputEntity>> CONSUMER_OUTPUT_ENTITY = ENTITIES.register("consumer_output_entity",
             () -> new BlockEntityType<>(ConsumerOutputEntity::new, BlockRegistry.CONSUMER_OUTPUT.get()));
 
+    public static final Supplier<BlockEntityType<ConduitAbsorberEntity>> CONDUIT_ABSORBER_ENTITY = ENTITIES.register("conduit_absorber_entity",
+            () -> new BlockEntityType<>(ConduitAbsorberEntity::new, BlockRegistry.CONDUIT_ABSORBER.get()));
+
 }
