@@ -22,7 +22,7 @@ public class CapabilityRegistry {
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.CONTROLLER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
-        event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.PIPE_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
+        event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.CABLE_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.BASIC_CONSUMER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(Capabilities.Item.BLOCK, BlockEntityRegistry.BASIC_CONSUMER_ENTITY.get(), Consumer::getItemCapability);
         event.registerBlockEntity(Capabilities.Item.BLOCK, BlockEntityRegistry.CONSUMER_OUTPUT_ENTITY.get(), ConsumerOutputEntity::getItemCapability);

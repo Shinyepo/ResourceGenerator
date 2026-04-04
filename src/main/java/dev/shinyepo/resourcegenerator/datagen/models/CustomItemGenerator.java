@@ -24,7 +24,7 @@ public class CustomItemGenerator extends ItemModelGenerators {
         generateItemWithExistingParent(ItemRegistry.SOLAR_ITEM.get(), "solar_panel");
         generateItemWithExistingParent(ItemRegistry.WATER_ABSORBER_ITEM.get(), "water_absorber");
         generateItemWithExistingParent(ItemRegistry.CONTROLLER_ITEM.get(), "controller");
-        generateItemWithExistingParent(ItemRegistry.PIPE_ITEM.get(), "pipe");
+        generateItemWithExistingParent(ItemRegistry.CABLE_ITEM.get(), "cable");
         generateItemWithExistingParent(ItemRegistry.BASIC_CONSUMER_ITEM.get(), "basic_consumer");
         generateItemWithExistingParent(ItemRegistry.OUTPUT_UPGRADE_ITEM.get(), "output_upgrade");
         generateItemWithExistingParent(ItemRegistry.RESOURCE_IMITATOR_ITEM.get(), "resource_imitator");

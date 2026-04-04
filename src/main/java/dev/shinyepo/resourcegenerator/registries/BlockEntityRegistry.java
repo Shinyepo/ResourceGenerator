@@ -23,8 +23,8 @@ public class BlockEntityRegistry {
     public static final Supplier<BlockEntityType<WaterAbsorberEntity>> WATER_ABSORBER_ENTITY = ENTITIES.register("water_absorber",
             () -> new BlockEntityType<>(WaterAbsorberEntity::new, BlockRegistry.WATER_ABSORBER.get()));
 
-    public static final Supplier<BlockEntityType<PipeEntity>> PIPE_ENTITY = ENTITIES.register("pipe_entity",
-            () -> new BlockEntityType<>(PipeEntity::new, BlockRegistry.PIPE.get()));
+    public static final Supplier<BlockEntityType<CableEntity>> CABLE_ENTITY = ENTITIES.register("cable_entity",
+            () -> new BlockEntityType<>(CableEntity::new, BlockRegistry.CABLE.get()));
 
     public static final Supplier<BlockEntityType<BasicConsumerEntity>> BASIC_CONSUMER_ENTITY = ENTITIES.register("basic_consumer_entity",
             () -> new BlockEntityType<>(BasicConsumerEntity::new, BlockRegistry.BASIC_CONSUMER.get()));

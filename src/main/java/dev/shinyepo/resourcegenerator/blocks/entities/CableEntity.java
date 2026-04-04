@@ -6,9 +6,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class PipeEntity extends Transmitter {
-    public PipeEntity(BlockPos pos, BlockState blockState) {
-        super(BlockEntityRegistry.PIPE_ENTITY.get(), pos, blockState);
+public class CableEntity extends Transmitter {
+    public CableEntity(BlockPos pos, BlockState blockState) {
+        super(BlockEntityRegistry.CABLE_ENTITY.get(), pos, blockState);
 
         configureSides(Direction.values());
     }
