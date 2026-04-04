@@ -147,7 +147,7 @@ public class DeviceNetworkConstructor {
         for (BlockPos device : validDevices) {
             if (!visited.contains(device)) {
                 Set<BlockPos> component = new HashSet<>();
-                dfs(device, component, validDevices);
+                dfs(level, device, component, validDevices);
                 visited.addAll(component);
                 components.add(component);
             }
@@ -292,7 +292,7 @@ public class DeviceNetworkConstructor {
         dataStore.setDirty();
     }
 
-    private void dfs(BlockPos start, Set<BlockPos> component, Set<BlockPos> allDevices) {
+    private void dfs(ServerLevel level, BlockPos start, Set<BlockPos> component, Set<BlockPos> allDevices) {
         ArrayDeque<BlockPos> stack = new ArrayDeque<>();
         stack.push(start);
 
@@ -301,7 +301,8 @@ public class DeviceNetworkConstructor {
             if (component.add(current)) {
                 for (Direction dir : Direction.values()) {
                     BlockPos neighbor = current.relative(dir);
-                    if (allDevices.contains(neighbor)) {
+                    INetworkCapability cap = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, neighbor, dir.getOpposite());
+                    if (allDevices.contains(neighbor) && cap != null) {
                         stack.push(neighbor);
                     }
                 }
