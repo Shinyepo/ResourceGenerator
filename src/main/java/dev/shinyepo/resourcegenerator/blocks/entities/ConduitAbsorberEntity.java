@@ -52,8 +52,8 @@ public class ConduitAbsorberEntity extends Producer {
         for (int ox = -1; ox <= 1; ++ox) {
             for (int oy = -1; oy <= 1; ++oy) {
                 for (int oz = -1; oz <= 1; ++oz) {
-                    //Skip center, 1 above and 1 below - for absorber and potential cables
-                    if (ox == 0 && oz == 0) {
+                    //Skip center - for absorber
+                    if (ox == 0 && oz == 0 && oy == 0) {
                         continue;
                     }
                     BlockPos testPos = worldPosition.offset(ox, oy, oz);
