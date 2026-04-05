@@ -64,13 +64,17 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
             Map<Identifier, Integer> playerUpgrades = AccountUpgradeData.get();
             int currentTier = playerUpgrades.getOrDefault(upgrade.id(), 0);
             boolean maxTierFlag = currentTier == upgrade.maxTier();
-            String upgradeCost = maxTierFlag ? "MAX TIER" : String.valueOf(upgrade.upgradeCost(currentTier + 1));
-            String nextBonus = maxTierFlag ? "MAX TIER" : String.valueOf(upgrade.totalBonus(currentTier + 1));
-            graphics.text(getFont(), Component.literal("Balance: " + this.getMenu().getValue()), 6, 92, GuiElement.BASIC.getColor(), false);
+            long upgradeCost = upgrade.upgradeCost(currentTier + 1);
+            float nextBonus = upgrade.totalBonus(currentTier + 1);
+            getParent().formatAndDisplayValue(graphics, "Balance: ", getMenu().getValue(), 6, 92, mouseX, mouseY);
             graphics.text(getFont(), Component.literal("Tier: " + currentTier), 6, 102, GuiElement.BASIC.getColor(), false);
             graphics.text(getFont(), Component.literal("Current bonus: " + upgrade.totalBonus(currentTier)), 6, 112, GuiElement.BASIC.getColor(), false);
-            graphics.text(getFont(), Component.literal("Upgrade Cost: " + upgradeCost), 6, 122, GuiElement.BASIC.getColor(), false);
-            graphics.text(getFont(), Component.literal("Next bonus: " + nextBonus), 6, 132, GuiElement.BASIC.getColor(), false);
+            if (maxTierFlag) {
+                graphics.text(getFont(), Component.literal("Max Tier"), 6, 122, GuiElement.RED.getColor(), false);
+            } else {
+                getParent().formatAndDisplayValue(graphics, "Upgrade Cost: ", upgradeCost, 6, 122, mouseX, mouseY);
+                graphics.text(getFont(), Component.literal("Next bonus: " + nextBonus), 6, 132, GuiElement.BASIC.getColor(), false);
+            }
 
             graphics.text(getFont(), Component.literal("?"), 6, 152, GuiElement.BASIC.getColor(), false);
             if (GuiMouseUtil.isMouseOver(mouseX, mouseY, leftPos + 6, topPos + 152, 7)) {
