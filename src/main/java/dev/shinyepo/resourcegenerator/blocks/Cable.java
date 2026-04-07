@@ -56,7 +56,7 @@ public class Cable extends NetworkBlock implements SimpleWaterloggedBlock {
         setBlockEntity(CableEntity::new);
 
         registerDefaultState(getStateDefinition().any()
-                .setValue(WATERLOGGED, true)
+                .setValue(WATERLOGGED, false)
                 .setValue(NORTH, false)
                 .setValue(SOUTH, false)
                 .setValue(WEST, false)
