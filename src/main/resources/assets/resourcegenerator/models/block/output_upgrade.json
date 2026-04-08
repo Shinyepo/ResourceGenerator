@@ -6,8 +6,6 @@
     64,
     64
   ],
-  "render_type": "minecraft:cutout_mipped",
-  "ambientocclusion": false,
   "textures": {
     "0": "resourcegenerator:block/upgrade_block/upgrade_texture",
     "particle": "resourcegenerator:block/upgrade_block/upgrade_texture"

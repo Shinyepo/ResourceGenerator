@@ -6,8 +6,6 @@
     64
   ],
   "parent": "block/block",
-  "render_type": "minecraft:cutout_mipped",
-  "ambientocclusion": false,
   "textures": {
     "0": "resourcegenerator:block/resource_imitator/resource_imitator_texture",
     "particle": "resourcegenerator:block/resource_imitator/resource_imitator_texture"

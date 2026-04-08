@@ -2,8 +2,6 @@
   "format_version": "1.21.8",
   "credit": "Made with Blockbench",
   "parent": "block/block",
-  "render_type": "minecraft:cutout_mipped",
-  "ambientocclusion": false,
   "textures": {
     "0": "resourcegenerator:block/cable/cable_texture",
     "particle": "resourcegenerator:block/cable/cable_texture"

@@ -6,8 +6,6 @@
     32
   ],
   "parent": "block/block",
-  "render_type": "minecraft:cutout_mipped",
-  "ambientocclusion": false,
   "textures": {
     "1": "resourcegenerator:block/solar/solar_texture",
     "particle": "resourcegenerator:block/solar/solar_texture"
