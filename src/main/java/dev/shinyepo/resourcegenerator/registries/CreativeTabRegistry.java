@@ -22,6 +22,7 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.SOLAR_ITEM.get());
                 output.accept(ItemRegistry.WATER_ABSORBER_ITEM.get());
                 output.accept(ItemRegistry.CABLE_ITEM.get());
+                output.accept(ItemRegistry.ITEM_PIPE_ITEM.get());
                 output.accept(ItemRegistry.BASIC_CONSUMER_ITEM.get());
                 output.accept(ItemRegistry.OUTPUT_UPGRADE_ITEM.get());
                 output.accept(ItemRegistry.RESOURCE_IMITATOR_ITEM.get());

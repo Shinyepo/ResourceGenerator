@@ -26,6 +26,9 @@ public class BlockEntityRegistry {
     public static final Supplier<BlockEntityType<CableEntity>> CABLE_ENTITY = ENTITIES.register("cable_entity",
             () -> new BlockEntityType<>(CableEntity::new, BlockRegistry.CABLE.get()));
 
+    public static final Supplier<BlockEntityType<ItemPipeEntity>> ITEM_PIPE_ENTITY = ENTITIES.register("item_pipe_entity",
+            () -> new BlockEntityType<>(ItemPipeEntity::new, BlockRegistry.ITEM_PIPE.get()));
+
     public static final Supplier<BlockEntityType<BasicConsumerEntity>> BASIC_CONSUMER_ENTITY = ENTITIES.register("basic_consumer_entity",
             () -> new BlockEntityType<>(BasicConsumerEntity::new, BlockRegistry.BASIC_CONSUMER.get()));
 

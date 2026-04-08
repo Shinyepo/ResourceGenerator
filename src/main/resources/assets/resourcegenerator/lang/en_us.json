@@ -18,6 +18,8 @@
   "item.resourcegenerator.conduit_absorber": "Conduit Absorber",
   "block.resourcegenerator.cable": "Network Cable",
   "item.resourcegenerator.cable": "Network Cable",
+  "block.resourcegenerator.item_pipe": "Item Pipe",
+  "item.resourcegenerator.item_pipe": "Item Pipe",
   "block.resourcegenerator.basic_consumer": "Basic Consumer",
   "item.resourcegenerator.basic_consumer": "Basic Consumer",
   "item.resourcegenerator.id_card": "Id Card",
