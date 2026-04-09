@@ -4,6 +4,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
 import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
+import dev.shinyepo.resourcegenerator.pipes.CustomBlockStateModel;
+import dev.shinyepo.resourcegenerator.pipes.builders.CustomBlockDefinition;
 import dev.shinyepo.resourcegenerator.registries.*;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -18,6 +20,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -57,6 +60,7 @@ public class ResourceGenerator {
 
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(ResourceGenerator::registerRegistries);
+        modEventBus.addListener(ResourceGenerator::registerDefinitions);
         modEventBus.addListener(CapabilityRegistry::registerCapabilities);
         modEventBus.addListener(PacketRegistry::registerPayloadHandler);
         modEventBus.addListener(DataPackRegistry::registerDatapackRegistries);
@@ -78,6 +82,11 @@ public class ResourceGenerator {
                     DeviceNetworkController.unloadData(level);
                     AccountController.unloadData(level);
                 });
+    }
+
+    public static void registerDefinitions(RegisterBlockStateModels event) {
+        event.registerDefinition(CustomBlockDefinition.ID, CustomBlockDefinition.CODEC);
+        event.registerModel(CustomBlockStateModel.Unbaked.ID, CustomBlockStateModel.Unbaked.CODEC);
     }
 
     public static void registerRegistries(NewRegistryEvent event) {

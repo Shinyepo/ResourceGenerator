@@ -2,6 +2,8 @@ package dev.shinyepo.resourcegenerator.datagen.models;
 
 import com.mojang.math.Quadrant;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
+import dev.shinyepo.resourcegenerator.pipes.builders.CustomBlockModelBuilder;
+import dev.shinyepo.resourcegenerator.pipes.builders.CustomModelDefinition;
 import dev.shinyepo.resourcegenerator.registries.BlockRegistry;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelOutput;
@@ -12,6 +14,7 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.model.ModelInstance;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.block.Block;
@@ -39,6 +42,17 @@ public class CustomBlockGenerator extends BlockModelGenerators {
         generateBlockWithExistingModel(BlockRegistry.SCULK_ABSORBER);
         generateBlockWithExistingModel(BlockRegistry.CONSUMER_OUTPUT);
         generateBlockWithExistingModel(BlockRegistry.CONDUIT_ABSORBER);
+        registerItemPipe();
+    }
+
+    private void registerItemPipe() {
+        blockStateOutput.accept(
+                CustomModelDefinition.dispatch(
+                        BlockRegistry.ITEM_PIPE.get(),
+                        new CustomBlockModelBuilder()
+                                .withModelLocation(BuiltInRegistries.BLOCK.getKey(BlockRegistry.ITEM_PIPE.get()))
+                )
+        );
     }
 
     private void generateBlockWithExistingModel(Block block, Identifier modelLocation) {

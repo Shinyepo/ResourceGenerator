@@ -1,0 +1,5 @@
+{
+  "neoforge:definition_type": "resourcegenerator:custom_definition_loader",
+  "model": "resourcegenerator:item_pipe",
+  "state": {}
+}
