@@ -79,8 +79,6 @@ public class Cable extends NetworkBlock implements SimpleWaterloggedBlock {
 
     @Override
     protected @NonNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-
-
         return dynamicShape.getShape(state);
     }
 

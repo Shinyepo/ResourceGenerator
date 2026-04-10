@@ -55,7 +55,6 @@ public class ItemPipe extends BasicBlock implements SimpleWaterloggedBlock {
         setBlockEntity(ItemPipeEntity::new);
 
         dynamicShape = new ItemPipeDynamicShapeHelper();
-        dynamicShape.init();
 
         registerDefaultState(getStateDefinition().any()
                 .setValue(WATERLOGGED, false));

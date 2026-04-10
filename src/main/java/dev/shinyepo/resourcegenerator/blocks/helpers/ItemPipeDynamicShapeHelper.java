@@ -35,6 +35,10 @@ public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
 
     public VoxelShape[] shapeCache;
 
+    public ItemPipeDynamicShapeHelper() {
+        init();
+    }
+
     @Override
     public void init() {
         shapeCache = makeShapes();

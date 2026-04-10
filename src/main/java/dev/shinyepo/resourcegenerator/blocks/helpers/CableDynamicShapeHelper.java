@@ -1,16 +1,17 @@
 package dev.shinyepo.resourcegenerator.blocks.helpers;
 
 import dev.shinyepo.resourcegenerator.blocks.Cable;
-import dev.shinyepo.resourcegenerator.blocks.types.NetworkBlock;
 import dev.shinyepo.resourcegenerator.capabilities.INetworkCapability;
+import dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection;
 import dev.shinyepo.resourcegenerator.registries.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -26,9 +27,15 @@ public class CableDynamicShapeHelper implements IDynamicShapeHelper {
     private static final VoxelShape UP_EXT = Block.box(7, 9, 7, 9, 16, 9);
     private static final VoxelShape DOWN_EXT = Block.box(7, 0, 7, 9, 7, 9);
 
+    public VoxelShape[] shapeCache;
+
+    public CableDynamicShapeHelper() {
+        init();
+    }
+
     @Override
     public void init() {
-
+        shapeCache = makeShapes();
     }
 
     @Override
@@ -44,16 +51,60 @@ public class CableDynamicShapeHelper implements IDynamicShapeHelper {
 
     @Override
     public VoxelShape getShape(BlockState state) {
+        int north = state.getValue(NORTH) ? 1 : 0;
+        int south = state.getValue(SOUTH) ? 1 : 0;
+        int west = state.getValue(WEST) ? 1 : 0;
+        int east = state.getValue(EAST) ? 1 : 0;
+        int up = state.getValue(UP) ? 1 : 0;
+        int down = state.getValue(DOWN) ? 1 : 0;
+
+        int index = calculateShapeIndex(north, south, west, east, up, down);
+
+        return shapeCache[index];
+    }
+
+    private VoxelShape[] makeShapes() {
+        int length = ItemPipeConnection.values().length;
+        VoxelShape[] shapeCache = new VoxelShape[length * length * length * length * length * length];
+
+        for (int up = 0; up < 2; up++) {
+            for (int down = 0; down < 2; down++) {
+                for (int north = 0; north < 2; north++) {
+                    for (int south = 0; south < 2; south++) {
+                        for (int east = 0; east < 2; east++) {
+                            for (int west = 0; west < 2; west++) {
+                                int idx = calculateShapeIndex(north, south, west, east, up, down);
+                                shapeCache[idx] = makeShape(north, south, west, east, up, down);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return shapeCache;
+    }
+
+    private VoxelShape makeShape(int north, int south, int west, int east, int up, int down) {
         VoxelShape shape = CENTER;
-
-        if (state.getValue(NORTH)) shape = Shapes.or(shape, NORTH_EXT);
-        if (state.getValue(SOUTH)) shape = Shapes.or(shape, SOUTH_EXT);
-        if (state.getValue(EAST)) shape = Shapes.or(shape, EAST_EXT);
-        if (state.getValue(WEST)) shape = Shapes.or(shape, WEST_EXT);
-        if (state.getValue(UP)) shape = Shapes.or(shape, UP_EXT);
-        if (state.getValue(DOWN)) shape = Shapes.or(shape, DOWN_EXT);
-
+        shape = combineShape(shape, north, NORTH_EXT);
+        shape = combineShape(shape, south, SOUTH_EXT);
+        shape = combineShape(shape, west, WEST_EXT);
+        shape = combineShape(shape, east, EAST_EXT);
+        shape = combineShape(shape, up, UP_EXT);
+        shape = combineShape(shape, down, DOWN_EXT);
         return shape;
+    }
+
+    private VoxelShape combineShape(VoxelShape shape, int cableConnection, VoxelShape cableShape) {
+        if (cableConnection == 1) {
+            return Shapes.join(shape, cableShape, BooleanOp.OR);
+        }
+        return shape;
+    }
+
+    private int calculateShapeIndex(int north, int south, int west, int east, int up, int down) {
+        int l = 2; //Possible shapes per side
+        return ((((south * l + north) * l + west) * l + east) * l + up) * l + down;
     }
 
     @Override
@@ -83,13 +134,11 @@ public class CableDynamicShapeHelper implements IDynamicShapeHelper {
         if (relativeState.getBlock() instanceof Cable)
             return true;
 
-        if (relativeState.getBlock() instanceof NetworkBlock) {
-            if (level instanceof ServerLevel serverLevel) {
-                INetworkCapability cap = serverLevel.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, relativePos, direction.getOpposite());
-                return cap != null;
-            }
-        }
+        BlockEntity be = level.getBlockEntity(relativePos);
+        if (be == null)
+            return false;
 
-        return false;
+        INetworkCapability cap = be.getLevel().getCapability(CapabilityRegistry.NETWORK_CAPABILITY, relativePos, direction.getOpposite());
+        return cap != null;
     }
 }
