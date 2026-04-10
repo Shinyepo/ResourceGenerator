@@ -138,6 +138,7 @@ public class CableDynamicShapeHelper implements IDynamicShapeHelper {
         if (be == null)
             return false;
 
+        assert be.getLevel() != null;
         INetworkCapability cap = be.getLevel().getCapability(CapabilityRegistry.NETWORK_CAPABILITY, relativePos, direction.getOpposite());
         return cap != null;
     }

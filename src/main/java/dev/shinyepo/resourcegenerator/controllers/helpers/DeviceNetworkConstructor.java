@@ -35,14 +35,21 @@ public class DeviceNetworkConstructor extends AbstractNetworkConstructor {
     @Override
     protected Network.DeviceType getValidNetworkDevice(ServerLevel level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof INetworkDevice device) {
-            if (device instanceof Producer) {
-                return DeviceNetwork.DeviceNetworkType.PRODUCER;
-            } else if (device instanceof Transmitter) {
-                return DeviceNetwork.DeviceNetworkType.TRANSMITTER;
-            } else if (device instanceof Receiver) {
-                return DeviceNetwork.DeviceNetworkType.RECEIVER;
-            } else if (device instanceof Consumer) {
-                return DeviceNetwork.DeviceNetworkType.CONSUMER;
+            switch (device) {
+                case Producer _ -> {
+                    return DeviceNetwork.DeviceNetworkType.PRODUCER;
+                }
+                case Transmitter _ -> {
+                    return DeviceNetwork.DeviceNetworkType.TRANSMITTER;
+                }
+                case Receiver _ -> {
+                    return DeviceNetwork.DeviceNetworkType.RECEIVER;
+                }
+                case Consumer _ -> {
+                    return DeviceNetwork.DeviceNetworkType.CONSUMER;
+                }
+                default -> {
+                }
             }
         }
         return null;

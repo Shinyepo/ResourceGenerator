@@ -35,14 +35,14 @@ public abstract class AbstractNetworkConstructor {
         INetworkCapability cap = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, removePos, null);
         if (cap == null) return;
         pendingOps
-                .computeIfAbsent(level, k -> new HashMap<>())
+                .computeIfAbsent(level, _ -> new HashMap<>())
                 .put(removePos.immutable(), new Operation(cap.getNetworkId(), PendingNetworkOp.DESTROY));
     }
 
     //Trigger on placing new network device
     public void enqueueNewNetworkConnection(ServerLevel level, BlockPos newDevice) {
         pendingOps
-                .computeIfAbsent(level, k -> new HashMap<>())
+                .computeIfAbsent(level, _ -> new HashMap<>())
                 .put(newDevice.immutable(), new Operation(null, PendingNetworkOp.PLACE));
     }
 

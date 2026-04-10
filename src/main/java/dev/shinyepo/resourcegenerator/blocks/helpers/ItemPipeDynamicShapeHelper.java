@@ -16,6 +16,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
 
+import static dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection.BLOCK;
+import static dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection.CABLE;
 import static dev.shinyepo.resourcegenerator.properties.CustomProperties.*;
 
 public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
@@ -89,10 +91,12 @@ public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         if (block instanceof ItemPipe && fromState.getBlock().equals(state.getBlock())) {
-            return ItemPipeConnection.CABLE;
+            return CABLE;
         } else if (isConnectable(world, connectorPos, facing)) {
-            if (fromState.is(Blocks.AIR)) return ItemPipeConnection.BLOCK;
-            return fromState.getValue(getProp(facing)) != ItemPipeConnection.NONE ? fromState.getValue(getProp(facing)) : ItemPipeConnection.BLOCK;
+            if (fromState.is(Blocks.AIR)) return BLOCK;
+            var prop = getProp(facing);
+            assert prop != null;
+            return fromState.getValue(prop) != ItemPipeConnection.NONE ? fromState.getValue(prop) : BLOCK;
         } else {
             return ItemPipeConnection.NONE;
         }
@@ -132,6 +136,7 @@ public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
         if (te == null) {
             return false;
         }
+        assert te.getLevel() != null;
         return te.getLevel().getCapability(Capabilities.Item.BLOCK, pos, facing.getOpposite()) != null;
     }
 
@@ -169,9 +174,9 @@ public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
     }
 
     private VoxelShape combineShape(VoxelShape shape, ItemPipeConnection ItemPipeConnection, VoxelShape cableShape, VoxelShape blockShape) {
-        if (ItemPipeConnection == ItemPipeConnection.CABLE) {
+        if (ItemPipeConnection == CABLE) {
             return Shapes.join(shape, cableShape, BooleanOp.OR);
-        } else if (ItemPipeConnection == ItemPipeConnection.BLOCK) {
+        } else if (ItemPipeConnection == BLOCK) {
             return Shapes.join(shape, Shapes.join(blockShape, cableShape, BooleanOp.OR), BooleanOp.OR);
         } else {
             return shape;

@@ -24,10 +24,7 @@ public class ItemTransferNetworkConstructor extends AbstractNetworkConstructor {
 
     @Override
     protected boolean isDeviceValid(ServerLevel level, BlockPos pos) {
-        if (!(level.getBlockEntity(pos) instanceof ItemPipeEntity)) {
-            return false;
-        }
-        return true;
+        return level.getBlockEntity(pos) instanceof ItemPipeEntity;
     }
 
     @Override
