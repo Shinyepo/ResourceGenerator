@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
 import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
+import dev.shinyepo.resourcegenerator.controllers.ItemTransferNetworkController;
 import dev.shinyepo.resourcegenerator.pipes.CustomBlockStateModel;
 import dev.shinyepo.resourcegenerator.pipes.builders.CustomBlockDefinition;
 import dev.shinyepo.resourcegenerator.registries.*;
@@ -66,8 +67,10 @@ public class ResourceGenerator {
         modEventBus.addListener(DataPackRegistry::registerDatapackRegistries);
         NeoForge.EVENT_BUS.addListener(this::onServerStopping);
         NeoForge.EVENT_BUS.addListener(ResourceGenerator::registerCommands);
+
         NeoForge.EVENT_BUS.addListener(DeviceNetworkController::onServerTick);
         NeoForge.EVENT_BUS.addListener(AccountController::onServerTick);
+        NeoForge.EVENT_BUS.addListener(ItemTransferNetworkController::onServerTick);
 
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -79,8 +82,9 @@ public class ResourceGenerator {
     public void onServerStopping(ServerStoppingEvent event) {
         event.getServer().getAllLevels()
                 .forEach(level -> {
-                    DeviceNetworkController.unloadData(level);
+                    DeviceNetworkController.getInstance(level).unloadData(level);
                     AccountController.unloadData(level);
+                    ItemTransferNetworkController.getInstance(level).unloadData(level);
                 });
     }
 

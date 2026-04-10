@@ -4,13 +4,16 @@ import dev.shinyepo.resourcegenerator.blocks.entities.ItemPipeEntity;
 import dev.shinyepo.resourcegenerator.blocks.helpers.IDynamicShapeHelper;
 import dev.shinyepo.resourcegenerator.blocks.helpers.ItemPipeDynamicShapeHelper;
 import dev.shinyepo.resourcegenerator.blocks.types.BasicBlock;
+import dev.shinyepo.resourcegenerator.controllers.ItemTransferNetworkController;
 import dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection;
 import dev.shinyepo.resourcegenerator.properties.CustomProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -84,6 +87,22 @@ public class ItemPipe extends BasicBlock implements SimpleWaterloggedBlock {
         if (state != blockState) {
             level.setBlockAndUpdate(pos, blockState);
         }
+
+        if (!level.isClientSide()) {
+            ItemTransferNetworkController networkController = ItemTransferNetworkController.getInstance((ServerLevel) level);
+            networkController.handleNetworkOnPlace((ServerLevel) level, pos);
+        }
+    }
+
+    @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
+        if (level.isClientSide())
+            return super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid);
+
+        ItemTransferNetworkController networkController = ItemTransferNetworkController.getInstance((ServerLevel) level);
+        networkController.handleNetworkOnDestroy((ServerLevel) level, pos);
+
+        return super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid);
     }
 
     @Override

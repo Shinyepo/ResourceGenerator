@@ -2,7 +2,6 @@ package dev.shinyepo.resourcegenerator.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.shinyepo.resourcegenerator.blocks.entities.types.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class DeviceNetwork {
+public class DeviceNetwork implements Network {
     private UUID networkId;
     private HashSet<BlockPos> producers = new HashSet<>();
     private HashSet<BlockPos> transmitters = new HashSet<>();
@@ -34,10 +33,10 @@ public class DeviceNetwork {
                     Identifier.CODEC.xmap(loc -> ResourceKey.create(Registries.DIMENSION, loc), ResourceKey::identifier).fieldOf("dimension").forGetter(DeviceNetwork::getDimension)
             ).apply(instance, DeviceNetwork::new));
 
-    public DeviceNetwork(ResourceKey<Level> dimension, INetworkDevice device, BlockPos pos) {
+    public DeviceNetwork(ResourceKey<Level> dimension, Network.DeviceType device, BlockPos pos) {
         networkId = UUID.randomUUID();
         this.dimension = dimension;
-        addNetworkDevice(device, pos);
+        addDevice(device, pos);
     }
 
     public DeviceNetwork(UUID networkId, HashSet<BlockPos> producers, HashSet<BlockPos> transmitters, HashSet<BlockPos> receivers, HashSet<BlockPos> consumers, ResourceKey<Level> dimension) {
@@ -125,17 +124,17 @@ public class DeviceNetwork {
         consumers.addAll(pos);
     }
 
-    public void addNetworkDevice(INetworkDevice device, BlockPos pos) {
-        if (device instanceof Producer) {
+    public <T extends Network.DeviceType> void addDevice(T device, BlockPos pos) {
+        if (device == DeviceNetworkType.PRODUCER) {
             producers.add(pos);
         }
-        if (device instanceof Transmitter) {
+        if (device == DeviceNetworkType.TRANSMITTER) {
             transmitters.add(pos);
         }
-        if (device instanceof Receiver) {
+        if (device == DeviceNetworkType.RECEIVER) {
             receivers.add(pos);
         }
-        if (device instanceof Consumer) {
+        if (device == DeviceNetworkType.CONSUMER) {
             consumers.add(pos);
         }
         //TODO: Throw exception?
@@ -146,20 +145,19 @@ public class DeviceNetwork {
         return devices <= 0;
     }
 
-    public void removeDevice(INetworkDevice device, BlockPos pos) {
-        if (device instanceof Producer) {
+    public <T extends Network.DeviceType> void removeDevice(T device, BlockPos pos) {
+        if (device == DeviceNetworkType.PRODUCER) {
             producers.remove(pos);
         }
-        if (device instanceof Transmitter) {
+        if (device == DeviceNetworkType.TRANSMITTER) {
             transmitters.remove(pos);
         }
-        if (device instanceof Receiver) {
+        if (device == DeviceNetworkType.RECEIVER) {
             receivers.remove(pos);
         }
-        if (device instanceof Consumer) {
+        if (device == DeviceNetworkType.CONSUMER) {
             consumers.remove(pos);
         }
-
     }
 
     public Set<BlockPos> getAllDevices() {
@@ -176,5 +174,20 @@ public class DeviceNetwork {
             return receivers.iterator().next();
         }
         return null;
+    }
+
+    @Override
+    public void clearAllDevices() {
+        producers.clear();
+        transmitters.clear();
+        receivers.clear();
+        consumers.clear();
+    }
+
+    public enum DeviceNetworkType implements DeviceType {
+        PRODUCER,
+        TRANSMITTER,
+        RECEIVER,
+        CONSUMER
     }
 }

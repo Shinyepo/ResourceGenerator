@@ -20,6 +20,7 @@ public class CapabilityRegistry {
             Direction.class
     );
 
+
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.CONTROLLER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
@@ -28,6 +29,7 @@ public class CapabilityRegistry {
         event.registerBlockEntity(Capabilities.Item.BLOCK, BlockEntityRegistry.BASIC_CONSUMER_ENTITY.get(), Consumer::getItemCapability);
         event.registerBlockEntity(Capabilities.Item.BLOCK, BlockEntityRegistry.CONSUMER_OUTPUT_ENTITY.get(), ConsumerOutputEntity::getItemCapability);
         event.registerBlockEntity(Capabilities.Item.BLOCK, BlockEntityRegistry.ITEM_PIPE_ENTITY.get(), ItemPipeEntity::getItemCapability);
+        event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.ITEM_PIPE_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.SOLAR_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.WATER_ABSORBER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.SCULK_ABSORBER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);

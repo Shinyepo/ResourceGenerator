@@ -26,9 +26,9 @@ public class DeviceNetworkController {
         return INSTANCES.computeIfAbsent(level, DeviceNetworkController::new);
     }
 
-    public static void unloadData(ServerLevel level) {
+    public void unloadData(ServerLevel level) {
         INSTANCES.remove(level);
-        DeviceNetworkConstructor.clear(level);
+        networkConstructor.clear(level);
     }
 
     public void handleNetworkOnPlace(ServerLevel level, BlockPos pos) {

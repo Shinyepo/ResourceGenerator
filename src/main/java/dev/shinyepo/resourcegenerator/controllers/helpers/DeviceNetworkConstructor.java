@@ -1,251 +1,68 @@
 package dev.shinyepo.resourcegenerator.controllers.helpers;
 
-import dev.shinyepo.resourcegenerator.blocks.entities.types.INetworkDevice;
+import dev.shinyepo.resourcegenerator.blocks.entities.ItemPipeEntity;
+import dev.shinyepo.resourcegenerator.blocks.entities.types.*;
 import dev.shinyepo.resourcegenerator.capabilities.INetworkCapability;
-import dev.shinyepo.resourcegenerator.configs.SideConfig;
 import dev.shinyepo.resourcegenerator.data.DeviceNetwork;
-import dev.shinyepo.resourcegenerator.persistence.DeviceNetworkSavedData;
+import dev.shinyepo.resourcegenerator.data.Network;
+import dev.shinyepo.resourcegenerator.persistence.ISavedData;
 import dev.shinyepo.resourcegenerator.registries.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 
-public class DeviceNetworkConstructor {
-    private final DeviceNetworkSavedData dataStore;
-    private static final Map<ServerLevel, Map<BlockPos, Operation>> PENDING_OPS = new WeakHashMap<>();
-
-    public DeviceNetworkConstructor(DeviceNetworkSavedData dataStore) {
-        this.dataStore = dataStore;
+public class DeviceNetworkConstructor extends AbstractNetworkConstructor {
+    public DeviceNetworkConstructor(ISavedData dataStore) {
+        super(dataStore);
     }
 
-    public static void clear(ServerLevel level) {
-        PENDING_OPS.remove(level);
-    }
-
-    public void flushPendingOperations(ServerLevel level) {
-        Map<BlockPos, Operation> pending = PENDING_OPS.get(level);
-        if (pending == null || pending.isEmpty()) {
-            return;
+    @Override
+    protected boolean isDeviceValid(ServerLevel level, BlockPos pos) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof INetworkDevice && !(blockEntity instanceof ItemPipeEntity)) {
+            return true;
         }
+        return false;
+    }
 
-        PENDING_OPS.put(level, new HashMap<>());
 
-        for (Map.Entry<BlockPos, Operation> entry : pending.entrySet()) {
-            BlockPos pos = entry.getKey();
-            Operation op = entry.getValue();
-
-            if (op.op == PendingNetworkOp.DESTROY) {
-                processDestroy(level, pos, op.networkId);
-            } else {
-                computeNetworkOnNewConnection(level, pos);
+    @Override
+    protected Network.DeviceType getValidNetworkDevice(ServerLevel level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof INetworkDevice device) {
+            if (device instanceof Producer) {
+                return DeviceNetwork.DeviceNetworkType.PRODUCER;
+            } else if (device instanceof Transmitter) {
+                return DeviceNetwork.DeviceNetworkType.TRANSMITTER;
+            } else if (device instanceof Receiver) {
+                return DeviceNetwork.DeviceNetworkType.RECEIVER;
+            } else if (device instanceof Consumer) {
+                return DeviceNetwork.DeviceNetworkType.CONSUMER;
             }
-        }
-    }
-
-    private INetworkDevice getValidNetworkDevice(ServerLevel level, BlockPos pos) {
-        if (!(level.getBlockEntity(pos) instanceof INetworkDevice device)) {
-            return null;
-        }
-        return device;
-    }
-
-    private Set<BlockPos> verifyAllDevices(Set<BlockPos> allDevices, ServerLevel level) {
-        Set<BlockPos> validDevices = new HashSet<>();
-        for (BlockPos devicePos : allDevices) {
-            if (getValidNetworkDevice(level, devicePos) != null) {
-                validDevices.add(devicePos);
-            }
-        }
-        return validDevices;
-    }
-
-    //Trigger on removing device from network
-    public void enqueueNetworkRebuild(ServerLevel level, BlockPos removePos) {
-        INetworkCapability cap = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, removePos, null);
-        if (cap == null) return;
-        PENDING_OPS
-                .computeIfAbsent(level, k -> new HashMap<>())
-                .put(removePos.immutable(), new Operation(cap.getNetworkId(), PendingNetworkOp.DESTROY));
-    }
-
-    private void processDestroy(ServerLevel level, BlockPos pos, UUID networkId) {
-        INetworkDevice device = getValidNetworkDevice(level, pos);
-        if (device != null) {
-            removeDeviceFromNetwork(networkId, device, pos);
-        }
-
-        rebuildNetworkFromWorld(level, networkId);
-    }
-
-    private void rebuildNetworkFromWorld(ServerLevel level, UUID networkId) {
-        DeviceNetwork network = dataStore.getNetwork(networkId);
-        if (network == null) {
-            return;
-        }
-
-        List<Set<BlockPos>> components = fetchSubNetworks(level, network);
-        //No subnetworks, remove it
-        if (components.isEmpty()) {
-            removeNetwork(networkId);
-            return;
-        }
-
-        //Only one subnetwork, rebuild it
-        if (components.size() == 1) {
-            Set<BlockPos> component = components.getFirst();
-            if (component.isEmpty()) {
-                removeNetwork(networkId);
-                return;
-            }
-            rebuildSingleNetwork(level, network, component);
-            return;
-        }
-
-        // Split into multiple networks.
-
-        Iterator<Set<BlockPos>> iterator = components.iterator();
-        Set<BlockPos> firstComponent = iterator.next();
-        rebuildSingleNetwork(level, network, firstComponent);
-
-        while (iterator.hasNext()) {
-            Set<BlockPos> component = iterator.next();
-            if (component.isEmpty()) {
-                continue;
-            }
-
-            BlockPos firstPos = component.iterator().next();
-            INetworkDevice firstDevice = getValidNetworkDevice(level, firstPos);
-            if (firstDevice == null) {
-                continue;
-            }
-
-            UUID newId = createNetwork(level.dimension(), firstDevice, firstPos);
-
-            for (BlockPos node : component) {
-                INetworkDevice nodeDevice = getValidNetworkDevice(level, node);
-                if (nodeDevice == null) {
-                    continue;
-                }
-
-                UUID addedTo = addDeviceToNetwork(newId, nodeDevice, node);
-                notifyDevicesOfNetworkChange(level, node, addedTo);
-            }
-        }
-        dataStore.setDirty();
-    }
-
-    private List<Set<BlockPos>> fetchSubNetworks(ServerLevel level, DeviceNetwork network) {
-        Set<BlockPos> visited = new HashSet<>();
-        List<Set<BlockPos>> components = new ArrayList<>();
-
-        Set<BlockPos> validDevices = verifyAllDevices(network.getAllDevices(), level);
-
-        for (BlockPos device : validDevices) {
-            if (!visited.contains(device)) {
-                Set<BlockPos> component = new HashSet<>();
-                dfs(level, device, component, validDevices);
-                visited.addAll(component);
-                components.add(component);
-            }
-        }
-
-        return components;
-    }
-
-    private void rebuildSingleNetwork(ServerLevel level, DeviceNetwork network, Set<BlockPos> component) {
-        network.getProducers().clear();
-        network.getTransmitters().clear();
-        network.getReceivers().clear();
-        network.getConsumers().clear();
-
-        for (BlockPos pos : component) {
-            INetworkDevice device = getValidNetworkDevice(level, pos);
-            if (device == null) {
-                continue;
-            }
-
-            network.addNetworkDevice(device, pos);
-            notifyDevicesOfNetworkChange(level, pos, network.getNetworkId());
-        }
-
-        dataStore.setDirty();
-    }
-
-    //Trigger on placing new network device
-    public void enqueueNewNetworkConnection(ServerLevel level, BlockPos newDevice) {
-        PENDING_OPS
-                .computeIfAbsent(level, k -> new HashMap<>())
-                .put(newDevice.immutable(), new Operation(null, PendingNetworkOp.PLACE));
-    }
-
-    public void computeNetworkOnNewConnection(ServerLevel level, BlockPos pos) {
-        INetworkDevice mainDevice = getValidNetworkDevice(level, pos);
-        INetworkCapability mainCap = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, pos, null);
-        if (mainDevice == null || mainCap == null) return;
-
-        Set<UUID> adjacentNetworks = getAdjacentNetworks(level, mainCap.getSides(), pos);
-
-        mainCap.setNetworkId(computeAdjacentNetworks(level, mainDevice, pos, adjacentNetworks));
-    }
-
-    private Set<UUID> getAdjacentNetworks(ServerLevel level, SideConfig[] sides, BlockPos pos) {
-        Set<UUID> adjacentNetworks = new HashSet<>();
-        for (int i = 0; i < sides.length; i++) {
-            if (sides[i] == SideConfig.NETWORK) {
-                Direction dir = Direction.values()[i];
-                INetworkCapability relCap = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, pos.relative(dir), dir.getOpposite());
-                if (relCap != null) {
-                    adjacentNetworks.add(relCap.getNetworkId());
-                }
-            }
-        }
-        return adjacentNetworks;
-    }
-
-    private UUID computeAdjacentNetworks(ServerLevel level, INetworkDevice mainDevice, BlockPos pos, Set<UUID> networks) {
-        if (networks.isEmpty()) {
-            return createNetwork(level.dimension(), mainDevice, pos);
-        } else if (networks.size() == 1) {
-            UUID targetId = networks.iterator().next();
-            return addDeviceToNetwork(targetId, mainDevice, pos);
-        } else {
-            return mergeNetworks(level, networks, mainDevice, pos);
-        }
-    }
-
-    public UUID createNetwork(ResourceKey<Level> dimension, INetworkDevice networkDevice, BlockPos pos) {
-        return dataStore.createNetwork(dimension, networkDevice, pos);
-    }
-
-    public UUID addDeviceToNetwork(UUID networkId, INetworkDevice device, BlockPos pos) {
-        DeviceNetwork network = dataStore.getNetwork(networkId);
-        if (network != null) {
-            network.addNetworkDevice(device, pos);
-            dataStore.setDirty();
-            return network.getNetworkId();
         }
         return null;
     }
 
-    public UUID mergeNetworks(ServerLevel level, Set<UUID> networkIds, INetworkDevice device, BlockPos pos) {
+    @Override
+    public UUID mergeNetworks(ServerLevel level, Set<UUID> networkIds, Network.DeviceType device, BlockPos pos) {
         Iterator<UUID> iterator = networkIds.iterator();
         UUID targetNetworkId = iterator.next();
 
-        DeviceNetwork targetNetwork = dataStore.getNetwork(targetNetworkId);
+        DeviceNetwork targetNetwork = (DeviceNetwork) getDataStore().getNetwork(targetNetworkId);
         if (targetNetwork == null) {
             targetNetworkId = createNetwork(level.dimension(), device, pos);
-            targetNetwork = dataStore.getNetwork(targetNetworkId);
+            targetNetwork = (DeviceNetwork) getDataStore().getNetwork(targetNetworkId);
         } else {
-            targetNetwork.addNetworkDevice(device, pos);
+            targetNetwork.addDevice(device, pos);
         }
 
         for (UUID nId : networkIds) {
             if (nId.equals(targetNetworkId)) continue;
-            DeviceNetwork existingNetwork = dataStore.getNetwork(nId);
+            DeviceNetwork existingNetwork = (DeviceNetwork) getDataStore().getNetwork(nId);
 
             targetNetwork.addTransmitters(existingNetwork.getTransmitters());
             targetNetwork.addProducers(existingNetwork.getProducers());
@@ -259,70 +76,26 @@ public class DeviceNetworkConstructor {
             existingNetwork.getTransmitters().forEach((dev) -> notifyDevicesOfNetworkChange(level, dev, finalTargetNetworkId));
             existingNetwork.getProducers().forEach((dev) -> notifyDevicesOfNetworkChange(level, dev, finalTargetNetworkId));
             existingNetwork.getConsumers().forEach((dev) -> notifyDevicesOfNetworkChange(level, dev, finalTargetNetworkId));
-            dataStore.removeNetwork(nId);
+            getDataStore().removeNetwork(nId);
         }
         notifyDevicesOfNetworkChange(level, pos, targetNetworkId);
-        dataStore.setDirty();
+        getDataStore().setDirty();
 
         return targetNetworkId;
 
     }
 
-    public void removeDeviceFromNetwork(UUID networkId, INetworkDevice device, BlockPos pos) {
-        DeviceNetwork network = dataStore.getNetwork(networkId);
-        if (network != null) {
-            network.removeDevice(device, pos);
-            if (network.isMarkedForDeletion()) {
-                dataStore.removeNetwork(networkId);
-            }
-            dataStore.setDirty();
-        }
-    }
-
-    private void notifyDevicesOfNetworkChange(ServerLevel level, BlockPos pos, UUID networkId) {
-        INetworkCapability capability = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, pos, null);
-        if (capability != null) {
-            capability.setNetworkId(networkId);
-        }
+    @Override
+    protected boolean isNeighbourValid(ServerLevel level, BlockPos neighbor, Direction dir) {
+        if (level.getBlockEntity(neighbor) instanceof ItemPipeEntity) return false;
+        INetworkCapability cap = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, neighbor, dir.getOpposite());
+        return cap != null;
     }
 
 
-    public void removeNetwork(UUID networkId) {
-        dataStore.removeNetwork(networkId);
-        dataStore.setDirty();
-    }
-
-    private void dfs(ServerLevel level, BlockPos start, Set<BlockPos> component, Set<BlockPos> allDevices) {
-        ArrayDeque<BlockPos> stack = new ArrayDeque<>();
-        stack.push(start);
-
-        while (!stack.isEmpty()) {
-            BlockPos current = stack.pop();
-            if (component.add(current)) {
-                for (Direction dir : Direction.values()) {
-                    BlockPos neighbor = current.relative(dir);
-                    INetworkCapability cap = level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, neighbor, dir.getOpposite());
-                    if (allDevices.contains(neighbor) && cap != null) {
-                        stack.push(neighbor);
-                    }
-                }
-            }
-        }
-    }
-
-
-    private static class Operation {
-        UUID networkId;
-        PendingNetworkOp op;
-
-        public Operation(UUID networkId, PendingNetworkOp op) {
-            this.networkId = networkId;
-            this.op = op;
-        }
-    }
-
-    private enum PendingNetworkOp {
-        PLACE,
-        DESTROY
+    @Override
+    protected INetworkCapability isNeighbourCapValid(ServerLevel level, BlockPos neighbor, Direction dir) {
+        if (level.getBlockEntity(neighbor) instanceof ItemPipeEntity) return null;
+        return level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, neighbor, dir.getOpposite());
     }
 }

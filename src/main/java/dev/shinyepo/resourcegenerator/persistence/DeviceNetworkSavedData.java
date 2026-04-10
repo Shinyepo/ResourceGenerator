@@ -2,8 +2,8 @@ package dev.shinyepo.resourcegenerator.persistence;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.shinyepo.resourcegenerator.blocks.entities.types.INetworkDevice;
 import dev.shinyepo.resourcegenerator.data.DeviceNetwork;
+import dev.shinyepo.resourcegenerator.data.Network;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.Identifier;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class DeviceNetworkSavedData extends SavedData {
+public class DeviceNetworkSavedData extends SavedData implements ISavedData {
     private HashMap<UUID, DeviceNetwork> networks = new HashMap<>();
     public static final SavedDataType<DeviceNetworkSavedData> TYPE = new SavedDataType<>(
             Identifier.parse("resource_generator_networks"),
@@ -49,7 +49,12 @@ public class DeviceNetworkSavedData extends SavedData {
         return this.networks.get(networkId);
     }
 
-    public UUID createNetwork(ResourceKey<Level> dimension, INetworkDevice networkDevice, BlockPos pos) {
+    @Override
+    public int getNetworkCount() {
+        return networks.size();
+    }
+
+    public UUID createNetwork(ResourceKey<Level> dimension, Network.DeviceType networkDevice, BlockPos pos) {
         DeviceNetwork network = new DeviceNetwork(dimension, networkDevice, pos);
         networks.put(network.getNetworkId(), network);
         setDirty();
