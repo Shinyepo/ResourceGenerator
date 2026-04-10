@@ -1,5 +1,6 @@
 package dev.shinyepo.resourcegenerator.controllers.helpers;
 
+import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.blocks.entities.ItemPipeEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.*;
 import dev.shinyepo.resourcegenerator.capabilities.INetworkCapability;
@@ -63,6 +64,10 @@ public class DeviceNetworkConstructor extends AbstractNetworkConstructor {
         for (UUID nId : networkIds) {
             if (nId.equals(targetNetworkId)) continue;
             DeviceNetwork existingNetwork = (DeviceNetwork) getDataStore().getNetwork(nId);
+            if (existingNetwork == null) {
+                ResourceGenerator.LOGGER.error("Encountered null network while merging networks");
+                continue;
+            }
 
             targetNetwork.addTransmitters(existingNetwork.getTransmitters());
             targetNetwork.addProducers(existingNetwork.getProducers());
