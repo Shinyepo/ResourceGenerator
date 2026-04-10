@@ -13,11 +13,11 @@ public class ItemTransferNetworkController {
     private static final Map<ServerLevel, ItemTransferNetworkController> INSTANCES = new WeakHashMap<>();
     private final ItemTransferNetworkConstructor networkConstructor;
 
-    private final ItemTransferNetworkSavedData savedData;
+    private final ItemTransferNetworkSavedData dataStore;
 
     private ItemTransferNetworkController(ServerLevel level) {
-        savedData = ItemTransferNetworkSavedData.getOrCreate(level);
-        this.networkConstructor = new ItemTransferNetworkConstructor(savedData);
+        dataStore = ItemTransferNetworkSavedData.getOrCreate(level);
+        this.networkConstructor = new ItemTransferNetworkConstructor(dataStore);
     }
 
     public static ItemTransferNetworkController getInstance(ServerLevel level) {
