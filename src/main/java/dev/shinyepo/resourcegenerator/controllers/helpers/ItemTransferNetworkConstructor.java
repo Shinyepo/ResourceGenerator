@@ -46,7 +46,7 @@ public class ItemTransferNetworkConstructor extends AbstractNetworkConstructor {
         Iterator<UUID> iterator = networkIds.iterator();
         UUID targetNetworkId = iterator.next();
 
-        
+
         ItemTransferNetwork targetNetwork = (ItemTransferNetwork) getDataStore().getNetwork(targetNetworkId);
         if (targetNetwork == null) {
             targetNetworkId = createNetwork(level.dimension(), device, pos);
@@ -59,10 +59,10 @@ public class ItemTransferNetworkConstructor extends AbstractNetworkConstructor {
             if (nId.equals(targetNetworkId)) continue;
             ItemTransferNetwork existingNetwork = (ItemTransferNetwork) getDataStore().getNetwork(nId);
 
-            //TODO: Add devices from old to new network
             targetNetwork.addItemPipes(existingNetwork.getItemPipes());
+
             UUID finalTargetNetworkId = targetNetworkId;
-            //TODO: Notify existing devices of change
+
             existingNetwork.getItemPipes().forEach((dev) -> notifyDevicesOfNetworkChange(level, dev, finalTargetNetworkId));
             getDataStore().removeNetwork(nId);
         }
