@@ -260,6 +260,8 @@ public abstract class AbstractNetworkConstructor {
 
     public void flushPendingOperations(ServerLevel level) {
 //        Debug purpose sout - WHY DO NETWORKS NOT DELETE THEMSELVES SOMETIMES?!
+        //Cause SavedData#setDirty only marks data to be later saved. When client is crashed data is not saved.
+        //Recompile networks in SavedData on world load?
 //        System.out.println(getClass().getSimpleName() + " size: " + getDataStore().getNetworkCount());
         Map<BlockPos, Operation> pending = pendingOps.get(level);
         if (pending == null || pending.isEmpty()) {
