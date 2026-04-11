@@ -21,6 +21,14 @@ public class ItemPipeEntity extends Transmitter {
     }
 
     public ResourceHandler<ItemResource> getItemCapability(@Nullable Direction direction) {
-        return itemHandler;
+        if (direction == null) return null;
+        assert level != null;
+        BlockState state = level.getBlockState(worldPosition);
+
+        var property = ItemPipeModeHelper.getProp(direction);
+        assert property != null;
+        if (state.getValue(property) == ItemPipeConnection.INSERT) return itemHandler;
+
+        return null;
     }
 }
