@@ -1,4 +1,4 @@
-// 26.1	2026-04-08T21:04:10.9006762	Model Definitions - resourcegenerator
+// 26.1	2026-04-11T12:52:10.6256268	Model Definitions - resourcegenerator
 e24546adc9d464a7b3e8215289faae2a24201307 assets/resourcegenerator/blockstates/basic_consumer.json
 812d7a5519cd714a886d0164b0bfd2814e582925 assets/resourcegenerator/blockstates/cable.json
 6b960d4e31399ea68d2f22bcd238466c99cb8456 assets/resourcegenerator/blockstates/conduit_absorber.json
@@ -20,6 +20,7 @@ bd2631671e7b0463eb752b5725497b450dc4e6ff assets/resourcegenerator/items/consumer
 8a35b2c77f249fe1d2fc0e043bd770e1c08319f4 assets/resourcegenerator/items/inspector.json
 d091d8d3b37f92139772b0cb83bc5aedc4610c21 assets/resourcegenerator/items/item_pipe.json
 c2a9294ebdf7402ed6b1a00cc12f49987cf59184 assets/resourcegenerator/items/output_upgrade.json
+fba5a170c2da1516a3f8d6c5729b7f8fe619f982 assets/resourcegenerator/items/pipe_wrench.json
 94a3b2536839eff86c73054f882939a8bbde2065 assets/resourcegenerator/items/resource_imitator.json
 36d25b327e496d9ece866cf9579a57b8b79c3864 assets/resourcegenerator/items/sculk_absorber.json
 47fe782192711c54b988a2e63224c8442100ef02 assets/resourcegenerator/items/solar_panel.json

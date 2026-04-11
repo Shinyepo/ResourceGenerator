@@ -3,6 +3,7 @@ package dev.shinyepo.resourcegenerator.registries;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.items.IdCard;
 import dev.shinyepo.resourcegenerator.items.Inspector;
+import dev.shinyepo.resourcegenerator.items.PipeWrench;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -24,4 +25,5 @@ public class ItemRegistry {
     public static final DeferredItem<BlockItem> SCULK_ABSORBER_ITEM = ITEMS.registerSimpleBlockItem("sculk_absorber", BlockRegistry.SCULK_ABSORBER);
     public static final DeferredItem<BlockItem> CONSUMER_OUTPUT_ITEM = ITEMS.registerSimpleBlockItem("consumer_output", BlockRegistry.CONSUMER_OUTPUT);
     public static final DeferredItem<BlockItem> CONDUIT_ABSORBER_ITEM = ITEMS.registerSimpleBlockItem("conduit_absorber", BlockRegistry.CONDUIT_ABSORBER);
+    public static final DeferredItem<Item> PIPE_WRENCH = ITEMS.registerItem("pipe_wrench", PipeWrench::new, () -> new Item.Properties().stacksTo(1));
 }
