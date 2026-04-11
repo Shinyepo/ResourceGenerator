@@ -5,7 +5,8 @@ import net.minecraft.util.StringRepresentable;
 public enum ItemPipeConnection implements StringRepresentable {
     NONE,
     CABLE,
-    BLOCK;
+    EXTRACT,
+    INSERT;
     public static final ItemPipeConnection[] VALUES = values();
 
     @Override

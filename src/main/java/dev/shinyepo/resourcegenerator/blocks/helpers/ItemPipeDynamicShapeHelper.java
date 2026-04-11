@@ -16,8 +16,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
 
-import static dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection.BLOCK;
-import static dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection.CABLE;
+import static dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection.*;
 import static dev.shinyepo.resourcegenerator.properties.CustomProperties.*;
 
 public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
@@ -93,10 +92,10 @@ public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
         if (block instanceof ItemPipe && fromState.getBlock().equals(state.getBlock())) {
             return CABLE;
         } else if (isConnectable(world, connectorPos, facing)) {
-            if (fromState.is(Blocks.AIR)) return BLOCK;
+            if (fromState.is(Blocks.AIR)) return INSERT;
             var prop = getProp(facing);
             assert prop != null;
-            return fromState.getValue(prop) != ItemPipeConnection.NONE ? fromState.getValue(prop) : BLOCK;
+            return fromState.getValue(prop) != ItemPipeConnection.NONE ? fromState.getValue(prop) : INSERT;
         } else {
             return ItemPipeConnection.NONE;
         }
@@ -176,7 +175,7 @@ public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
     private VoxelShape combineShape(VoxelShape shape, ItemPipeConnection ItemPipeConnection, VoxelShape cableShape, VoxelShape blockShape) {
         if (ItemPipeConnection == CABLE) {
             return Shapes.join(shape, cableShape, BooleanOp.OR);
-        } else if (ItemPipeConnection == BLOCK) {
+        } else if (ItemPipeConnection == EXTRACT || ItemPipeConnection == INSERT) {
             return Shapes.join(shape, Shapes.join(blockShape, cableShape, BooleanOp.OR), BooleanOp.OR);
         } else {
             return shape;

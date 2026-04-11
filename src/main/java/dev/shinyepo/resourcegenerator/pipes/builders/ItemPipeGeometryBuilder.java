@@ -24,8 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
-import static dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection.BLOCK;
-import static dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection.CABLE;
+import static dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection.*;
 import static dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipePatterns.SpriteIdx.*;
 import static dev.shinyepo.resourcegenerator.properties.CustomProperties.*;
 
@@ -36,8 +35,10 @@ public final class ItemPipeGeometryBuilder {
     private TextureAtlasSprite spriteCornerCable;
     private TextureAtlasSprite spriteThreeCable;
     private TextureAtlasSprite spriteCrossCable;
-    private TextureAtlasSprite spriteSide;
-    private TextureAtlasSprite spriteConnector;
+    private TextureAtlasSprite spriteSideInsert;
+    private TextureAtlasSprite spriteSideExtract;
+    private TextureAtlasSprite spriteInsert;
+    private TextureAtlasSprite spriteExtract;
 
 
     static {
@@ -63,15 +64,17 @@ public final class ItemPipeGeometryBuilder {
     }
 
     private void initTextures() {
-        if (spriteConnector == null) {
-            spriteConnector = getTexture("block/pipe/connector_universal");
+        if (spriteExtract == null) {
+            spriteInsert = getTexture("block/pipe/connector_insert");
+            spriteExtract = getTexture("block/pipe/connector_extract");
+            spriteSideInsert = getTexture("block/pipe/connector_side_insert");
+            spriteSideExtract = getTexture("block/pipe/connector_side_extract");
             spriteNormalCable = getTexture("block/pipe/normal");
             spriteNoneCable = getTexture("block/pipe/none");
             spriteEndCable = getTexture("block/pipe/end");
             spriteCornerCable = getTexture("block/pipe/corner");
             spriteThreeCable = getTexture("block/pipe/three");
             spriteCrossCable = getTexture("block/pipe/cross");
-            spriteSide = getTexture("block/pipe/connector_side_universal");
         }
     }
 
@@ -129,12 +132,14 @@ public final class ItemPipeGeometryBuilder {
             builder.addUnculledFace(quad(v(o, 1, 1 - o), v(o, 1, o), v(o, 1 - o, o), v(o, 1 - o, 1 - o), spriteCable));
             builder.addUnculledFace(quad(v(o, 1, o), v(1 - o, 1, o), v(1 - o, 1 - o, o), v(o, 1 - o, o), spriteCable));
             builder.addUnculledFace(quad(v(o, 1 - o, 1 - o), v(1 - o, 1 - o, 1 - o), v(1 - o, 1, 1 - o), v(o, 1, 1 - o), spriteCable));
-        } else if (up == BLOCK) {
+        } else if (up == INSERT || up == EXTRACT) {
             builder.addUnculledFace(quad(v(1 - o, 1 - p, o), v(1 - o, 1 - p, 1 - o), v(1 - o, 1 - o, 1 - o), v(1 - o, 1 - o, o), spriteCable));
             builder.addUnculledFace(quad(v(o, 1 - p, 1 - o), v(o, 1 - p, o), v(o, 1 - o, o), v(o, 1 - o, 1 - o), spriteCable));
             builder.addUnculledFace(quad(v(o, 1 - p, o), v(1 - o, 1 - p, o), v(1 - o, 1 - o, o), v(o, 1 - o, o), spriteCable));
             builder.addUnculledFace(quad(v(o, 1 - o, 1 - o), v(1 - o, 1 - o, 1 - o), v(1 - o, 1 - p, 1 - o), v(o, 1 - p, 1 - o), spriteCable));
 
+            TextureAtlasSprite spriteConnector = up == INSERT ? spriteInsert : spriteExtract;
+            TextureAtlasSprite spriteSide = up == INSERT ? spriteSideInsert : spriteSideExtract;
             builder.addUnculledFace(quad(v(1 - q, 1 - p, q), v(1 - q, 1, q), v(1 - q, 1, 1 - q), v(1 - q, 1 - p, 1 - q), spriteSide));
             builder.addUnculledFace(quad(v(q, 1 - p, 1 - q), v(q, 1, 1 - q), v(q, 1, q), v(q, 1 - p, q), spriteSide));
             builder.addUnculledFace(quad(v(q, 1, q), v(1 - q, 1, q), v(1 - q, 1 - p, q), v(q, 1 - p, q), spriteSide));
@@ -152,12 +157,14 @@ public final class ItemPipeGeometryBuilder {
             builder.addUnculledFace(quad(v(o, o, 1 - o), v(o, o, o), v(o, 0, o), v(o, 0, 1 - o), spriteCable));
             builder.addUnculledFace(quad(v(o, o, o), v(1 - o, o, o), v(1 - o, 0, o), v(o, 0, o), spriteCable));
             builder.addUnculledFace(quad(v(o, 0, 1 - o), v(1 - o, 0, 1 - o), v(1 - o, o, 1 - o), v(o, o, 1 - o), spriteCable));
-        } else if (down == BLOCK) {
+        } else if (down == INSERT || down == EXTRACT) {
             builder.addUnculledFace(quad(v(1 - o, o, o), v(1 - o, o, 1 - o), v(1 - o, p, 1 - o), v(1 - o, p, o), spriteCable));
             builder.addUnculledFace(quad(v(o, o, 1 - o), v(o, o, o), v(o, p, o), v(o, p, 1 - o), spriteCable));
             builder.addUnculledFace(quad(v(o, o, o), v(1 - o, o, o), v(1 - o, p, o), v(o, p, o), spriteCable));
             builder.addUnculledFace(quad(v(o, p, 1 - o), v(1 - o, p, 1 - o), v(1 - o, o, 1 - o), v(o, o, 1 - o), spriteCable));
 
+            TextureAtlasSprite spriteConnector = down == INSERT ? spriteInsert : spriteExtract;
+            TextureAtlasSprite spriteSide = down == INSERT ? spriteSideInsert : spriteSideExtract;
             builder.addUnculledFace(quad(v(1 - q, 0, q), v(1 - q, p, q), v(1 - q, p, 1 - q), v(1 - q, 0, 1 - q), spriteSide));
             builder.addUnculledFace(quad(v(q, 0, 1 - q), v(q, p, 1 - q), v(q, p, q), v(q, 0, q), spriteSide));
             builder.addUnculledFace(quad(v(q, p, q), v(1 - q, p, q), v(1 - q, 0, q), v(q, 0, q), spriteSide));
@@ -175,12 +182,14 @@ public final class ItemPipeGeometryBuilder {
             builder.addUnculledFace(quad(v(1, o, o), v(1, o, 1 - o), v(1 - o, o, 1 - o), v(1 - o, o, o), spriteCable));
             builder.addUnculledFace(quad(v(1, 1 - o, o), v(1, o, o), v(1 - o, o, o), v(1 - o, 1 - o, o), spriteCable));
             builder.addUnculledFace(quad(v(1, o, 1 - o), v(1, 1 - o, 1 - o), v(1 - o, 1 - o, 1 - o), v(1 - o, o, 1 - o), spriteCable));
-        } else if (east == BLOCK) {
+        } else if (east == INSERT || east == EXTRACT) {
             builder.addUnculledFace(quad(v(1 - p, 1 - o, 1 - o), v(1 - p, 1 - o, o), v(1 - o, 1 - o, o), v(1 - o, 1 - o, 1 - o), spriteCable));
             builder.addUnculledFace(quad(v(1 - p, o, o), v(1 - p, o, 1 - o), v(1 - o, o, 1 - o), v(1 - o, o, o), spriteCable));
             builder.addUnculledFace(quad(v(1 - p, 1 - o, o), v(1 - p, o, o), v(1 - o, o, o), v(1 - o, 1 - o, o), spriteCable));
             builder.addUnculledFace(quad(v(1 - p, o, 1 - o), v(1 - p, 1 - o, 1 - o), v(1 - o, 1 - o, 1 - o), v(1 - o, o, 1 - o), spriteCable));
 
+            TextureAtlasSprite spriteConnector = east == INSERT ? spriteInsert : spriteExtract;
+            TextureAtlasSprite spriteSide = east == INSERT ? spriteSideInsert : spriteSideExtract;
             builder.addUnculledFace(quad(v(1 - p, 1 - q, 1 - q), v(1, 1 - q, 1 - q), v(1, 1 - q, q), v(1 - p, 1 - q, q), spriteSide));
             builder.addUnculledFace(quad(v(1 - p, q, q), v(1, q, q), v(1, q, 1 - q), v(1 - p, q, 1 - q), spriteSide));
             builder.addUnculledFace(quad(v(1 - p, 1 - q, q), v(1, 1 - q, q), v(1, q, q), v(1 - p, q, q), spriteSide));
@@ -198,12 +207,14 @@ public final class ItemPipeGeometryBuilder {
             builder.addUnculledFace(quad(v(o, o, o), v(o, o, 1 - o), v(0, o, 1 - o), v(0, o, o), spriteCable));
             builder.addUnculledFace(quad(v(o, 1 - o, o), v(o, o, o), v(0, o, o), v(0, 1 - o, o), spriteCable));
             builder.addUnculledFace(quad(v(o, o, 1 - o), v(o, 1 - o, 1 - o), v(0, 1 - o, 1 - o), v(0, o, 1 - o), spriteCable));
-        } else if (west == BLOCK) {
+        } else if (west == INSERT || west == EXTRACT) {
             builder.addUnculledFace(quad(v(o, 1 - o, 1 - o), v(o, 1 - o, o), v(p, 1 - o, o), v(p, 1 - o, 1 - o), spriteCable));
             builder.addUnculledFace(quad(v(o, o, o), v(o, o, 1 - o), v(p, o, 1 - o), v(p, o, o), spriteCable));
             builder.addUnculledFace(quad(v(o, 1 - o, o), v(o, o, o), v(p, o, o), v(p, 1 - o, o), spriteCable));
             builder.addUnculledFace(quad(v(o, o, 1 - o), v(o, 1 - o, 1 - o), v(p, 1 - o, 1 - o), v(p, o, 1 - o), spriteCable));
 
+            TextureAtlasSprite spriteConnector = west == INSERT ? spriteInsert : spriteExtract;
+            TextureAtlasSprite spriteSide = west == INSERT ? spriteSideInsert : spriteSideExtract;
             builder.addUnculledFace(quad(v(0, 1 - q, 1 - q), v(p, 1 - q, 1 - q), v(p, 1 - q, q), v(0, 1 - q, q), spriteSide));
             builder.addUnculledFace(quad(v(0, q, q), v(p, q, q), v(p, q, 1 - q), v(0, q, 1 - q), spriteSide));
             builder.addUnculledFace(quad(v(0, 1 - q, q), v(p, 1 - q, q), v(p, q, q), v(0, q, q), spriteSide));
@@ -221,12 +232,14 @@ public final class ItemPipeGeometryBuilder {
             builder.addUnculledFace(quad(v(o, o, 0), v(1 - o, o, 0), v(1 - o, o, o), v(o, o, o), spriteCable));
             builder.addUnculledFace(quad(v(1 - o, o, 0), v(1 - o, 1 - o, 0), v(1 - o, 1 - o, o), v(1 - o, o, o), spriteCable));
             builder.addUnculledFace(quad(v(o, o, o), v(o, 1 - o, o), v(o, 1 - o, 0), v(o, o, 0), spriteCable));
-        } else if (north == BLOCK) {
+        } else if (north == INSERT || north == EXTRACT) {
             builder.addUnculledFace(quad(v(o, 1 - o, o), v(1 - o, 1 - o, o), v(1 - o, 1 - o, p), v(o, 1 - o, p), spriteCable));
             builder.addUnculledFace(quad(v(o, o, p), v(1 - o, o, p), v(1 - o, o, o), v(o, o, o), spriteCable));
             builder.addUnculledFace(quad(v(1 - o, o, p), v(1 - o, 1 - o, p), v(1 - o, 1 - o, o), v(1 - o, o, o), spriteCable));
             builder.addUnculledFace(quad(v(o, o, o), v(o, 1 - o, o), v(o, 1 - o, p), v(o, o, p), spriteCable));
 
+            TextureAtlasSprite spriteConnector = north == INSERT ? spriteInsert : spriteExtract;
+            TextureAtlasSprite spriteSide = north == INSERT ? spriteSideInsert : spriteSideExtract;
             builder.addUnculledFace(quad(v(q, 1 - q, p), v(1 - q, 1 - q, p), v(1 - q, 1 - q, 0), v(q, 1 - q, 0), spriteSide));
             builder.addUnculledFace(quad(v(q, q, 0), v(1 - q, q, 0), v(1 - q, q, p), v(q, q, p), spriteSide));
             builder.addUnculledFace(quad(v(1 - q, q, 0), v(1 - q, 1 - q, 0), v(1 - q, 1 - q, p), v(1 - q, q, p), spriteSide));
@@ -244,12 +257,14 @@ public final class ItemPipeGeometryBuilder {
             builder.addUnculledFace(quad(v(o, o, 1 - o), v(1 - o, o, 1 - o), v(1 - o, o, 1), v(o, o, 1), spriteCable));
             builder.addUnculledFace(quad(v(1 - o, o, 1 - o), v(1 - o, 1 - o, 1 - o), v(1 - o, 1 - o, 1), v(1 - o, o, 1), spriteCable));
             builder.addUnculledFace(quad(v(o, o, 1), v(o, 1 - o, 1), v(o, 1 - o, 1 - o), v(o, o, 1 - o), spriteCable));
-        } else if (south == BLOCK) {
+        } else if (south == INSERT || south == EXTRACT) {
             builder.addUnculledFace(quad(v(o, 1 - o, 1 - p), v(1 - o, 1 - o, 1 - p), v(1 - o, 1 - o, 1 - o), v(o, 1 - o, 1 - o), spriteCable));
             builder.addUnculledFace(quad(v(o, o, 1 - o), v(1 - o, o, 1 - o), v(1 - o, o, 1 - p), v(o, o, 1 - p), spriteCable));
             builder.addUnculledFace(quad(v(1 - o, o, 1 - o), v(1 - o, 1 - o, 1 - o), v(1 - o, 1 - o, 1 - p), v(1 - o, o, 1 - p), spriteCable));
             builder.addUnculledFace(quad(v(o, o, 1 - p), v(o, 1 - o, 1 - p), v(o, 1 - o, 1 - o), v(o, o, 1 - o), spriteCable));
 
+            TextureAtlasSprite spriteConnector = south == INSERT ? spriteInsert : spriteExtract;
+            TextureAtlasSprite spriteSide = south == INSERT ? spriteSideInsert : spriteSideExtract;
             builder.addUnculledFace(quad(v(q, 1 - q, 1), v(1 - q, 1 - q, 1), v(1 - q, 1 - q, 1 - p), v(q, 1 - q, 1 - p), spriteSide));
             builder.addUnculledFace(quad(v(q, q, 1 - p), v(1 - q, q, 1 - p), v(1 - q, q, 1), v(q, q, 1), spriteSide));
             builder.addUnculledFace(quad(v(1 - q, q, 1 - p), v(1 - q, 1 - q, 1 - p), v(1 - q, 1 - q, 1), v(1 - q, q, 1), spriteSide));
