@@ -3,15 +3,19 @@ package dev.shinyepo.resourcegenerator.blocks;
 import dev.shinyepo.resourcegenerator.blocks.entities.ItemPipeEntity;
 import dev.shinyepo.resourcegenerator.blocks.helpers.IDynamicShapeHelper;
 import dev.shinyepo.resourcegenerator.blocks.helpers.ItemPipeDynamicShapeHelper;
+import dev.shinyepo.resourcegenerator.blocks.helpers.ItemPipeModeHelper;
 import dev.shinyepo.resourcegenerator.blocks.types.BasicBlock;
 import dev.shinyepo.resourcegenerator.controllers.ItemTransferNetworkController;
 import dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection;
 import dev.shinyepo.resourcegenerator.properties.CustomProperties;
+import dev.shinyepo.resourcegenerator.registries.ItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +33,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.NonNull;
@@ -91,6 +96,15 @@ public class ItemPipe extends BasicBlock implements SimpleWaterloggedBlock {
             ItemTransferNetworkController networkController = ItemTransferNetworkController.getInstance((ServerLevel) level);
             networkController.handleNetworkOnPlace((ServerLevel) level, pos);
         }
+    }
+
+    @Override
+    protected @NonNull InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (level.isClientSide()) return InteractionResult.PASS;
+        if (!itemStack.is(ItemRegistry.PIPE_WRENCH))
+            return super.useItemOn(itemStack, state, level, pos, player, hand, hit);
+
+        return ItemPipeModeHelper.cycleMode((ServerLevel) level, state, pos, hit);
     }
 
     @Override

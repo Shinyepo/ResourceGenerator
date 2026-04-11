@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -93,36 +92,12 @@ public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
             return CABLE;
         } else if (isConnectable(world, connectorPos, facing)) {
             if (fromState.is(Blocks.AIR)) return INSERT;
-            var prop = getProp(facing);
+            var prop = ItemPipeModeHelper.getProp(facing);
             assert prop != null;
             return fromState.getValue(prop) != ItemPipeConnection.NONE ? fromState.getValue(prop) : INSERT;
         } else {
             return ItemPipeConnection.NONE;
         }
-    }
-
-    private static EnumProperty<ItemPipeConnection> getProp(Direction facing) {
-        switch (facing) {
-            case Direction.NORTH -> {
-                return NORTH;
-            }
-            case Direction.SOUTH -> {
-                return SOUTH;
-            }
-            case Direction.WEST -> {
-                return WEST;
-            }
-            case Direction.EAST -> {
-                return EAST;
-            }
-            case Direction.DOWN -> {
-                return DOWN;
-            }
-            case Direction.UP -> {
-                return UP;
-            }
-        }
-        return null;
     }
 
     private boolean isConnectable(LevelReader world, BlockPos connectorPos, Direction facing) {
