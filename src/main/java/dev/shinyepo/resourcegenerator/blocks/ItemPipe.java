@@ -26,6 +26,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -128,6 +129,18 @@ public class ItemPipe extends BasicBlock implements SimpleWaterloggedBlock {
         if (state.getValue(WATERLOGGED)) {
             ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return dynamicShape.updateShape(level, pos, state);
+
+        BlockState newBlockState = dynamicShape.updateShape(level, pos, state);
+        if (level.isClientSide()) return newBlockState;
+
+        //Notify pipe of cached output change
+        var prop = ItemPipeModeHelper.getProp(direction);
+        if (state.getValue(prop) == ItemPipeConnection.EXTRACT) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof ItemPipeEntity pipe) {
+                pipe.onCachedOutputChange();
+            }
+        }
+        return newBlockState;
     }
 }

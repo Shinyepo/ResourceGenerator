@@ -1,11 +1,13 @@
 package dev.shinyepo.resourcegenerator.blocks.helpers;
 
 import dev.shinyepo.resourcegenerator.blocks.ItemPipe;
+import dev.shinyepo.resourcegenerator.blocks.entities.ItemPipeEntity;
 import dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -32,7 +34,12 @@ public class ItemPipeModeHelper {
         } else if (currCon == ItemPipeConnection.INSERT) {
             val = ItemPipeConnection.EXTRACT;
         }
-        level.setBlock(pos, state.setValue(prop, val), 3);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof ItemPipeEntity pipe) {
+            level.setBlock(pos, state.setValue(prop, val), 3);
+            pipe.onCachedOutputChange();
+
+        }
         //TODO: Notify network of side config change
         return InteractionResult.SUCCESS_SERVER;
     }
