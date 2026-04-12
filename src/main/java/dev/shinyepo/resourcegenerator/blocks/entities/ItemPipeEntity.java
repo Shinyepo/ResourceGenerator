@@ -2,6 +2,7 @@ package dev.shinyepo.resourcegenerator.blocks.entities;
 
 import dev.shinyepo.resourcegenerator.blocks.entities.types.Transmitter;
 import dev.shinyepo.resourcegenerator.blocks.helpers.ItemPipeModeHelper;
+import dev.shinyepo.resourcegenerator.controllers.ItemTransferNetworkController;
 import dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection;
 import dev.shinyepo.resourcegenerator.registries.BlockEntityRegistry;
 import dev.shinyepo.resourcegenerator.util.ItemStacksHandlerUtil;
@@ -13,15 +14,18 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class ItemPipeEntity extends Transmitter {
-    private final ItemStacksResourceHandler itemHandler = ItemStacksHandlerUtil.createInputItemHandler(1, this::setChanged);
+    private final ItemStacksResourceHandler itemHandler = ItemStacksHandlerUtil.createItemTransferHandler(this::onGettingItem, this::networkCanOutputItems);
     private final Set<BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction>> outputCache = new HashSet<>();
     private boolean isOutputCacheValid = false;
 
@@ -32,10 +36,27 @@ public class ItemPipeEntity extends Transmitter {
         calculateOutputCache();
     }
 
+    private void onGettingItem() {
+        if (this.level == null || this.level.isClientSide()) return;
+        ServerLevel level = (ServerLevel) this.level;
+        ItemTransferNetworkController controller = ItemTransferNetworkController.getInstance(level);
+
+        UUID networkId = networkCapability.getNetworkId();
+        try (Transaction tx = Transaction.openRoot()) {
+            ResourceHandler<ItemResource> targetHandler = controller.getClosestOutput(networkId, worldPosition);
+            if (targetHandler != null) {
+                var result = ResourceHandlerUtil.move(itemHandler, targetHandler, _ -> true, 1, tx);
+                if (result != 0) tx.commit();
+                else tx.close();
+            }
+        }
+    }
+
     private void calculateOutputCache() {
         if (this.level == null || this.level.isClientSide())
             return;
         outputCache.clear();
+        this.invalidateCapabilities();
         BlockState currState = level.getBlockState(worldPosition);
 
         for (Direction direction : Direction.values()) {
@@ -55,6 +76,7 @@ public class ItemPipeEntity extends Transmitter {
                         ));
             }
         }
+        updateNetworkCapabilityCache();
         isOutputCacheValid = true;
     }
 
@@ -66,6 +88,7 @@ public class ItemPipeEntity extends Transmitter {
     public void tick(ServerLevel level) {
         if (!isOutputCacheValid) calculateOutputCache();
         if (level.getGameTime() % 20 != 0) return;
+        System.out.println(outputCache.size());
     }
 
     public ResourceHandler<ItemResource> getItemCapability(@Nullable Direction direction) {
@@ -75,8 +98,30 @@ public class ItemPipeEntity extends Transmitter {
 
         var property = ItemPipeModeHelper.getProp(direction);
         assert property != null;
-        if (state.getValue(property) == ItemPipeConnection.INSERT) return itemHandler;
+
+        if (state.getValue(property) == ItemPipeConnection.INSERT && networkCanOutputItems()) return itemHandler;
 
         return null;
+    }
+
+    private void updateNetworkCapabilityCache() {
+        if (level == null || level.isClientSide()) return;
+        ServerLevel level = (ServerLevel) this.level;
+        UUID networkId = networkCapability.getNetworkId();
+        if (networkId == null) return;
+
+        ItemTransferNetworkController networkController = ItemTransferNetworkController.getInstance(level);
+        networkController.addCapabilityCacheToNetwork(networkId, worldPosition, outputCache);
+    }
+
+    private boolean networkCanOutputItems() {
+        if (level == null || level.isClientSide()) return false;
+        ServerLevel level = (ServerLevel) this.level;
+
+        ItemTransferNetworkController networkController = ItemTransferNetworkController.getInstance(level);
+        UUID networkId = networkCapability.getNetworkId();
+
+        if (networkId == null) return false;
+        return networkController.canOutputItems(networkId);
     }
 }

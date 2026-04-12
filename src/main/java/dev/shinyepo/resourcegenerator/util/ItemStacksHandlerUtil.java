@@ -9,11 +9,28 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public class ItemStacksHandlerUtil {
 
     public static ItemStacksResourceHandler createInputItemHandler(int slots, Runnable onChanged) {
         return createInputItemHandler(slots, onChanged, List.of());
+    }
+
+    //Limit amount of items in pipe buffer?
+    //get rid of buffer entirely?
+    public static ItemStacksResourceHandler createItemTransferHandler(Runnable onChanged, BooleanSupplier isValid) {
+        return new ItemStacksResourceHandler(1) {
+            @Override
+            public boolean isValid(int index, ItemResource resource) {
+                return isValid.getAsBoolean();
+            }
+
+            @Override
+            protected void onContentsChanged(int slot, ItemStack previousContents) {
+                onChanged.run();
+            }
+        };
     }
 
     @Nonnull
