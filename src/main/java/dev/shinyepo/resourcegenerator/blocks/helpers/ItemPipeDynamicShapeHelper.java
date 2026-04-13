@@ -19,19 +19,19 @@ import static dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection.*;
 import static dev.shinyepo.resourcegenerator.properties.CustomProperties.*;
 
 public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
-    VoxelShape SHAPE_CABLE_NORTH = Shapes.box(.3, .3, 0, .7, .7, .5);
-    VoxelShape SHAPE_CABLE_SOUTH = Shapes.box(.3, .3, .5, .7, .7, 1);
-    VoxelShape SHAPE_CABLE_WEST = Shapes.box(0, .3, .3, .5, .7, .7);
-    VoxelShape SHAPE_CABLE_EAST = Shapes.box(.5, .3, .3, 1, .7, .7);
-    VoxelShape SHAPE_CABLE_UP = Shapes.box(.3, .5, .3, .7, 1, .7);
-    VoxelShape SHAPE_CABLE_DOWN = Shapes.box(.3, 0, .3, .7, .5, .7);
+    VoxelShape SHAPE_CABLE_NORTH = Shapes.box(.34, .34, 0, .66, .66, .34);
+    VoxelShape SHAPE_CABLE_SOUTH = Shapes.box(.34, .34, .66, .66, .66, 1);
+    VoxelShape SHAPE_CABLE_WEST = Shapes.box(0, .34, .34, .34, .66, .66);
+    VoxelShape SHAPE_CABLE_EAST = Shapes.box(.66, .34, .34, 1, .66, .66);
+    VoxelShape SHAPE_CABLE_UP = Shapes.box(.34, .66, .34, .66, 1, .66);
+    VoxelShape SHAPE_CABLE_DOWN = Shapes.box(.34, 0, .34, .66, .34, .66);
 
-    VoxelShape SHAPE_BLOCK_NORTH = Shapes.box(.3, .3, 0, .7, .7, .1);
-    VoxelShape SHAPE_BLOCK_SOUTH = Shapes.box(.3, .3, .9, .7, .7, 1);
-    VoxelShape SHAPE_BLOCK_WEST = Shapes.box(0, .3, .3, .1, .7, .7);
-    VoxelShape SHAPE_BLOCK_EAST = Shapes.box(.9, .3, .3, 1, .7, .7);
-    VoxelShape SHAPE_BLOCK_UP = Shapes.box(.3, .9, .3, .7, 1, .7);
-    VoxelShape SHAPE_BLOCK_DOWN = Shapes.box(.3, 0, .3, .7, .1, .7);
+    VoxelShape SHAPE_BLOCK_NORTH = Shapes.box(.2, .2, 0, .8, .8, .1);
+    VoxelShape SHAPE_BLOCK_SOUTH = Shapes.box(.2, .2, .9, .8, .8, 1);
+    VoxelShape SHAPE_BLOCK_WEST = Shapes.box(0, .2, .2, .1, .8, .8);
+    VoxelShape SHAPE_BLOCK_EAST = Shapes.box(.9, .2, .2, 1, .8, .8);
+    VoxelShape SHAPE_BLOCK_UP = Shapes.box(.2, .9, .2, .8, 1, .8);
+    VoxelShape SHAPE_BLOCK_DOWN = Shapes.box(.2, 0, .2, .8, .1, .8);
 
     public VoxelShape[] shapeCache;
 
@@ -137,7 +137,7 @@ public class ItemPipeDynamicShapeHelper implements IDynamicShapeHelper {
     }
 
     private VoxelShape makeShape(ItemPipeConnection north, ItemPipeConnection south, ItemPipeConnection west, ItemPipeConnection east, ItemPipeConnection up, ItemPipeConnection down) {
-        VoxelShape shape = Shapes.box(.3, .3, .3, .7, .7, .7);
+        VoxelShape shape = Shapes.box(.34, .34, .34, .66, .66, .66);
         shape = combineShape(shape, north, SHAPE_CABLE_NORTH, SHAPE_BLOCK_NORTH);
         shape = combineShape(shape, south, SHAPE_CABLE_SOUTH, SHAPE_BLOCK_SOUTH);
         shape = combineShape(shape, west, SHAPE_CABLE_WEST, SHAPE_BLOCK_WEST);

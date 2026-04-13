@@ -88,7 +88,6 @@ public class ItemPipeEntity extends Transmitter {
     public void tick(ServerLevel level) {
         if (!isOutputCacheValid) calculateOutputCache();
         if (level.getGameTime() % 20 != 0) return;
-        System.out.println(outputCache.size());
     }
 
     public ResourceHandler<ItemResource> getItemCapability(@Nullable Direction direction) {
