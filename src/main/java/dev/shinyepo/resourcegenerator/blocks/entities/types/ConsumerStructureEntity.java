@@ -1,13 +1,14 @@
 package dev.shinyepo.resourcegenerator.blocks.entities.types;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-public class ConsumerStructureEntity extends BasicEntity {
-    private BlockPos consumerPos = null;
+public class ConsumerStructureEntity extends BasicEntity implements ITickableEntity {
+    protected BlockPos consumerPos = null;
 
     public ConsumerStructureEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -43,5 +44,10 @@ public class ConsumerStructureEntity extends BasicEntity {
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         consumerPos = input.read("consumerPos", BlockPos.CODEC).orElse(null);
+    }
+
+    @Override
+    public void tick(ServerLevel level) {
+
     }
 }
