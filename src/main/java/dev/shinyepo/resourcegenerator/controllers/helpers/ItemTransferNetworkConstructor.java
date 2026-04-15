@@ -1,6 +1,5 @@
 package dev.shinyepo.resourcegenerator.controllers.helpers;
 
-import dev.shinyepo.resourcegenerator.blocks.entities.CableEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.ItemPipeEntity;
 import dev.shinyepo.resourcegenerator.blocks.entities.types.INetworkDevice;
 import dev.shinyepo.resourcegenerator.capabilities.INetworkCapability;
@@ -77,7 +76,8 @@ public class ItemTransferNetworkConstructor extends AbstractNetworkConstructor {
 
     @Override
     protected INetworkCapability isNeighbourCapValid(ServerLevel level, BlockPos neighbor, Direction dir) {
-        if (level.getBlockEntity(neighbor) instanceof CableEntity) return null;
-        return level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, neighbor, null);
+        if (level.getBlockEntity(neighbor) instanceof ItemPipeEntity)
+            return level.getCapability(CapabilityRegistry.NETWORK_CAPABILITY, neighbor, null);
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package dev.shinyepo.resourcegenerator.blocks.helpers;
 
 import dev.shinyepo.resourcegenerator.blocks.Cable;
+import dev.shinyepo.resourcegenerator.blocks.entities.ItemPipeEntity;
 import dev.shinyepo.resourcegenerator.capabilities.INetworkCapability;
 import dev.shinyepo.resourcegenerator.pipes.helpers.ItemPipeConnection;
 import dev.shinyepo.resourcegenerator.registries.CapabilityRegistry;
@@ -135,7 +136,7 @@ public class CableDynamicShapeHelper implements IDynamicShapeHelper {
             return true;
 
         BlockEntity be = level.getBlockEntity(relativePos);
-        if (be == null)
+        if (be == null || be instanceof ItemPipeEntity)
             return false;
 
         assert be.getLevel() != null;
