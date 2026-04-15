@@ -77,6 +77,7 @@ public class ItemPipeEntity extends Transmitter {
             }
         }
         updateNetworkCapabilityCache();
+        setChanged();
         isOutputCacheValid = true;
     }
 
