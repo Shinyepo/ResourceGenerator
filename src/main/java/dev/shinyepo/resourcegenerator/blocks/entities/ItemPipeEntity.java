@@ -26,9 +26,10 @@ import java.util.Set;
 import java.util.UUID;
 
 public class ItemPipeEntity extends Transmitter {
-    private final ItemStacksResourceHandler itemHandler = ItemStacksHandlerUtil.createItemTransferHandler(this::onGettingItem, this::networkCanOutputItems);
+    private final ItemStacksResourceHandler itemHandler = ItemStacksHandlerUtil.createItemTransferHandler(this::canTransferItems);
     private final Set<BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction>> outputCache = new HashSet<>();
     private boolean isOutputCacheValid = false;
+    private int transferCooldown = 20;
 
     public ItemPipeEntity(BlockPos pos, BlockState blockState) {
         super(BlockEntityRegistry.ITEM_PIPE_ENTITY.get(), pos, blockState);
@@ -37,21 +38,25 @@ public class ItemPipeEntity extends Transmitter {
         calculateOutputCache();
     }
 
-    private void onGettingItem() {
+    private void transferItems() {
         if (this.level == null || this.level.isClientSide()) return;
+        --transferCooldown;
+        if (transferCooldown > 0) return;
         ServerLevel level = (ServerLevel) this.level;
         ItemTransferNetworkController controller = ItemTransferNetworkController.getInstance(level);
 
         UUID networkId = networkCapability.getNetworkId();
         try (Transaction tx = Transaction.openRoot()) {
             List<BlockPos> orderedOutputs = controller.getOrderedOutputs(networkId, worldPosition);
+            if (orderedOutputs == null) return;
             for (BlockPos output : orderedOutputs) {
                 ResourceHandler<ItemResource> targetHandler = controller.getOutputHandler(networkId, output);
                 if (targetHandler == null) continue;
-
-                var result = ResourceHandlerUtil.move(itemHandler, targetHandler, _ -> true, 1, tx);
+                int amountToTransfer = Math.min(4, itemHandler.getAmountAsInt(0));
+                var result = ResourceHandlerUtil.move(itemHandler, targetHandler, _ -> true, amountToTransfer, tx);
                 if (result != 0) {
                     tx.commit();
+                    transferCooldown = 20;
                     break;
                 }
             }
@@ -94,7 +99,7 @@ public class ItemPipeEntity extends Transmitter {
     @Override
     public void tick(ServerLevel level) {
         if (!isOutputCacheValid) calculateOutputCache();
-        if (level.getGameTime() % 20 != 0) return;
+        transferItems();
     }
 
     public ResourceHandler<ItemResource> getItemCapability(@Nullable Direction direction) {
@@ -118,6 +123,11 @@ public class ItemPipeEntity extends Transmitter {
 
         ItemTransferNetworkController networkController = ItemTransferNetworkController.getInstance(level);
         networkController.addCapabilityCacheToNetwork(networkId, worldPosition, outputCache);
+    }
+
+    private boolean canTransferItems() {
+        if (itemHandler.getAmountAsInt(0) > 3) return false;
+        return networkCanOutputItems();
     }
 
     private boolean networkCanOutputItems() {

@@ -19,16 +19,11 @@ public class ItemStacksHandlerUtil {
 
     //Limit amount of items in pipe buffer?
     //get rid of buffer entirely?
-    public static ItemStacksResourceHandler createItemTransferHandler(Runnable onChanged, BooleanSupplier isValid) {
+    public static ItemStacksResourceHandler createItemTransferHandler(BooleanSupplier isValid) {
         return new ItemStacksResourceHandler(1) {
             @Override
             public boolean isValid(int index, ItemResource resource) {
                 return isValid.getAsBoolean();
-            }
-
-            @Override
-            protected void onContentsChanged(int slot, ItemStack previousContents) {
-                onChanged.run();
             }
         };
     }
