@@ -86,7 +86,8 @@ public class ConsumerOutputEntity extends ConsumerStructureEntity {
             }
 
             try (Transaction tx = Transaction.openRoot()) {
-                var result = ResourceHandlerUtil.move(consumerCap, cap, _ -> true, 1, tx);
+                int amountToTransfer = Math.min(4, consumerCap.getAmountAsInt(0));
+                var result = ResourceHandlerUtil.move(consumerCap, cap, _ -> true, amountToTransfer, tx);
                 if (result == 0) {
                     tx.close();
                     return;
