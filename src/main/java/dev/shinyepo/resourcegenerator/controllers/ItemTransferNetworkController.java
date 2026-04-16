@@ -11,10 +11,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.WeakHashMap;
+import java.util.*;
 
 public class ItemTransferNetworkController {
     private static final Map<ServerLevel, ItemTransferNetworkController> INSTANCES = new WeakHashMap<>();
@@ -67,7 +64,11 @@ public class ItemTransferNetworkController {
         networkConstructor.flushPendingOperations(level);
     }
 
-    public ResourceHandler<ItemResource> getClosestOutput(UUID networkId, BlockPos worldPosition) {
-        return networkActions.getClosestOutput(networkId, worldPosition);
+    public List<BlockPos> getOrderedOutputs(UUID networkId, BlockPos worldPosition) {
+        return networkActions.getOrderedOutputs(networkId, worldPosition);
+    }
+
+    public ResourceHandler<ItemResource> getOutputHandler(UUID networkId, BlockPos output) {
+        return networkActions.getOutputHandler(networkId, output);
     }
 }

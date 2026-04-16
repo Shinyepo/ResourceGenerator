@@ -9,6 +9,7 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,9 +33,16 @@ public class ItemTransferNetworkActions {
         return network.canOutputItems();
     }
 
-    public ResourceHandler<ItemResource> getClosestOutput(UUID networkId, BlockPos input) {
+    public List<BlockPos> getOrderedOutputs(UUID networkId, BlockPos input) {
         ItemTransferNetwork network = dataStore.getNetwork(networkId);
         if (network == null) return null;
-        return network.getClosestOutput(input);
+        return network.getOrderedOutputs(input);
+    }
+
+    public ResourceHandler<ItemResource> getOutputHandler(UUID networkId, BlockPos output) {
+        ItemTransferNetwork network = dataStore.getNetwork(networkId);
+        if (network == null) return null;
+
+        return network.getResourceHandler(output);
     }
 }

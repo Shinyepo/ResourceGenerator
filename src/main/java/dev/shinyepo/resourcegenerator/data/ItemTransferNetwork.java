@@ -19,8 +19,10 @@ import java.util.*;
 public class ItemTransferNetwork implements Network {
     private UUID networkId;
     private HashSet<BlockPos> itemPipes = new HashSet<>();
+    //Output Pipe position, Set of Capability Caches of relative entities
     private final HashMap<BlockPos, Set<BlockCapabilityCache<ResourceHandler<ItemResource>, Direction>>> capabilityCaches = new HashMap<>();
-    private final HashMap<BlockPos, BlockPos> closestOutputCache = new HashMap<>();
+    // Input, Ordered Output positions
+    private final HashMap<BlockPos, List<BlockPos>> orderedOutputCache = new HashMap<>();
     private ResourceKey<Level> dimension;
 
     public static final Codec<ItemTransferNetwork> CODEC = RecordCodecBuilder.create(instance ->
@@ -111,7 +113,7 @@ public class ItemTransferNetwork implements Network {
     }
 
     public void addCapabilityCache(BlockPos pos, Set<BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction>> cache) {
-        closestOutputCache.clear();
+        orderedOutputCache.clear();
         if (cache.isEmpty()) {
             capabilityCaches.remove(pos);
             return;
@@ -123,28 +125,20 @@ public class ItemTransferNetwork implements Network {
         return !capabilityCaches.isEmpty();
     }
 
-    public ResourceHandler<ItemResource> getClosestOutput(BlockPos input) {
-        if (capabilityCaches.isEmpty()) return null;
-        BlockPos closest = closestOutputCache.computeIfAbsent(input, this::cacheClosestOutput);
-
-        var cap = capabilityCaches.get(closest);
-        if (cap == null || cap.isEmpty()) return null;
-        return cap.iterator().next().getCapability();
+    public ResourceHandler<ItemResource> getResourceHandler(BlockPos pos) {
+        return capabilityCaches.get(pos).iterator().next().getCapability();
     }
 
-    private BlockPos cacheClosestOutput(BlockPos input) {
-        BlockPos closest = null;
-        double closestDistance = Double.MAX_VALUE;
+    public List<BlockPos> getOrderedOutputs(BlockPos input) {
+        if (capabilityCaches.isEmpty()) return null;
 
-        for (BlockPos pos : capabilityCaches.keySet()) {
-            double distance = input.distSqr(pos);
-            if (distance < closestDistance) {
-                closest = pos;
-                closestDistance = distance;
-            }
-        }
+        return orderedOutputCache.computeIfAbsent(input, this::cacheClosestOutput);
+    }
 
-        return closest;
+    private List<BlockPos> cacheClosestOutput(BlockPos input) {
+        return capabilityCaches.keySet().stream()
+                .sorted(Comparator.comparingDouble(input::distSqr))
+                .toList();
     }
 
     public enum ItemTransferDeviceType implements DeviceType {

@@ -21,6 +21,7 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -43,11 +44,16 @@ public class ItemPipeEntity extends Transmitter {
 
         UUID networkId = networkCapability.getNetworkId();
         try (Transaction tx = Transaction.openRoot()) {
-            ResourceHandler<ItemResource> targetHandler = controller.getClosestOutput(networkId, worldPosition);
-            if (targetHandler != null) {
+            List<BlockPos> orderedOutputs = controller.getOrderedOutputs(networkId, worldPosition);
+            for (BlockPos output : orderedOutputs) {
+                ResourceHandler<ItemResource> targetHandler = controller.getOutputHandler(networkId, output);
+                if (targetHandler == null) continue;
+
                 var result = ResourceHandlerUtil.move(itemHandler, targetHandler, _ -> true, 1, tx);
-                if (result != 0) tx.commit();
-                else tx.close();
+                if (result != 0) {
+                    tx.commit();
+                    break;
+                }
             }
         }
     }
