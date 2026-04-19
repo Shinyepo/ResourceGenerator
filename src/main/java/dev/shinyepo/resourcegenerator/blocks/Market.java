@@ -2,7 +2,6 @@ package dev.shinyepo.resourcegenerator.blocks;
 
 import dev.shinyepo.resourcegenerator.blocks.entities.MarketEntity;
 import dev.shinyepo.resourcegenerator.blocks.types.HorizontalBlock;
-import dev.shinyepo.resourcegenerator.menus.market.MarketContainer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.Shapes;
 
@@ -16,10 +15,8 @@ public class Market extends HorizontalBlock {
                 Block.box(0, 0, 0, 1.5, 2, 1.5),
                 Block.box(14.5, 0, 0, 16, 2, 1.5),
                 Block.box(0.5, 0.01, 0.5, 15.5, 14.01, 15.5),
-                Block.box(3, 13.5, 1.6999999999999997, 13, 14.5, 4.849999999999999));
-        
-
                 Block.box(3, 13.5, 1.6999999999999997, 13, 14.5, 4.849999999999999))));
+
         setBlockEntity(MarketEntity::new);
     }
 }
