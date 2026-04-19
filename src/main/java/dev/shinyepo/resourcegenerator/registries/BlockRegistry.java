@@ -27,6 +27,7 @@ public class BlockRegistry {
     public static final DeferredBlock<Block> RESOURCE_IMITATOR = BLOCKS.registerBlock("resource_imitator", ResourceImitator::new, BlockBehaviour.Properties::of);
     public static final DeferredBlock<Block> CONSUMER_OUTPUT = BLOCKS.registerBlock("consumer_output", ConsumerOutput::new, BlockBehaviour.Properties::of);
     public static final DeferredBlock<Block> SCULK_ABSORBER = BLOCKS.registerBlock("sculk_absorber", SculkAbsorber::new, BlockBehaviour.Properties::of);
+    public static final DeferredBlock<Block> MARKET = BLOCKS.registerBlock("market", Market::new, BlockBehaviour.Properties::of);
     public static final DeferredBlock<Block> CONDUIT_ABSORBER = BLOCKS.registerBlock("conduit_absorber", ConduitAbsorber::new, () ->
             BlockBehaviour.Properties.of().lightLevel(state -> state.getValue(CustomProperties.OPERATIONAL) ? 15 : 0));
 }

@@ -7,7 +7,7 @@
     "2": "resourcegenerator:block/controller/top_texture",
     "3": "resourcegenerator:block/controller/texture",
     "5": "resourcegenerator:block/controller/middle_texture",
-    "6": "resourcegenerator:block/controller/keyboard_texture",
+    "6": "resourcegenerator:block/shared/keyboard",
     "7": "resourcegenerator:block/controller/some_texture",
     "8": "resourcegenerator:block/controller/monitor_texture",
     "9": "resourcegenerator:block/controller/slot_texture",

@@ -42,6 +42,7 @@ public class CustomBlockGenerator extends BlockModelGenerators {
         generateBlockWithExistingModel(BlockRegistry.SCULK_ABSORBER);
         generateBlockWithExistingModel(BlockRegistry.CONSUMER_OUTPUT);
         generateBlockWithExistingModel(BlockRegistry.CONDUIT_ABSORBER);
+        generateBlockWithExistingModel(BlockRegistry.MARKET);
         registerItemPipe();
     }
 

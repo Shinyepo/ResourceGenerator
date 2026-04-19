@@ -25,5 +25,6 @@ public class ItemRegistry {
     public static final DeferredItem<BlockItem> SCULK_ABSORBER_ITEM = ITEMS.registerSimpleBlockItem("sculk_absorber", BlockRegistry.SCULK_ABSORBER);
     public static final DeferredItem<BlockItem> CONSUMER_OUTPUT_ITEM = ITEMS.registerSimpleBlockItem("consumer_output", BlockRegistry.CONSUMER_OUTPUT);
     public static final DeferredItem<BlockItem> CONDUIT_ABSORBER_ITEM = ITEMS.registerSimpleBlockItem("conduit_absorber", BlockRegistry.CONDUIT_ABSORBER);
+    public static final DeferredItem<BlockItem> MARKET_ITEM = ITEMS.registerSimpleBlockItem("market", BlockRegistry.MARKET);
     public static final DeferredItem<Item> PIPE_WRENCH = ITEMS.registerItem("pipe_wrench", PipeWrench::new, () -> new Item.Properties().stacksTo(1));
 }

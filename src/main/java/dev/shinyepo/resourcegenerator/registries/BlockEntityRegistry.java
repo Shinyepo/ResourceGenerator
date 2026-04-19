@@ -47,4 +47,7 @@ public class BlockEntityRegistry {
     public static final Supplier<BlockEntityType<ConduitAbsorberEntity>> CONDUIT_ABSORBER_ENTITY = ENTITIES.register("conduit_absorber_entity",
             () -> new BlockEntityType<>(ConduitAbsorberEntity::new, BlockRegistry.CONDUIT_ABSORBER.get()));
 
+    public static final Supplier<BlockEntityType<MarketEntity>> MARKET_ENTITY = ENTITIES.register("market_entity",
+            () -> new BlockEntityType<>(MarketEntity::new, BlockRegistry.MARKET.get()));
+
 }
