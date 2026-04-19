@@ -101,6 +101,10 @@ public class BasicBlock extends Block implements EntityBlock {
 
     @Override
     protected @NonNull InteractionResult useWithoutItem(@NonNull BlockState state, Level level, @NonNull BlockPos pos, @NonNull Player player, @NonNull BlockHitResult hitResult) {
+        return openMenu(level, state, pos, player);
+    }
+
+    private InteractionResult openMenu(Level level, BlockState state, BlockPos pos, Player player) {
         if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             MenuProvider menu = state.getMenuProvider(level, pos);
             if (menu != null) {
@@ -108,10 +112,10 @@ public class BasicBlock extends Block implements EntityBlock {
                     verboseDataEntity.syncDataToClient(serverPlayer);
                 }
                 serverPlayer.openMenu(state.getMenuProvider(level, pos), buf -> buf.writeBlockPos(pos));
-                return InteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS_SERVER;
             }
             return InteractionResult.PASS;
         }
-        return InteractionResult.PASS;
+        return InteractionResult.CONSUME;
     }
 }
