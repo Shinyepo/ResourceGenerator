@@ -1,12 +1,8 @@
 package dev.shinyepo.resourcegenerator.blocks.entities.types;
 
-import com.mojang.serialization.Codec;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
 import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
-import dev.shinyepo.resourcegenerator.networking.CustomMessages;
-import dev.shinyepo.resourcegenerator.networking.packets.SyncOwnerS2C;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,8 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
-    private UUID accountId;
-    protected String ownerName = "";
+    protected final AccountEntity accountEntity = new AccountEntity(this);
     protected Long value = 0L;
     protected Long prevValue = 0L;
 
@@ -30,73 +25,54 @@ public class Receiver extends NetworkDeviceEntity implements IAccountEntity {
     @Override
     public void tick(ServerLevel level) {
         if (level.getGameTime() % 20 == 0) {
-            if (accountId != null && networkCapability.getNetworkId() != null) {
+            if (getAccountId() != null && networkCapability.getNetworkId() != null) {
                 DeviceNetworkController controller = DeviceNetworkController.getInstance(level);
                 AccountController accountController = AccountController.getInstance(level);
                 Long balance = controller.getNetworksBalance(networkCapability.getNetworkId());
                 prevValue = value;
-                accountController.addBalanceFromMachines(level, accountId, balance);
-                value = accountController.getAccountBalance(accountId);
+                accountController.addBalanceFromMachines(level, getAccountId(), balance);
+                value = accountController.getAccountBalance(getAccountId());
                 controller.resetNetworksBalance(networkCapability.getNetworkId());
             }
         }
     }
 
-    @Override
     public UUID getAccountId() {
-        return accountId;
+        return accountEntity.getAccountId();
     }
 
-    @Override
-    public void setAccountId(UUID accountId) {
-        this.accountId = accountId;
-        assert level != null;
-        if (!level.isClientSide())
-            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 1);
-    }
-
-    @Override
     public String getOwnerName() {
-        return ownerName;
+        return accountEntity.getOwnerName();
+    }
+
+    public void setOwnerName(String ownerName) {
+        accountEntity.setOwnerName(ownerName);
     }
 
     public Map<Identifier, Integer> getUpgrades() {
-        if (accountId != null) {
+        if (getAccountId() != null) {
             ServerLevel serverLevel = (ServerLevel) level;
             AccountController accountController = AccountController.getInstance(serverLevel);
-            return accountController.getUpgrades(accountId);
+            return accountController.getUpgrades(getAccountId());
         }
         return null;
     }
 
     @Override
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-        setChanged();
-    }
-
-    @Override
     public void setChanged() {
         super.setChanged();
-        if (!ownerName.isEmpty())
-            CustomMessages.sendToAllPlayers(new SyncOwnerS2C(ownerName, this.getBlockPos()));
+        accountEntity.onChange();
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        if (accountId != null) {
-            output.store("accountId", UUIDUtil.CODEC, accountId);
-        }
-        if (!"".equals(ownerName)) {
-            output.store("ownerName", Codec.STRING, ownerName);
-        }
+        accountEntity.serialize(output);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        accountId = input.read("accountId", UUIDUtil.CODEC).orElse(null);
-        ownerName = input.read("ownerName", Codec.STRING).orElse("");
+        accountEntity.deserialize(input);
     }
 }
