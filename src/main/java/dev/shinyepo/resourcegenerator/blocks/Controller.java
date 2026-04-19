@@ -17,36 +17,24 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class Controller extends HorizontalNetworkBlock {
-    private final VoxelShape SHAPE_N = Shapes.or(
-            Block.box(-15.5, 0.5, 0.75, 31.5, 15.5, 16),
-            Block.box(-15.99, 0, 0.01, -13.99, 15.99, 2.01),
-            Block.box(-15.99, 0, 14.01, -13.99, 15.99, 16.01),
-            Block.box(29.99, 0, 0.01, 31.99, 15.99, 2.01),
-            Block.box(29.99, 0, 14.01, 31.99, 15.99, 16.01),
-            Block.box(-16, 15, 0, 32, 16, 16.02)
-    );
-    private final VoxelShape SHAPE_W = Shapes.or(
-            Block.box(0.01, 0, -15.99, 2.01, 16, -13.99),
-            Block.box(13.99, 0, -15.99, 15.99, 16, -13.99),
-            Block.box(13.99, 0, 29.99, 15.99, 16, 31.99),
-            Block.box(0.01, 0, 29.99, 2.01, 16, 31.99),
-            Block.box(0.75, 0.5, -15.5, 15.98, 15, 31.5),
-            Block.box(0, 15, -16, 16, 16.01, 32)
-    );
 
     public Controller(Properties properties) {
         super(properties);
+        SHAPES.putAll(Shapes.rotateAll(Shapes.or(Block.box(-15.5, 0.5, 0.75, 31.5, 15.5, 16),
+                Block.box(-15.99, 0, 0.01, -13.99, 15.99, 2.01),
+                Block.box(-15.99, 0, 14.01, -13.99, 15.99, 16.01),
+                Block.box(29.99, 0, 0.01, 31.99, 15.99, 2.01),
+                Block.box(29.99, 0, 14.01, 31.99, 15.99, 16.01),
+                Block.box(-16, 15, 0, 32, 16, 16.02))));
+
         registerDefaultState(getStateDefinition().any()
                 .setValue(FACING, Direction.NORTH));
-        SHAPES.put(Direction.NORTH, SHAPE_N);
-        SHAPES.put(Direction.WEST, SHAPE_W);
 
         setBlockEntity(ControllerEntity::new);
         setDataContainerFactory(ControllerContainer::new);

@@ -2,6 +2,7 @@ package dev.shinyepo.resourcegenerator.blocks.types;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -24,14 +26,12 @@ public class HorizontalNetworkBlock extends NetworkBlock {
 
     @Override
     protected @NonNull VoxelShape getShape(@NonNull BlockState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @NonNull CollisionContext context) {
-        VoxelShape shape = SHAPES.get(state.getValue(FACING));
-        return shape == null ? SHAPES.get(Direction.NORTH) : shape;
+        return SHAPES.get(state.getValue(FACING));
     }
 
     @Override
     protected @NonNull VoxelShape getCollisionShape(BlockState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @NonNull CollisionContext context) {
-        VoxelShape shape = SHAPES.get(state.getValue(FACING));
-        return shape == null ? SHAPES.get(Direction.NORTH) : shape;
+        return SHAPES.get(state.getValue(FACING));
     }
 
     @Override
@@ -39,5 +39,8 @@ public class HorizontalNetworkBlock extends NetworkBlock {
         builder.add(FACING);
     }
 
-
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+    }
 }
