@@ -1,4 +1,4 @@
-// 26.1	2026-04-19T12:24:35.743222	Model Definitions - resourcegenerator
+// 26.1	2026-04-19T13:49:46.7429835	Model Definitions - resourcegenerator
 e24546adc9d464a7b3e8215289faae2a24201307 assets/resourcegenerator/blockstates/basic_consumer.json
 812d7a5519cd714a886d0164b0bfd2814e582925 assets/resourcegenerator/blockstates/cable.json
 6b960d4e31399ea68d2f22bcd238466c99cb8456 assets/resourcegenerator/blockstates/conduit_absorber.json
@@ -6,7 +6,7 @@ e1a281da776af612ea92dbb2ed74caaeaa7d6c24 assets/resourcegenerator/blockstates/co
 3901d1bc04bef8188ce388fe37427c51e36e706b assets/resourcegenerator/blockstates/controller.json
 3dff9e1ec59415779195d2abfa9f07bc17b428a1 assets/resourcegenerator/blockstates/dummy_extension.json
 ca65fff11f424cc8ddcc56eeaf4bbc61bb026238 assets/resourcegenerator/blockstates/item_pipe.json
-7a9e4a26d840660b99f2f03ebb73b20fda5ca80e assets/resourcegenerator/blockstates/market.json
+3a50f66e5253168c0544a023068cc11298b66c46 assets/resourcegenerator/blockstates/market.json
 a03a50e12f993d1f3a7ffcc3bd21590480f63906 assets/resourcegenerator/blockstates/output_upgrade.json
 4d5280dd4f0956fc8db0c68c168b3b187d50a44c assets/resourcegenerator/blockstates/resource_imitator.json
 e1afaa30b95fd6bf0c121835f4ec5f381746e581 assets/resourcegenerator/blockstates/sculk_absorber.json

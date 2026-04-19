@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "resourcegenerator:block/market",
+      "y": 90
+    },
+    "facing=north": {
       "model": "resourcegenerator:block/market"
+    },
+    "facing=south": {
+      "model": "resourcegenerator:block/market",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "resourcegenerator:block/market",
+      "y": 270
     }
   }
 }
