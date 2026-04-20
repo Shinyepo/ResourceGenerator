@@ -15,9 +15,9 @@ public class MarketContainer extends AbstractContainerBase {
         if (player.level().getBlockEntity(pos) instanceof MarketEntity marketEntity) {
             this.marketEntity = marketEntity;
 
-            addSlot(marketEntity.getCardHandler(), 0, 152, 8);
-            addSlot(marketEntity.getOutputHandler(), 0, 86, 36);
-            layoutPlayerInventorySlots(player.getInventory());
+            addSlot(marketEntity.getCardHandler(), 0, 252, 8);
+//            addSlot(marketEntity.getOutputHandler(), 0, 86, 36);
+            layoutPlayerInventorySlots(player.getInventory(), 108, this.defaultInventoryY);
         }
     }
 
