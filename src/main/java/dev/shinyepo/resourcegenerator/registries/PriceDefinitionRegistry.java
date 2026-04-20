@@ -29,18 +29,19 @@ public class PriceDefinitionRegistry {
 
     public static final DeferredRegister<ResourcePriceDefinition> PRICES = DeferredRegister.create(PRICE_REGISTRY, ResourceGenerator.MODID);
 
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_ORE = registerDefault("ore", 100L);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_RAW = registerDefault("raw", "ore", 1F);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_INGOT = registerDefault("ingot", "ore", 1F);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_NUGGET = registerDefault("nugget", "ingot", 0.11F);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_STORAGE_BLOCK = registerDefault("storage_block", "ore", 9);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_GEM = registerDefault("gem", 1000L);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_DUST = registerDefault("dust", 75L);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_GRAVEL = registerDefault("gravel", 15L);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_SAND = registerDefault("sand", 30L);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_STONE = registerDefault("stone", 60L);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_COBBLESTONE = registerDefault("cobblestone", 30L);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_SANDSTONE = registerDefault("sandstone", 120L);
+
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_ORE = registerDefault("default_ore", 100L);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_RAW = registerDefault("default_raw", "default_ore", 1F);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_INGOT = registerDefault("default_ingot", "default_ore", 1F);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_NUGGET = registerDefault("default_nugget", "default_ingot", 0.11F);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_STORAGE_BLOCK = registerDefault("storage_block", "default_ore", 9);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_GEM = registerDefault("default_gem", 1000L);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_DUST = registerDefault("default_dust", 75L);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_GRAVEL = registerDefault("default_gravel", 15L);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_SAND = registerDefault("default_sand", 30L);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_STONE = registerDefault("default_stone", 60L);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_COBBLESTONE = registerDefault("default_cobblestone", 30L);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_SANDSTONE = registerDefault("default_sandstone", 120L);
 
 
     public static final Supplier<ResourcePriceDefinition> IRON_ORE = registerSetOfResources(Blocks.IRON_ORE, 45L);
