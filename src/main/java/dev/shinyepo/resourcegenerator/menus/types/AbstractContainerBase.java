@@ -20,8 +20,8 @@ public abstract class AbstractContainerBase extends AbstractContainerMenu {
     private final int SLOT_COUNT;
     private final int INPUT_RANGE;
 
-    private final int defaultInventoryX = 8;
-    private final int defaultInventoryY = 84;
+    protected final int defaultInventoryX = 8;
+    protected final int defaultInventoryY = 84;
 
     public AbstractContainerBase(MenuType<?> menuType, int windowId, BlockPos pos, int slotCount, int inputRange, Block block) {
         super(menuType, windowId);
