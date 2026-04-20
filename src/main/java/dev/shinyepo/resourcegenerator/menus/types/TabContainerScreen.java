@@ -88,9 +88,9 @@ public abstract class TabContainerScreen<T extends AbstractContainerBase> extend
     }
 
     @Override
-    public @Nullable Slot getSlotUnderMouse() {
+    public @Nullable Slot getHoveredSlot() {
         if (tabManager.tabShouldRenderInventory())
-            return super.getSlotUnderMouse();
+            return super.getHoveredSlot();
         return null;
     }
 

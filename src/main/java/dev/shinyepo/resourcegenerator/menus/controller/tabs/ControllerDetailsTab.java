@@ -33,8 +33,8 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
     public void display(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 
         ControllerScreen parent = getParent();
-        int topPos = parent.getGuiTop();
-        int leftPos = parent.getGuiLeft();
+        int topPos = parent.getTopPos();
+        int leftPos = parent.getLeftPos();
         if (widget == null) {
             this.widget = new ScrollableUpgradeList(getParent(), 160, topPos + 20, topPos + 80);
 

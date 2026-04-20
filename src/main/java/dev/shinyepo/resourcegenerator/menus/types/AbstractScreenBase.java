@@ -85,9 +85,9 @@ public class AbstractScreenBase<T extends AbstractContainerBase> extends Abstrac
     }
 
     @Override
-    public @Nullable Slot getSlotUnderMouse() {
+    public @Nullable Slot getHoveredSlot() {
         if (inventoryWidget != null)
-            return super.getSlotUnderMouse();
+            return super.getHoveredSlot();
         return null;
     }
 

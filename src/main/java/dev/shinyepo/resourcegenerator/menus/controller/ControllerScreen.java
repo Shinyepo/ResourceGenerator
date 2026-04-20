@@ -68,8 +68,8 @@ public class ControllerScreen extends TabContainerScreen<ControllerContainer> {
     }
 
     public void displayFormattedWithTooltip(GuiGraphicsExtractor graphics, Component text, Component tooltipText, int color, int x, int y, int mouseX, int mouseY) {
-        int topPos = getGuiTop();
-        int leftPos = getGuiLeft();
+        int topPos = getTopPos();
+        int leftPos = getLeftPos();
         int balanceWidth = getFont().width(text);
 
         graphics.text(getFont(), text, x, y, color, false);
