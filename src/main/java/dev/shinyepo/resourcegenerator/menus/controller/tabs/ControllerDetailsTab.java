@@ -36,7 +36,7 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
         int topPos = parent.getTopPos();
         int leftPos = parent.getLeftPos();
         if (widget == null) {
-            this.widget = new ScrollableUpgradeList(getParent(), 160, topPos + 20, topPos + 80);
+            this.widget = new ScrollableUpgradeList(getParent(), 160, topPos + 20, topPos + 86);
 
             widget.setX(leftPos + 5);
             getParent().registerWidget(Button.builder(Component.literal("Buy"), btn -> {
@@ -55,6 +55,7 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
                 }
             }).pos(leftPos + 120, topPos + 142).size(48, 16).build());
             getParent().registerWidget(widget);
+            widget.refreshList();
         }
 
 

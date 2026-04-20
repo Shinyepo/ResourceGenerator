@@ -2,7 +2,6 @@ package dev.shinyepo.resourcegenerator.menus.widgets;
 
 import dev.shinyepo.resourcegenerator.data.Upgrade;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerScreen;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -16,10 +15,9 @@ public class ScrollableUpgradeList extends ObjectSelectionList<ScrollableUpgrade
     private final ControllerScreen parent;
 
     public ScrollableUpgradeList(ControllerScreen parent, int listWidth, int top, int bottom) {
-        super(Minecraft.getInstance(), listWidth, bottom - top, top, 14);
+        super(parent.getMinecraft(), listWidth, bottom - top, top, (int) Math.round(parent.getFont().lineHeight * 1.5));
         this.listWidth = listWidth;
         this.parent = parent;
-        refreshList();
     }
 
     public void refreshList() {
@@ -34,14 +32,14 @@ public class ScrollableUpgradeList extends ObjectSelectionList<ScrollableUpgrade
 
     @Override
     protected int scrollBarX() {
-        return getRight();
+        return parent.getLeftPos() + this.listWidth - 1;
     }
 
     public class UpgradeEntry extends ObjectSelectionList.Entry<UpgradeEntry> {
         private final ControllerScreen parent;
         private final Upgrade upgrade;
 
-        public UpgradeEntry(Upgrade upgrade, ControllerScreen parent) {
+        UpgradeEntry(Upgrade upgrade, ControllerScreen parent) {
             this.upgrade = upgrade;
             this.parent = parent;
         }
