@@ -31,6 +31,10 @@ public class AbstractScreenBase<T extends AbstractContainerBase> extends Abstrac
         super(menu, inventory, title, 196, 166);
     }
 
+    public AbstractScreenBase(T menu, Inventory inventory, Component title, int width, int height) {
+        super(menu, inventory, title, width, height);
+    }
+
     @Override
     protected void init() {
         super.init();
@@ -40,8 +44,18 @@ public class AbstractScreenBase<T extends AbstractContainerBase> extends Abstrac
         inventoryWidget = PlayerInventoryWidget.create();
     }
 
+    protected void createInventoryWidget(int x, int y) {
+        inventoryWidget = PlayerInventoryWidget.create();
+        inventoryWidget.setPosition(x, y);
+    }
+
     protected void createCardSlotWidget() {
         cardSlotWidget = CardSlotWidget.create();
+    }
+
+    protected void createCardSlotWidget(int x, int y) {
+        cardSlotWidget = CardSlotWidget.create();
+        cardSlotWidget.setPosition(x, y);
     }
 
     protected void createSlotWidget(int x, int y) {
