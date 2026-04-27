@@ -24,9 +24,48 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
     private static final Identifier ACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/details_on.png");
     private static final Identifier INACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/details_off.png");
     private ScrollableUpgradeList widget;
+    private Button buyButton;
 
     public ControllerDetailsTab(ControllerScreen parent, ControllerContainer menu, int index) {
         super("Details", parent, menu, index);
+
+        initWidgets();
+    }
+
+    private void initWidgets() {
+        ControllerScreen parent = getParent();
+        int topPos = parent.getTopPos();
+        int leftPos = parent.getLeftPos();
+
+        this.widget = new ScrollableUpgradeList(getParent(), 160, topPos + 20, topPos + 86);
+        widget.setX(leftPos + 5);
+        widget.refreshList();
+
+        this.buyButton = Button.builder(Component.literal("Buy"), btn -> {
+            ScrollableUpgradeList.UpgradeEntry upgradeEntry = getParent().getSelected();
+            if (upgradeEntry != null) {
+                Upgrade upgrade = upgradeEntry.getUpgrade();
+                Map<Identifier, Integer> playerUpgrades = AccountUpgradeData.get();
+                int playerTier = playerUpgrades.getOrDefault(upgradeEntry.getUpgrade().id(), 0);
+                long upgradeCost = upgrade.upgradeCost(playerUpgrades.getOrDefault(upgrade.id(), 0) + 1);
+                boolean maxTierFlag = upgrade.maxTier() >= playerTier + 1;
+                boolean costFlag = upgradeCost <= getMenu().getValue();
+                if (costFlag && maxTierFlag) {
+                    getMenu().buyUpgrade(upgradeEntry.getUpgrade().id(), playerTier + 1);
+                    getMenu().setValue(getMenu().getValue() - upgradeCost);
+                }
+            }
+        }).pos(leftPos + 120, topPos + 142).size(48, 16).build();
+    }
+
+    @Override
+    public void init() {
+        registerWidgets();
+    }
+
+    private void registerWidgets() {
+        getParent().registerWidget(widget);
+        getParent().registerWidget(buyButton);
     }
 
     @Override
@@ -86,7 +125,7 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
 
     @Override
     public void cleanup() {
-        widget = null;
+        getParent().clearWidgets();
         getParent().setSelected(null);
     }
 
@@ -102,6 +141,7 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
     @Override
     public void onTabSwitch() {
         getMenu().syncUpgradeData();
+        registerWidgets();
     }
 
     @Override
