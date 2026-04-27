@@ -7,8 +7,9 @@ import dev.shinyepo.resourcegenerator.menus.controller.ControllerContainer;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerScreen;
 import dev.shinyepo.resourcegenerator.menus.types.GuiElement;
 import dev.shinyepo.resourcegenerator.menus.types.ScreenTab;
-import dev.shinyepo.resourcegenerator.menus.widgets.ScrollableUpgradeList;
+import dev.shinyepo.resourcegenerator.menus.widgets.*;
 import dev.shinyepo.resourcegenerator.util.GuiMouseUtil;
+import dev.shinyepo.resourcegenerator.util.GuiNumericUtil;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -25,6 +26,9 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
     private static final Identifier INACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/details_off.png");
     private ScrollableUpgradeList widget;
     private Button buyButton;
+    private AbstractAccountWidget balanceWidget;
+    private AbstractAccountWidget changeWidget;
+    private AbstractAccountWidget tierWidget;
 
     public ControllerDetailsTab(ControllerScreen parent, ControllerContainer menu, int index) {
         super("Details", parent, menu, index);
@@ -40,6 +44,16 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
         this.widget = new ScrollableUpgradeList(getParent(), 160, topPos + 20, topPos + 86);
         widget.setX(leftPos + 5);
         widget.refreshList();
+
+        Long balance = getMenu().getValue();
+        String abbreviatedValue = GuiNumericUtil.abbreviate(balance);
+        this.balanceWidget = new BalanceWidget(getFont(), leftPos + 6, topPos + 90, Component.literal(abbreviatedValue));
+
+        this.changeWidget = new ChangeWidget(getFont(), leftPos + 6, topPos + 110, Component.literal(""), "Cost: ", ChangeWidget.ChangeType.LOSS);
+        changeWidget.visible = false;
+
+        this.tierWidget = new TierWidget(getFont(), leftPos + 6, topPos + 130, Component.literal(""));
+        tierWidget.visible = false;
 
         this.buyButton = Button.builder(Component.literal("Buy"), btn -> {
             ScrollableUpgradeList.UpgradeEntry upgradeEntry = getParent().getSelected();
@@ -66,10 +80,16 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
     private void registerWidgets() {
         getParent().registerWidget(widget);
         getParent().registerWidget(buyButton);
+        getParent().registerWidget(balanceWidget);
+        getParent().registerWidget(changeWidget);
+        getParent().registerWidget(tierWidget);
     }
 
     @Override
     public void display(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        balanceWidget.setMessage(getMenu().getValue());
+
+
         ControllerScreen parent = getParent();
         int topPos = parent.getTopPos();
         int leftPos = parent.getLeftPos();
@@ -77,21 +97,21 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
 
         ScrollableUpgradeList.UpgradeEntry upgradeEntry = getParent().getSelected();
         if (upgradeEntry != null) {
+            changeWidget.visible = true;
+            tierWidget.visible = true;
             Upgrade upgrade = upgradeEntry.getUpgrade();
             Map<Identifier, Integer> playerUpgrades = AccountUpgradeData.get();
             int currentTier = playerUpgrades.getOrDefault(upgrade.id(), 0);
             boolean maxTierFlag = currentTier == upgrade.maxTier();
             long upgradeCost = upgrade.upgradeCost(currentTier + 1);
-            float nextBonus = upgrade.totalBonus(currentTier + 1);
+            tierWidget.setMessage(currentTier + "/" + upgrade.maxTier());
 
-//            balanceWidget.display(graphics, getFont(), getMenu().getValue(), mouseX, mouseY);
-            graphics.text(getFont(), Component.literal("Tier: " + currentTier), 6, 102, GuiElement.BASIC.getColor(), false);
-            graphics.text(getFont(), Component.literal("Current bonus: " + upgrade.totalBonus(currentTier)), 6, 112, GuiElement.BASIC.getColor(), false);
             if (maxTierFlag) {
-                graphics.text(getFont(), Component.literal("Max Tier"), 6, 122, GuiElement.RED.getColor(), false);
+                changeWidget.setMessage(0L);
+                buyButton.active = false;
             } else {
-//                getParent().formatAndDisplayValue(graphics, upgradeCost, 6, 122, mouseX, mouseY);
-                graphics.text(getFont(), Component.literal("Next bonus: " + nextBonus), 6, 132, GuiElement.BASIC.getColor(), false);
+                changeWidget.setMessage(-upgradeCost);
+                buyButton.active = true;
             }
 
             graphics.text(getFont(), Component.literal("?"), 6, 152, GuiElement.BASIC.getColor(), false);
