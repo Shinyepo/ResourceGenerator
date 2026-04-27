@@ -80,7 +80,7 @@ public class TabManager {
             int tabY = topPos + (tab.getIndex() * 24 + 4);
             if (mouseOver((int) mouseX, (int) mouseY, tabX, tabY)) {
                 if (activeTab != tab.getIndex()) {
-                    tab.cleanup();
+                    tabs.get(activeTab).cleanup();
                     switchTab(tab.getIndex());
                     return true;
                 }

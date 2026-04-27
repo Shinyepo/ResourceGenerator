@@ -54,13 +54,9 @@ public abstract class TabContainerScreen<T extends AbstractContainerBase> extend
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        boolean result = tabManager.handleClick(leftPos, topPos, event.x(), event.y());
-        if (result) {
-            clearWidgets();
-            return true;
-        }
+        var clickResult = tabManager.handleClick(leftPos, topPos, event.x(), event.y());
 
-        return super.mouseClicked(event, doubleClick);
+        return clickResult || super.mouseClicked(event, doubleClick);
     }
 
     @Override
