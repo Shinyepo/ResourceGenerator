@@ -9,6 +9,8 @@ public interface IScreenTab {
 
     void renderTabTooltips(GuiGraphicsExtractor graphics, int leftPos, int topPos, int mouseX, int mouseY);
 
+    void init();
+
     void cleanup();
 
     String getName();

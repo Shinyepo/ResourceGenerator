@@ -24,6 +24,10 @@ public class TabManager {
         }
     }
 
+    public void init() {
+        tabs.get(activeTab).init();
+    }
+
     protected void switchTab(int index) {
         activeTab = index;
         tabs.get(activeTab).onTabSwitch();

@@ -39,6 +39,7 @@ public class ControllerScreen extends TabContainerScreen<ControllerContainer> {
                 new ControllerSummaryTab(this, this.menu, 0, true),
                 new ControllerDetailsTab(this, this.menu, 1)
         );
+        configureFirstTab();
     }
 
     public void setSelected(ScrollableUpgradeList.UpgradeEntry selected) {

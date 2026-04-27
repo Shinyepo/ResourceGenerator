@@ -35,6 +35,10 @@ public abstract class TabContainerScreen<T extends AbstractContainerBase> extend
         tabManager.renderTabs(graphics, leftPos, topPos);
     }
 
+    protected void configureFirstTab() {
+        tabManager.init();
+    }
+
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         List<Slot> backup = null;
