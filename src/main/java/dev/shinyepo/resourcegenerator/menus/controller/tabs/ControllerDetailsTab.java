@@ -70,32 +70,9 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
 
     @Override
     public void display(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-
         ControllerScreen parent = getParent();
         int topPos = parent.getTopPos();
         int leftPos = parent.getLeftPos();
-        if (widget == null) {
-            this.widget = new ScrollableUpgradeList(getParent(), 160, topPos + 20, topPos + 86);
-
-            widget.setX(leftPos + 5);
-            getParent().registerWidget(Button.builder(Component.literal("Buy"), btn -> {
-                ScrollableUpgradeList.UpgradeEntry upgradeEntry = getParent().getSelected();
-                if (upgradeEntry != null) {
-                    Upgrade upgrade = upgradeEntry.getUpgrade();
-                    Map<Identifier, Integer> playerUpgrades = AccountUpgradeData.get();
-                    int playerTier = playerUpgrades.getOrDefault(upgradeEntry.getUpgrade().id(), 0);
-                    long upgradeCost = upgrade.upgradeCost(playerUpgrades.getOrDefault(upgrade.id(), 0) + 1);
-                    boolean maxTierFlag = upgrade.maxTier() >= playerTier + 1;
-                    boolean costFlag = upgradeCost <= getMenu().getValue();
-                    if (costFlag && maxTierFlag) {
-                        getMenu().buyUpgrade(upgradeEntry.getUpgrade().id(), playerTier + 1);
-                        getMenu().setValue(getMenu().getValue() - upgradeCost);
-                    }
-                }
-            }).pos(leftPos + 120, topPos + 142).size(48, 16).build());
-            getParent().registerWidget(widget);
-            widget.refreshList();
-        }
 
 
         ScrollableUpgradeList.UpgradeEntry upgradeEntry = getParent().getSelected();
@@ -106,13 +83,14 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
             boolean maxTierFlag = currentTier == upgrade.maxTier();
             long upgradeCost = upgrade.upgradeCost(currentTier + 1);
             float nextBonus = upgrade.totalBonus(currentTier + 1);
-            getParent().formatAndDisplayValue(graphics, "Balance: ", getMenu().getValue(), 6, 92, mouseX, mouseY);
+
+//            balanceWidget.display(graphics, getFont(), getMenu().getValue(), mouseX, mouseY);
             graphics.text(getFont(), Component.literal("Tier: " + currentTier), 6, 102, GuiElement.BASIC.getColor(), false);
             graphics.text(getFont(), Component.literal("Current bonus: " + upgrade.totalBonus(currentTier)), 6, 112, GuiElement.BASIC.getColor(), false);
             if (maxTierFlag) {
                 graphics.text(getFont(), Component.literal("Max Tier"), 6, 122, GuiElement.RED.getColor(), false);
             } else {
-                getParent().formatAndDisplayValue(graphics, "Upgrade Cost: ", upgradeCost, 6, 122, mouseX, mouseY);
+//                getParent().formatAndDisplayValue(graphics, upgradeCost, 6, 122, mouseX, mouseY);
                 graphics.text(getFont(), Component.literal("Next bonus: " + nextBonus), 6, 132, GuiElement.BASIC.getColor(), false);
             }
 
