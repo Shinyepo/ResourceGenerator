@@ -81,10 +81,10 @@ public class PriceDefinitionRegistry {
         var result = register(oreId, price);
 
         Identifier netherOreId = fromNamespaceAndPath(oreId.getNamespace(), "nether_" + oreId.getPath());
-        register(netherOreId, oreReferenceId, 1F);
+        BuiltInRegistries.BLOCK.get(netherOreId).ifPresent(_ -> register(netherOreId, oreReferenceId, 1F));
 
         Identifier deepslateOreId = fromNamespaceAndPath(oreId.getNamespace(), "deepslate_" + oreId.getPath());
-        register(deepslateOreId, oreReferenceId, 1F);
+        BuiltInRegistries.BLOCK.get(deepslateOreId).ifPresent(_ -> register(deepslateOreId, oreReferenceId, 1F));
 
         return result;
     }
@@ -132,20 +132,21 @@ public class PriceDefinitionRegistry {
 
         String ingotPath = oreId.getPath().replace("ore", "ingot");
         Identifier ingotId = fromNamespaceAndPath(oreId.getNamespace(), ingotPath);
+        BuiltInRegistries.ITEM.get(ingotId).ifPresent(_ -> register(ingotId, oreReferenceId, 1F));
+
         Identifier ingotReferenceId = fromNamespaceAndPath(ResourceGenerator.MODID, ingotId.getPath());
-        register(ingotId, oreReferenceId, 1F);
 
         String nuggetPath = oreId.getPath().replace("ore", "nugget");
         Identifier nuggetId = fromNamespaceAndPath(oreId.getNamespace(), nuggetPath);
-        register(nuggetId, ingotReferenceId, 0.11F);
+        BuiltInRegistries.ITEM.get(nuggetId).ifPresent(_ -> register(nuggetId, ingotReferenceId, 0.11F));
 
         String rawPath = "raw_" + oreId.getPath().replace("_ore", "");
         Identifier rawId = fromNamespaceAndPath(oreId.getNamespace(), rawPath);
-        register(rawId, oreReferenceId, 1F);
+        BuiltInRegistries.ITEM.get(rawId).ifPresent(_ -> register(rawId, oreReferenceId, 1F));
 
         String blockPath = oreId.getPath().replace("ore", "block");
         Identifier blockId = fromNamespaceAndPath(oreId.getNamespace(), blockPath);
-        register(blockId, ingotReferenceId, 9F);
+        BuiltInRegistries.BLOCK.get(blockId).ifPresent(_ -> register(blockId, ingotReferenceId, 9F));
 
         return result;
     }
