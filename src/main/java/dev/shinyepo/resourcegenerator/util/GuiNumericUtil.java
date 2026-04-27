@@ -7,13 +7,14 @@ public class GuiNumericUtil {
     public static final String[] SUFFIXES = {"", "k", "m", "b", "t"};
 
     public static String abbreviate(long number) {
+        var sign = (int) Math.signum(number);
         number = Math.abs(number);
-        if (number < 1000) return String.valueOf(number);
+        if (number < 1000) return String.valueOf(sign * number);
 
         int exp = (int) (Math.log(number) / Math.log(1000));
         double scaled = number / Math.pow(1000, exp);
 
-        return String.format("%.1f%s", scaled, SUFFIXES[exp]); // removes trailing .0
+        return String.format("%.1f%s", sign * scaled, SUFFIXES[exp]); // removes trailing .0
     }
 
     public static String format(long number) {
