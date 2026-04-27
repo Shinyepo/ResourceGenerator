@@ -5,17 +5,24 @@ import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 
 public class ChangeWidget extends AbstractAccountWidget {
-    private final int v = 124;
-    private final int gainU = 0;
-    private final int lossU = 16;
-    private final int noChangeU = 64;
-
     private long cachedChange;
 
     public ChangeWidget(Font font, int x, int y, Component message) {
-        super(font, x, y, font.width(message) + 16 + 4, 16, message, "Change: ");
+        this(font, x, y, message, "Change: ", ChangeType.NO_CHANGE);
+    }
 
-        this.setUV(0, 124);
+    public ChangeWidget(Font font, int x, int y, Component message, ChangeType type) {
+        this(font, x, y, message, "Change: ", type);
+    }
+
+    public ChangeWidget(Font font, int x, int y, Component message, String tooltipPrefix) {
+        this(font, x, y, message, tooltipPrefix, ChangeType.NO_CHANGE);
+    }
+
+    public ChangeWidget(Font font, int x, int y, Component message, String tooltipPrefix, ChangeType type) {
+        super(font, x, y, font.width(message) + 16 + 4, 16, message, tooltipPrefix);
+
+        this.setUV(type.getU(), type.getV());
         this.setSpriteDimensions(16, 16);
     }
 
@@ -25,11 +32,33 @@ public class ChangeWidget extends AbstractAccountWidget {
         cachedChange = value;
         super.setMessage(value);
         if (value > 0) {
-            setUV(gainU, v);
+            setUV(ChangeType.GAIN.getU(), ChangeType.GAIN.getV());
         } else if (value < 0) {
-            setUV(lossU, v);
+            setUV(ChangeType.LOSS.getU(), ChangeType.GAIN.getV());
         } else {
-            setUV(noChangeU, v);
+            setUV(ChangeType.NO_CHANGE.getU(), ChangeType.GAIN.getV());
+        }
+    }
+
+    public enum ChangeType {
+        GAIN(0, 124),
+        LOSS(16, 124),
+        NO_CHANGE(64, 124);
+
+        private final int u;
+        private final int v;
+
+        ChangeType(int u, int v) {
+            this.u = u;
+            this.v = v;
+        }
+
+        public int getU() {
+            return u;
+        }
+
+        public int getV() {
+            return v;
         }
     }
 }
