@@ -49,7 +49,7 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
         String abbreviatedValue = GuiNumericUtil.abbreviate(balance);
         this.balanceWidget = new BalanceWidget(getFont(), leftPos + 6, topPos + 90, Component.literal(abbreviatedValue));
 
-        this.changeWidget = new ChangeWidget(getFont(), leftPos + 6, topPos + 110, Component.literal(""), "Cost: ", ChangeWidget.ChangeType.LOSS);
+        this.changeWidget = new ChangeWidget(getFont(), leftPos + 6, topPos + 110, Component.literal("0"), "Cost: ", ChangeWidget.ChangeType.NO_CHANGE);
         changeWidget.visible = false;
 
         this.tierWidget = new TierWidget(getFont(), leftPos + 6, topPos + 130, Component.literal(""));
