@@ -36,7 +36,7 @@ public class PriceDefinitionRegistry {
     public static final Supplier<ResourcePriceDefinition> DEFAULT_RAW = registerDefault("default_raw", "default_ore", 1F);
     public static final Supplier<ResourcePriceDefinition> DEFAULT_INGOT = registerDefault("default_ingot", "default_ore", 1F);
     public static final Supplier<ResourcePriceDefinition> DEFAULT_NUGGET = registerDefault("default_nugget", "default_ingot", 0.11F);
-    public static final Supplier<ResourcePriceDefinition> DEFAULT_STORAGE_BLOCK = registerDefault("storage_block", "default_ore", 9);
+    public static final Supplier<ResourcePriceDefinition> DEFAULT_STORAGE_BLOCK = registerDefault("default_storage_block", "default_ore", 9);
     public static final Supplier<ResourcePriceDefinition> DEFAULT_GEM = registerDefault("default_gem", 1000L);
     public static final Supplier<ResourcePriceDefinition> DEFAULT_DUST = registerDefault("default_dust", 75L);
     public static final Supplier<ResourcePriceDefinition> DEFAULT_GRAVEL = registerDefault("default_gravel", 15L);
