@@ -39,6 +39,7 @@ import static dev.shinyepo.resourcegenerator.registries.BlockTypeRegistry.BLOCK_
 import static dev.shinyepo.resourcegenerator.registries.CreativeTabRegistry.CREATIVE_TABS;
 import static dev.shinyepo.resourcegenerator.registries.DataComponentRegistry.DATA_COMPONENTS;
 import static dev.shinyepo.resourcegenerator.registries.ItemRegistry.ITEMS;
+import static dev.shinyepo.resourcegenerator.registries.MarketOfferRegistry.OFFERS;
 import static dev.shinyepo.resourcegenerator.registries.MenuRegistry.MENUS;
 import static dev.shinyepo.resourcegenerator.registries.PriceDefinitionRegistry.PRICES;
 import static dev.shinyepo.resourcegenerator.registries.UpgradeRegistry.UPGRADES;
@@ -57,6 +58,7 @@ public class ResourceGenerator {
         MENUS.register(modEventBus);
         UPGRADES.register(modEventBus);
         PRICES.register(modEventBus);
+        OFFERS.register(modEventBus);
         BLOCK_TYPE.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
@@ -96,6 +98,7 @@ public class ResourceGenerator {
     public static void registerRegistries(NewRegistryEvent event) {
         event.register(UpgradeRegistry.UPGRADE_REGISTRY);
         event.register(PriceDefinitionRegistry.PRICE_REGISTRY);
+        event.register(MarketOfferRegistry.MARKET_OFFER_REGISTRY);
     }
 
     public static void registerCommands(RegisterCommandsEvent event) {
