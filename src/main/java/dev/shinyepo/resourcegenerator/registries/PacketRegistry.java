@@ -16,11 +16,13 @@ public class PacketRegistry {
         registrar.playToClient(SyncOwnerS2C.TYPE, SyncOwnerS2C.STREAM_CODEC, SyncOwnerS2C::handler);
         registrar.playToClient(SyncAccountUpgradesS2C.TYPE, SyncAccountUpgradesS2C.STREAM_CODEC, SyncAccountUpgradesS2C::handler);
         registrar.playToClient(SyncConsumerEntityDataS2TCC.TYPE, SyncConsumerEntityDataS2TCC.STREAM_CODEC, SyncConsumerEntityDataS2TCC::handler);
+        registrar.playToClient(SyncAccountBalanceS2C.TYPE, SyncAccountBalanceS2C.STREAM_CODEC, SyncAccountBalanceS2C::handler);
 
 
         //TO SERVER
         registrar.playToServer(BuyAccountUpgradeC2S.TYPE, BuyAccountUpgradeC2S.STREAM_CODEC, BuyAccountUpgradeC2S::handler);
         registrar.playToServer(RequestUpgradesSyncC2S.TYPE, RequestUpgradesSyncC2S.STREAM_CODEC, RequestUpgradesSyncC2S::handler);
         registrar.playToServer(RequestPatternTierSyncC2S.TYPE, RequestPatternTierSyncC2S.STREAM_CODEC, RequestPatternTierSyncC2S::handler);
+        registrar.playToServer(RequestAccountBalanceSyncC2S.TYPE, RequestAccountBalanceSyncC2S.STREAM_CODEC, RequestAccountBalanceSyncC2S::handler);
     }
 }
