@@ -2,15 +2,23 @@ package dev.shinyepo.resourcegenerator.menus.market;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
-import dev.shinyepo.resourcegenerator.data.pricing.ResourcePriceDefinition;
+import dev.shinyepo.resourcegenerator.data.client.AccountBalanceData;
+import dev.shinyepo.resourcegenerator.data.market.MarketOffer;
 import dev.shinyepo.resourcegenerator.menus.types.AbstractScreenBase;
-import dev.shinyepo.resourcegenerator.registries.PriceDefinitionRegistry;
+import dev.shinyepo.resourcegenerator.menus.widgets.AbstractMiscWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.BalanceWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.ChangeWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.FakeItemDisplayWidget;
+import dev.shinyepo.resourcegenerator.networking.CustomMessages;
+import dev.shinyepo.resourcegenerator.networking.packets.BuyItemFromMarketC2S;
+import dev.shinyepo.resourcegenerator.networking.packets.RequestAccountBalanceSyncC2S;
+import dev.shinyepo.resourcegenerator.registries.MarketOfferRegistry;
+import dev.shinyepo.resourcegenerator.util.GuiNumericUtil;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -20,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
+import java.util.UUID;
 
 import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
@@ -31,23 +40,70 @@ public class MarketScreen extends AbstractScreenBase<MarketContainer> {
     private static final Identifier TRADE_ARROW_SPRITE = Identifier.withDefaultNamespace("container/villager/trade_arrow");
     private static final Identifier DISCOUNT_STRIKETHRUOGH_SPRITE = Identifier.withDefaultNamespace("container/villager/discount_strikethrough");
     private static final Identifier BACKGROUND = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/market/background.png");
+    private static final Identifier MISC_ATLAS = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/shared/misc_atlas.png");
 
     private final MarketOfferButton[] buttons = new MarketOfferButton[7];
     private int selectedIndex;
+    private ItemStack selectedItem = ItemStack.EMPTY;
     private int scrollOff;
     private boolean isDragging;
+    private int tickCount;
 
+    private FakeItemDisplayWidget itemDisplayWidget;
+    private AbstractMiscWidget balanceWidget;
+    private AbstractMiscWidget priceWidget;
 
-    private final List<ResourcePriceDefinition> entries;
+    private final List<MarketOffer> entries;
 
     public MarketScreen(MarketContainer menu, Inventory inventory, Component title) {
         super(menu, inventory, title, 276, 166);
         this.inventoryLabelX = 107;
-        this.entries = PriceDefinitionRegistry.getMarketEntries();
+        this.entries = MarketOfferRegistry.getMarketOffers();
     }
 
     public @NonNull Font getFont() {
         return this.font;
+    }
+
+    @Override
+    protected void containerTick() {
+        tickCount++;
+        if (tickCount % 20 == 0) {
+            requestBalanceSync();
+        }
+    }
+
+    private void requestBalanceSync() {
+        UUID ownerId = getMenu().getOwnerId();
+        if (ownerId == null) {
+            balanceWidget.setMessage("Missing ID card");
+            return;
+        }
+        CustomMessages.sendToServer(new RequestAccountBalanceSyncC2S(ownerId));
+        balanceWidget.setMessage(AccountBalanceData.getBalance());
+    }
+
+    private void displayItem() {
+        var offer = entries.get(selectedIndex);
+        if (offer == null) return;
+        var item = offer.getItem();
+        selectedItem = item.getDefaultInstance();
+        itemDisplayWidget.setItemStack(selectedItem);
+        priceWidget.setMessage(-offer.getPrice());
+        priceWidget.setVisible(true);
+    }
+
+    private void tryBuyItem() {
+        Long balance = AccountBalanceData.getBalance();
+        MarketOffer offer = entries.get(selectedIndex);
+
+        if (offer == null) return;
+        Long price = offer.getPrice();
+        if (balance < price) return;
+        UUID ownerId = getMenu().getOwnerId();
+        if (ownerId == null) return;
+
+        CustomMessages.sendToServer(new BuyItemFromMarketC2S(selectedItem, ownerId));
     }
 
     @Override
@@ -56,6 +112,31 @@ public class MarketScreen extends AbstractScreenBase<MarketContainer> {
         this.createInventoryWidget(107, 83);
         this.createCardSlotWidget(251, 7);
 
+        itemDisplayWidget = new FakeItemDisplayWidget(getFont(), getLeftPos() + 179, getTopPos() + 40, this::tryBuyItem);
+        addRenderableWidget(itemDisplayWidget);
+
+        balanceWidget = new BalanceWidget(getFont(), getLeftPos() + 106, getTopPos() + 20, Component.literal("Missing ID card"));
+        addRenderableWidget(balanceWidget);
+
+        priceWidget = new ChangeWidget(getFont(), getLeftPos() + 106, getTopPos() + 43, Component.literal(""), "Price: ", ChangeWidget.ChangeType.LOSS);
+        priceWidget.setVisible(false);
+        addRenderableWidget(priceWidget);
+
+        var substractButton = Button.builder(Component.literal("-"), btn -> {
+            var newCount = Math.max(1, selectedItem.getCount() - 1);
+            updatePrice(newCount);
+            selectedItem.setCount(newCount);
+        }).pos(getLeftPos() + 167, getTopPos() + 45).size(10, 10).build();
+
+        var addButton = Button.builder(Component.literal("+"), btn -> {
+            var newCount = Math.min(64, selectedItem.getCount() + 1);
+            updatePrice(newCount);
+            selectedItem.setCount(newCount);
+        }).pos(getLeftPos() + 199, getTopPos() + 45).size(10, 10).build();
+
+
+        addRenderableWidget(addButton);
+        addRenderableWidget(substractButton);
 
         int xo = (this.width - this.imageWidth) / 2;
         int yo = (this.height - this.imageHeight) / 2;
@@ -65,25 +146,18 @@ public class MarketScreen extends AbstractScreenBase<MarketContainer> {
             this.buttons[i] = (MarketOfferButton) this.addRenderableWidget(
                     new MarketOfferButton(xo + 5, buttonY, i, button -> {
                         this.selectedIndex = ((MarketOfferButton) button).getIndex() + this.scrollOff;
+                        displayItem();
                     }));
             buttonY += 20;
         }
-
-//        createInventoryWidget();
-//        createCardSlotWidget();
-//        createSlotWidget(85, 35);
-
-//        this.listWidget = new MarketListWidget(this, 64, 16, getTopPos() + 70);
-//        this.listWidget.setX(6);
-//
-//        this.addRenderableWidget(this.listWidget);
-//        listWidget.refreshList();
     }
 
-    @Override
-    protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
-        super.extractLabels(graphics, xm, ym);
-//        graphics.text(this.font, this.menu.getOwnerName(), 16, 30, GuiElement.BASIC.getColor(), false);
+    private void updatePrice(int count) {
+        if (selectedItem.isEmpty()) return;
+        var entry = entries.get(selectedIndex);
+        if (entry == null) return;
+
+        priceWidget.setMessage((long) -entry.getPrice() * count);
     }
 
     @Override
@@ -91,7 +165,6 @@ public class MarketScreen extends AbstractScreenBase<MarketContainer> {
         int xo = (this.width - this.imageWidth) / 2;
         int yo = (this.height - this.imageHeight) / 2;
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, xo, yo, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
-
     }
 
     @Override
@@ -102,18 +175,19 @@ public class MarketScreen extends AbstractScreenBase<MarketContainer> {
         int yo = (this.height - this.imageHeight) / 2;
         int offerY = yo + 16 + 1;
         int sellItem1X = xo + 5 + 5;
-        this.extractScroller(graphics, xo, yo, mouseX, mouseY, entries);
+        this.extractScroller(graphics, xo, yo, mouseX, mouseY);
         int currentOfferIndex = 0;
 
-        for (ResourcePriceDefinition entry : entries) {
+        for (MarketOffer entry : entries) {
             if (!this.canScroll(entries.size()) || currentOfferIndex >= this.scrollOff && currentOfferIndex < 7 + this.scrollOff) {
                 ItemStack baseCost = getItemStackFromEntry(entry);
                 int decorH = offerY + 2;
                 this.extractAndDecorateCost(graphics, baseCost, sellItem1X, decorH);
 
                 this.extractButtonArrows(graphics, entry, xo, decorH);
-                graphics.fakeItem(baseCost, xo + 5 + 68, decorH);
-                graphics.itemDecorations(this.font, baseCost, xo + 5 + 68, decorH);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, MISC_ATLAS, xo + 5 + 68, decorH, 32, 124, 16, 16, 256, 256);
+//                graphics.fakeItem(baseCost, xo + 5 + 68, decorH);
+//                graphics.itemDecorations(this.font, baseCost, xo + 5 + 68, decorH);
                 offerY += 20;
                 ++currentOfferIndex;
             } else {
@@ -130,7 +204,7 @@ public class MarketScreen extends AbstractScreenBase<MarketContainer> {
         }
     }
 
-    private void extractButtonArrows(GuiGraphicsExtractor graphics, ResourcePriceDefinition offer, int xo, int decorHeight) {
+    private void extractButtonArrows(GuiGraphicsExtractor graphics, MarketOffer offer, int xo, int decorHeight) {
 //        if (offer.isOutOfStock()) {
 //            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TRADE_ARROW_OUT_OF_STOCK_SPRITE, xo + 5 + 35 + 20, decorHeight + 3, 10, 9);
 //        } else {
@@ -144,21 +218,12 @@ public class MarketScreen extends AbstractScreenBase<MarketContainer> {
         graphics.itemDecorations(this.font, costA, sellItem1X, decorHeight);
     }
 
-    private ItemStack getItemStackFromEntry(ResourcePriceDefinition entry) {
-        var isItem = BuiltInRegistries.ITEM.get(entry.resource());
-        if (isItem.isPresent()) {
-            return new ItemStack(isItem.get());
-        } else {
-            var isBlock = BuiltInRegistries.BLOCK.get(entry.resource());
-            if (isBlock.isPresent()) {
-                return new ItemStack(isBlock.get().value());
-            }
-        }
-        return ItemStack.EMPTY;
+    private ItemStack getItemStackFromEntry(MarketOffer entry) {
+        return entry.getItem().getDefaultInstance();
     }
 
-    private void extractScroller(GuiGraphicsExtractor graphics, int xo, int yo, int mouseX, int mouseY, List<ResourcePriceDefinition> offers) {
-        int steps = offers.size() + 1 - 7;
+    private void extractScroller(GuiGraphicsExtractor graphics, int xo, int yo, int mouseX, int mouseY) {
+        int steps = entries.size() + 1 - 7;
         if (steps > 1) {
             int leftOver = 139 - (27 + (steps - 1) * 139 / steps);
             int stepHeight = 1 + leftOver / steps + 139 / steps;
@@ -231,6 +296,7 @@ public class MarketScreen extends AbstractScreenBase<MarketContainer> {
         return numberOfOffers > 7;
     }
 
+
     public class MarketOfferButton extends Button.Plain {
         final int index;
 
@@ -246,11 +312,14 @@ public class MarketScreen extends AbstractScreenBase<MarketContainer> {
 
         public void extractToolTip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
             if (this.isHovered && entries.size() > this.index + MarketScreen.this.scrollOff) {
-                ItemStack item = getItemStackFromEntry(entries.get(this.index + MarketScreen.this.scrollOff));
+                var entry = entries.get(this.index + MarketScreen.this.scrollOff);
+                ItemStack item = getItemStackFromEntry(entry);
+                long price = entry.getPrice();
+
                 if (mouseX < this.getX() + 20) {
                     graphics.setTooltipForNextFrame(MarketScreen.this.font, item, mouseX, mouseY);
                 } else if (mouseX > this.getX() + 65) {
-                    graphics.setTooltipForNextFrame(MarketScreen.this.font, item, mouseX, mouseY);
+                    graphics.setTooltipForNextFrame(MarketScreen.this.font, Component.literal(GuiNumericUtil.format(price)), mouseX, mouseY);
                 }
             }
         }
