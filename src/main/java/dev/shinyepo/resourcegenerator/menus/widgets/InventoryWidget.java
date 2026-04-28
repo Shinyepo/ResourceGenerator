@@ -9,4 +9,10 @@ public class InventoryWidget extends AbstractMiscWidget {
 
         this.setSpriteDimensions(162, 76);
     }
+
+    //Override to make it possible to move items...
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        return false;
+    }
 }

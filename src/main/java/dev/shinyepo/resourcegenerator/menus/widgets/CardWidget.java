@@ -10,4 +10,10 @@ public class CardWidget extends AbstractMiscWidget {
         this.setUV(162, 0);
         this.setSpriteDimensions(18, 18);
     }
+
+    //Override to make it possible to move items...
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        return false;
+    }
 }
