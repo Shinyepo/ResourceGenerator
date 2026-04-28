@@ -24,5 +24,7 @@ public class PacketRegistry {
         registrar.playToServer(RequestUpgradesSyncC2S.TYPE, RequestUpgradesSyncC2S.STREAM_CODEC, RequestUpgradesSyncC2S::handler);
         registrar.playToServer(RequestPatternTierSyncC2S.TYPE, RequestPatternTierSyncC2S.STREAM_CODEC, RequestPatternTierSyncC2S::handler);
         registrar.playToServer(RequestAccountBalanceSyncC2S.TYPE, RequestAccountBalanceSyncC2S.STREAM_CODEC, RequestAccountBalanceSyncC2S::handler);
+        registrar.playToServer(BuyItemFromMarketC2S.TYPE, BuyItemFromMarketC2S.STREAM_CODEC, BuyItemFromMarketC2S::handler);
+
     }
 }
