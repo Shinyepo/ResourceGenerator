@@ -15,7 +15,7 @@ public class MarketOffer {
 
     private final int maxQuantity;
     private int currentQuantity;
-    private Long finalPrice;
+    private Long finalPrice = 0L;
     private float finalMultiplier;
 
     private MarketOffer(Item id, Type offerType, Long basePrice, float minMultiplier, float maxMultiplier, int maxQuantity) {
