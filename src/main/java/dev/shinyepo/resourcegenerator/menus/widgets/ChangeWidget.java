@@ -4,7 +4,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 
-public class ChangeWidget extends AbstractAccountWidget {
+public class ChangeWidget extends AbstractMiscWidget {
     private long cachedChange;
 
     public ChangeWidget(Font font, int x, int y, Component message) {

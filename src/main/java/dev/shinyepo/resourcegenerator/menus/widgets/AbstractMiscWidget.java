@@ -15,7 +15,7 @@ import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
 
 
-public abstract class AbstractAccountWidget extends AbstractWidget {
+public abstract class AbstractMiscWidget extends AbstractWidget {
     protected final Identifier atlas = Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/shared/misc_atlas.png");
     private int u = 0;
     private int v = 0;
@@ -24,7 +24,11 @@ public abstract class AbstractAccountWidget extends AbstractWidget {
     protected final Font font;
     private final String tooltipPrefix;
 
-    public AbstractAccountWidget(Font font, int x, int y, int width, int height, Component message, String tooltipPrefix) {
+    public AbstractMiscWidget(Font font, int x, int y, int width, int height, Component message) {
+        this(font, x, y, width, height, message, "");
+    }
+
+    public AbstractMiscWidget(Font font, int x, int y, int width, int height, Component message, String tooltipPrefix) {
         super(x, y, width, height, message);
         this.font = font;
         this.tooltipPrefix = tooltipPrefix;
@@ -91,6 +95,10 @@ public abstract class AbstractAccountWidget extends AbstractWidget {
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narration) {
 
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     protected void setUV(int u, int v) {

@@ -3,7 +3,7 @@ package dev.shinyepo.resourcegenerator.menus.widgets;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 
-public class TierWidget extends AbstractAccountWidget {
+public class TierWidget extends AbstractMiscWidget {
     private final int v = 124;
 
     public TierWidget(Font font, int x, int y, Component message) {
