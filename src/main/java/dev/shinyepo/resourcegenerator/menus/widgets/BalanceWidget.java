@@ -5,8 +5,6 @@ import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 
 public class BalanceWidget extends AbstractMiscWidget {
-    private long cachedBalance;
-
     public BalanceWidget(Font font, int x, int y, Component message) {
         super(font, x, y, font.width(message) + 16 + 4, 16, message, "Balance: ");
 
@@ -16,9 +14,6 @@ public class BalanceWidget extends AbstractMiscWidget {
 
     @Override
     public void setMessage(@NonNull Long value) {
-        if (value == cachedBalance) return;
-
-        cachedBalance = value;
         super.setMessage(value);
     }
 }

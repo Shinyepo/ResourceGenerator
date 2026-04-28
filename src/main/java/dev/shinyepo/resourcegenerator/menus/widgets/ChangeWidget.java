@@ -5,8 +5,6 @@ import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 
 public class ChangeWidget extends AbstractMiscWidget {
-    private long cachedChange;
-
     public ChangeWidget(Font font, int x, int y, Component message) {
         this(font, x, y, message, "Change: ", ChangeType.NO_CHANGE);
     }
@@ -28,8 +26,6 @@ public class ChangeWidget extends AbstractMiscWidget {
 
     @Override
     public void setMessage(@NonNull Long value) {
-        if (value == cachedChange) return;
-        cachedChange = value;
         super.setMessage(value);
         if (value > 0) {
             setUV(ChangeType.GAIN.getU(), ChangeType.GAIN.getV());
