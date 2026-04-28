@@ -16,8 +16,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static dev.shinyepo.resourcegenerator.data.pricing.DefaultPriceRule.DEFAULT_RULES;
@@ -54,16 +52,6 @@ public class PriceDefinitionRegistry {
     public static final Supplier<ResourcePriceDefinition> COAL = register(Items.COAL, 30L);
     public static final Supplier<ResourcePriceDefinition> CHARCOAL = register(Items.CHARCOAL, 30L);
     public static final Supplier<ResourcePriceDefinition> COAL_BLOCK = register(Blocks.COAL_BLOCK, Items.COAL, 9);
-
-    public static List<ResourcePriceDefinition> getMarketEntries() {
-        List<ResourcePriceDefinition> list = new ArrayList<>();
-        for (var entry : PRICE_REGISTRY.entrySet()) {
-            var isDefault = entry.getKey().identifier().getPath().contains("default");
-            if (isDefault) continue;
-            list.add(entry.getValue());
-        }
-        return list;
-    }
 
     private static DeferredHolder<ResourcePriceDefinition, ResourcePriceDefinition> registerDefault(String defaultId, long price) {
         return PRICES.register(defaultId,
