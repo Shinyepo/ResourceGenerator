@@ -3,15 +3,10 @@ package dev.shinyepo.resourcegenerator.menus.controller.tabs;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerContainer;
 import dev.shinyepo.resourcegenerator.menus.controller.ControllerScreen;
-import dev.shinyepo.resourcegenerator.menus.types.GuiElement;
 import dev.shinyepo.resourcegenerator.menus.types.ScreenTab;
-import dev.shinyepo.resourcegenerator.menus.widgets.AbstractAccountWidget;
-import dev.shinyepo.resourcegenerator.menus.widgets.BalanceWidget;
-import dev.shinyepo.resourcegenerator.menus.widgets.ChangeWidget;
-import dev.shinyepo.resourcegenerator.menus.widgets.OwnerWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.*;
 import dev.shinyepo.resourcegenerator.util.GuiNumericUtil;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
@@ -20,12 +15,12 @@ import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 public class ControllerSummaryTab extends ScreenTab<ControllerContainer, ControllerScreen> {
     private static final Identifier ACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/summary_on.png");
     private static final Identifier INACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/summary_off.png");
-    private static final Identifier CARD_SLOT = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/card_slot.png");
-    private static final Identifier INVENTORY_SLOTS = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/inventory_slots.png");
 
-    private AbstractAccountWidget ownerWidget;
-    private AbstractAccountWidget balanceWidget;
-    private AbstractAccountWidget changeWidget;
+    private AbstractMiscWidget ownerWidget;
+    private AbstractMiscWidget balanceWidget;
+    private AbstractMiscWidget changeWidget;
+    private AbstractMiscWidget inventoryWidget;
+    private AbstractMiscWidget cardSlotWidget;
 
     public ControllerSummaryTab(ControllerScreen parent, ControllerContainer menu, int index, boolean isInventoryTab) {
         super("Summary", parent, menu, index, isInventoryTab);
@@ -33,23 +28,29 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
     }
 
     private void initWidgets() {
+        int leftPos = getParent().getLeftPos();
+        int topPos = getParent().getTopPos();
         int y = 20;
         int dy = 20;
 
+        inventoryWidget = new InventoryWidget(getFont(), leftPos + 7, topPos + 83);
+
+        cardSlotWidget = new CardWidget(getFont(), leftPos + 151, topPos + 7);
+
         ownerWidget = new OwnerWidget(getFont(),
-                getParent().getLeftPos() + 8, getParent().getTopPos() + y,
+                leftPos + 8, topPos + y,
                 Component.literal(getMenu().getOwnerName()));
 
         Long balance = getMenu().getValue();
         String abbreviatedValue = GuiNumericUtil.abbreviate(balance);
         balanceWidget = new BalanceWidget(getFont(),
-                getParent().getLeftPos() + 8, getParent().getTopPos() + y + dy,
+                leftPos + 8, topPos + y + dy,
                 Component.literal(abbreviatedValue));
 
         Long change = getMenu().getValue();
         String abbreviatedChange = GuiNumericUtil.abbreviate(change);
         changeWidget = new ChangeWidget(getFont(),
-                getParent().getLeftPos() + 8, getParent().getTopPos() + y + (dy * 2),
+                leftPos + 8, topPos + y + (dy * 2),
                 Component.literal(abbreviatedChange));
     }
 
@@ -62,21 +63,25 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
         getParent().registerWidget(ownerWidget);
         getParent().registerWidget(balanceWidget);
         getParent().registerWidget(changeWidget);
+        getParent().registerWidget(inventoryWidget);
+        getParent().registerWidget(cardSlotWidget);
     }
 
 
     @Override
     public void display(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        graphics.blit(RenderPipelines.GUI_TEXTURED, CARD_SLOT, 151, 7, 0, 0, 18, 18, 256, 256);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, INVENTORY_SLOTS, 7, 83, 0, 0, 162, 76, 256, 256);
         String owner = getMenu().getOwnerName();
         if (owner.isEmpty()) {
-            displayNotAssigned(graphics);
+            ownerWidget.setMessage("Owner not assigned!");
+            balanceWidget.setVisible(false);
+            changeWidget.setVisible(false);
             return;
         }
+        balanceWidget.setVisible(true);
+        changeWidget.setVisible(true);
 
-        balanceWidget.setMessage(getMenu().getValue());
         ownerWidget.setMessage(getMenu().getOwnerName());
+        balanceWidget.setMessage(getMenu().getValue());
         changeWidget.setMessage(getMenu().getValueChange());
     }
 
@@ -98,10 +103,6 @@ public class ControllerSummaryTab extends ScreenTab<ControllerContainer, Control
     @Override
     public void renderTabTooltips(GuiGraphicsExtractor graphics, int leftPos, int topPos, int mouseX, int mouseY) {
 
-    }
-
-    private void displayNotAssigned(GuiGraphicsExtractor graphics) {
-        graphics.text(getFont(), Component.literal("Owner not assigned!"), 8, 20, GuiElement.RED.getColor(), false);
     }
 
     @Override

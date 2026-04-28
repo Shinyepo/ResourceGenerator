@@ -26,9 +26,9 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
     private static final Identifier INACTIVE_TAB = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/controller/tabs/details_off.png");
     private ScrollableUpgradeList widget;
     private Button buyButton;
-    private AbstractAccountWidget balanceWidget;
-    private AbstractAccountWidget changeWidget;
-    private AbstractAccountWidget tierWidget;
+    private AbstractMiscWidget balanceWidget;
+    private AbstractMiscWidget changeWidget;
+    private AbstractMiscWidget tierWidget;
 
     public ControllerDetailsTab(ControllerScreen parent, ControllerContainer menu, int index) {
         super("Details", parent, menu, index);
@@ -50,10 +50,10 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
         this.balanceWidget = new BalanceWidget(getFont(), leftPos + 6, topPos + 90, Component.literal(abbreviatedValue));
 
         this.changeWidget = new ChangeWidget(getFont(), leftPos + 6, topPos + 110, Component.literal("0"), "Cost: ", ChangeWidget.ChangeType.NO_CHANGE);
-        changeWidget.visible = false;
+        changeWidget.setVisible(false);
 
         this.tierWidget = new TierWidget(getFont(), leftPos + 6, topPos + 130, Component.literal(""));
-        tierWidget.visible = false;
+        tierWidget.setVisible(false);
 
         this.buyButton = Button.builder(Component.literal("Buy"), btn -> {
             ScrollableUpgradeList.UpgradeEntry upgradeEntry = getParent().getSelected();
@@ -97,8 +97,8 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
 
         ScrollableUpgradeList.UpgradeEntry upgradeEntry = getParent().getSelected();
         if (upgradeEntry != null) {
-            changeWidget.visible = true;
-            tierWidget.visible = true;
+            changeWidget.setVisible(true);
+            tierWidget.setVisible(true);
             Upgrade upgrade = upgradeEntry.getUpgrade();
             Map<Identifier, Integer> playerUpgrades = AccountUpgradeData.get();
             int currentTier = playerUpgrades.getOrDefault(upgrade.id(), 0);

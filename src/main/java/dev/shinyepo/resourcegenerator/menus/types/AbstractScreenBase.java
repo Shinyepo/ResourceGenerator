@@ -1,10 +1,10 @@
 package dev.shinyepo.resourcegenerator.menus.types;
 
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
-import dev.shinyepo.resourcegenerator.menus.widgets.BasicWidget;
-import dev.shinyepo.resourcegenerator.menus.widgets.CardSlotWidget;
-import dev.shinyepo.resourcegenerator.menus.widgets.PlayerInventoryWidget;
-import dev.shinyepo.resourcegenerator.menus.widgets.SingleSlotWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.AbstractMiscWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.CardWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.InventoryWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.SlotWidget;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -16,16 +16,13 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 public class AbstractScreenBase<T extends AbstractContainerBase> extends AbstractContainerScreen<T> {
     private final Identifier GUI = fromNamespaceAndPath(ResourceGenerator.MODID, "textures/gui/shared/blank.png");
-    private BasicWidget inventoryWidget;
-    private BasicWidget cardSlotWidget;
-    private final List<BasicWidget> slotWidgets = new ArrayList<>();
+    protected AbstractMiscWidget inventoryWidget;
+    protected AbstractMiscWidget cardSlotWidget;
+    protected AbstractMiscWidget slotWidget;
 
     public AbstractScreenBase(T menu, Inventory inventory, Component title) {
         super(menu, inventory, title, 196, 166);
@@ -41,49 +38,26 @@ public class AbstractScreenBase<T extends AbstractContainerBase> extends Abstrac
     }
 
     protected void createInventoryWidget() {
-        inventoryWidget = PlayerInventoryWidget.create();
+        createInventoryWidget(7, 83);
     }
 
     protected void createInventoryWidget(int x, int y) {
-        inventoryWidget = PlayerInventoryWidget.create();
-        inventoryWidget.setPosition(x, y);
+        inventoryWidget = new InventoryWidget(getFont(), getLeftPos() + x, getTopPos() + y);
+        addRenderableWidget(inventoryWidget);
     }
 
     protected void createCardSlotWidget() {
-        cardSlotWidget = CardSlotWidget.create();
+        createCardSlotWidget(151, 7);
     }
 
     protected void createCardSlotWidget(int x, int y) {
-        cardSlotWidget = CardSlotWidget.create();
-        cardSlotWidget.setPosition(x, y);
+        cardSlotWidget = new CardWidget(getFont(), getLeftPos() + x, getTopPos() + y);
+        addRenderableWidget(cardSlotWidget);
     }
 
     protected void createSlotWidget(int x, int y) {
-        slotWidgets.add(SingleSlotWidget.create(x, y));
-    }
-
-    @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        super.extractRenderState(graphics, mouseX, mouseY, a);
-        this.extractTooltip(graphics, mouseX, mouseY);
-    }
-
-    @Override
-    protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
-        super.extractLabels(graphics, xm, ym);
-        if (inventoryWidget != null)
-            inventoryWidget.render(graphics);
-
-        if (cardSlotWidget != null)
-            cardSlotWidget.render(graphics);
-
-        if (!slotWidgets.isEmpty())
-            slotWidgets.forEach(slotWidget -> slotWidget.render(graphics));
-    }
-
-    @Override
-    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        super.extractTooltip(graphics, mouseX, mouseY);
+        slotWidget = new SlotWidget(getFont(), getLeftPos() + x, getTopPos() + y);
+        addRenderableWidget(slotWidget);
     }
 
     @Override
