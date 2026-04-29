@@ -1,18 +1,18 @@
 package dev.shinyepo.resourcegenerator.menus.consumer;
 
 import dev.shinyepo.resourcegenerator.menus.types.AbstractScreenBase;
-import dev.shinyepo.resourcegenerator.menus.types.GuiElement;
+import dev.shinyepo.resourcegenerator.menus.widgets.AbstractMiscWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.ChangeWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.PatternStateWidget;
+import dev.shinyepo.resourcegenerator.menus.widgets.PatternTierWidget;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ConsumerScreen extends AbstractScreenBase<ConsumerContainer> {
-    private static final WidgetSprites PAGE_FORWARD_SPRITES = new WidgetSprites(
-            Identifier.withDefaultNamespace("recipe_book/page_forward"), Identifier.withDefaultNamespace("recipe_book/page_forward_highlighted")
-    );
+    private AbstractMiscWidget patternTierWidget;
+    private AbstractMiscWidget patternStateWidget;
+    private AbstractMiscWidget priceWidget;
 
     public ConsumerScreen(ConsumerContainer menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -23,30 +23,40 @@ public class ConsumerScreen extends AbstractScreenBase<ConsumerContainer> {
         super.init();
         createInventoryWidget();
         createSlotWidget(80, 35);
+        int leftPos = this.getLeftPos();
+        int topPos = this.getTopPos();
 
-        addRenderableWidget(new ImageButton(leftPos + 8, topPos + 20, 8, 8, PAGE_FORWARD_SPRITES, btn ->
-                this.menu.syncPatternTier()
-        ));
+        patternStateWidget = new PatternStateWidget(getFont(), leftPos + 152, topPos + 47);
+        addRenderableWidget(patternStateWidget);
+
+        patternTierWidget = new PatternTierWidget(getFont(), leftPos + 152, topPos + 27, this::syncPatternTier);
+        patternTierWidget.setMessage((long) getMenu().getPatternTier());
+        addRenderableWidget(patternTierWidget);
+
+        priceWidget = new ChangeWidget(getFont(), leftPos + 8, topPos + 36, Component.literal(""), "Price: ", ChangeWidget.ChangeType.LOSS);
+        addRenderableWidget(priceWidget);
+    }
+
+    private void syncPatternTier() {
+        getMenu().syncPatternTier();
     }
 
     @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
         super.extractLabels(graphics, xm, ym);
-        graphics.text(this.font, "Tier: " + menu.getPatternTier(), 16, 20, GuiElement.BASIC.getColor(), false);
         boolean validState = this.menu.getPatternValidState();
-        String validStateString = validState ? "Valid" : "Invalid";
-        int color = validState ? GuiElement.GREEN.getColor() : GuiElement.RED.getColor();
-        graphics.text(this.font, validStateString, 16, 30, color, false);
+        if (validState) {
+            boolean productValidState = this.menu.getProductValidState();
+            if (productValidState) {
+                patternStateWidget.setMessage("VALID");
+            } else {
+                patternStateWidget.setMessage("INVALID_ITEM");
+            }
+        } else {
+            patternStateWidget.setMessage("INVALID");
+        }
 
-        graphics.item(this.menu.getProduct(), 16, 40);
-        graphics.text(this.font, Component.literal("Price " + this.menu.getPrice()), 32, 40, color, false);
-
-        boolean productValidState = this.menu.getProductValidState();
-        String productValidStateString = productValidState ? "Valid" : "Invalid";
-        int ProductColor = productValidState ? GuiElement.GREEN.getColor() : GuiElement.RED.getColor();
-
-        graphics.text(this.font, productValidStateString, 16, 50, ProductColor, false);
+        priceWidget.setMessage(-getMenu().getPrice());
+        patternTierWidget.setMessage((long) getMenu().getPatternTier());
     }
-
-
 }
