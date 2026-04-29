@@ -3,10 +3,10 @@ package dev.shinyepo.resourcegenerator.menus.widgets;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 
-public class TierWidget extends AbstractMiscWidget {
+public class UpgradeTierWidget extends AbstractMiscWidget {
     private final int v = 124;
 
-    public TierWidget(Font font, int x, int y, Component message) {
+    public UpgradeTierWidget(Font font, int x, int y, Component message) {
         super(font, x, y, font.width(message) + 16 + 4, 16, message, "Tier: ");
 
         this.setUV(TierType.NORMAL.getU(), v);
