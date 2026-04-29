@@ -116,6 +116,7 @@ public class MarketScreen extends AbstractScreenBase<MarketContainer> {
         addRenderableWidget(itemDisplayWidget);
 
         balanceWidget = new BalanceWidget(getFont(), getLeftPos() + 106, getTopPos() + 20, Component.literal("Missing ID card"));
+        requestBalanceSync();
         addRenderableWidget(balanceWidget);
 
         priceWidget = new ChangeWidget(getFont(), getLeftPos() + 106, getTopPos() + 43, Component.literal(""), "Price: ", ChangeWidget.ChangeType.LOSS);
