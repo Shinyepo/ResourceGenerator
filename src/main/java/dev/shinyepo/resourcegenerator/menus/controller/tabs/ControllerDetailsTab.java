@@ -52,7 +52,7 @@ public class ControllerDetailsTab extends ScreenTab<ControllerContainer, Control
         this.changeWidget = new ChangeWidget(getFont(), leftPos + 6, topPos + 110, Component.literal("0"), "Cost: ", ChangeWidget.ChangeType.NO_CHANGE);
         changeWidget.setVisible(false);
 
-        this.tierWidget = new TierWidget(getFont(), leftPos + 6, topPos + 130, Component.literal(""));
+        this.tierWidget = new UpgradeTierWidget(getFont(), leftPos + 6, topPos + 130, Component.literal(""));
         tierWidget.setVisible(false);
 
         this.buyButton = Button.builder(Component.literal("Buy"), btn -> {
