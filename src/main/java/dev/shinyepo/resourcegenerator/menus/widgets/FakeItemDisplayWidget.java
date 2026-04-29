@@ -33,7 +33,7 @@ public class FakeItemDisplayWidget extends AbstractMiscWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        onClick.run();
+        if (onClick != null) onClick.run();
         return true;
     }
 
