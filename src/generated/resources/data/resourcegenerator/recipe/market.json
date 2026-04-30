@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "minecraft:chest",
+    "E": "minecraft:emerald",
+    "F": "resourcegenerator:frame",
+    "H": "minecraft:hopper",
+    "L": "minecraft:lectern"
+  },
+  "pattern": [
+    " E ",
+    "CFL",
+    " H "
+  ],
+  "result": {
+    "id": "resourcegenerator:market"
+  }
+}

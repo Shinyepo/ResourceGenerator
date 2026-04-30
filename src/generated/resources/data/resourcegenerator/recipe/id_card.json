@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": "minecraft:black_dye",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    " D ",
+    " I "
+  ],
+  "result": {
+    "id": "resourcegenerator:id_card"
+  }
+}

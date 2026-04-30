@@ -1,0 +1,9 @@
+// 26.1.2	2026-04-30T12:54:26.0485987	resourcegenerator custom recipes
+0941ba2892a518bb24157b0aae85b60b8fca6d69 data/resourcegenerator/advancement/recipes/misc/frame.json
+078ae47b17397b22147b4fb21007b2db2f544083 data/resourcegenerator/advancement/recipes/redstone/market.json
+a7b1466a5a03f98dbb0643866be777338bc1f155 data/resourcegenerator/advancement/recipes/tools/id_card.json
+0b64d75d569b290548875f5144e89f7c863d6969 data/resourcegenerator/advancement/recipes/tools/pipe_wrench.json
+044ef41b25222336bd50d7f9da20a08caf1d3720 data/resourcegenerator/recipe/frame.json
+e703fd2e39ebbae796bb4f5d922c18b455f843f9 data/resourcegenerator/recipe/id_card.json
+30da0c90c010ff7a90473959e6a592a4603f616e data/resourcegenerator/recipe/market.json
+50b0a88130d339a2baf245761f038bd13ec75f10 data/resourcegenerator/recipe/pipe_wrench.json
