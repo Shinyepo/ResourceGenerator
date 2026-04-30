@@ -2,6 +2,7 @@ package dev.shinyepo.resourcegenerator.items;
 
 import dev.shinyepo.resourcegenerator.datacomponents.IdCardData;
 import dev.shinyepo.resourcegenerator.registries.DataComponentRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,15 +23,13 @@ public class IdCard extends Item {
 
     @Override
     public @NonNull InteractionResult use(@NonNull Level level, Player player, @NonNull InteractionHand hand) {
-        if (!player.isShiftKeyDown()) return InteractionResult.FAIL;
-        ItemStack item = player.getItemInHand(hand);
+        if (!player.isShiftKeyDown()) return InteractionResult.PASS;
         if (!level.isClientSide()) {
-            IdCardData data = item.get(DataComponentRegistry.ID_CARD.get());
-            System.out.println("item data : " + data);
-            if (data != null) return InteractionResult.FAIL;
+            ItemStack item = player.getItemInHand(hand);
+
             IdCardData newData = new IdCardData(player.nameAndId().name(), player.nameAndId().id());
             item.set(DataComponentRegistry.ID_CARD.get(), newData);
-            System.out.println("new data : " + newData);
+
             player.getInventory().setChanged();
             return InteractionResult.SUCCESS;
         }
@@ -40,14 +39,14 @@ public class IdCard extends Item {
     @SuppressWarnings("deprecation")
     @Override
     public void appendHoverText(@NonNull ItemStack stack, @NonNull TooltipContext context, @NonNull TooltipDisplay tooltipDisplay, @NonNull Consumer<Component> tooltipAdder, @NonNull TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
         IdCardData data = stack.get(DataComponentRegistry.ID_CARD.get());
 
         if (data != null) {
-            tooltipAdder.accept(Component.literal("Owner " + data.username()));
-            tooltipAdder.accept(Component.literal("Id " + data.userId()));
+            tooltipAdder.accept(Component.literal(data.username()));
         } else {
-            tooltipAdder.accept(Component.literal("Not set"));
+            tooltipAdder.accept(Component.literal("Not set").withColor(ChatFormatting.RED.getColor()));
         }
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
+
     }
 }
