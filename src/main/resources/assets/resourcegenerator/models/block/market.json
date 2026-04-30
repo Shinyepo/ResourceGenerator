@@ -9,10 +9,10 @@
   "textures": {
     "0": "resourcegenerator:block/market/front",
     "1": "resourcegenerator:block/market/side",
-    "2": "resourcegenerator:block/market/frame",
+    "2": "resourcegenerator:block/shared/frame",
     "3": "resourcegenerator:block/shared/keyboard",
     "4": "resourcegenerator:block/market/bottom",
-    "particle": "resourcegenerator:block/market/frame"
+    "particle": "resourcegenerator:block/shared/frame"
   },
   "elements": [
     {
