@@ -3,6 +3,7 @@ package dev.shinyepo.resourcegenerator.datagen;
 import dev.shinyepo.resourcegenerator.ResourceGenerator;
 import dev.shinyepo.resourcegenerator.datagen.models.CustomModelProvider;
 import dev.shinyepo.resourcegenerator.datagen.patterns.CustomPatternProvider;
+import dev.shinyepo.resourcegenerator.datagen.recipes.CustomRecipeProvider;
 import dev.shinyepo.resourcegenerator.datagen.tags.CustomBlockTagProvider;
 import dev.shinyepo.resourcegenerator.datagen.tags.CustomItemTagProvider;
 import net.minecraft.core.RegistrySetBuilder;
@@ -21,6 +22,7 @@ public class DataGenerators {
         event.createProvider(CustomModelProvider::new);
         event.createProvider(CustomItemTagProvider::new);
         event.createProvider(CustomBlockTagProvider::new);
+        event.createProvider(CustomRecipeProvider.Runner::new);
 
         event.createDatapackRegistryObjects(
                 new RegistrySetBuilder()
