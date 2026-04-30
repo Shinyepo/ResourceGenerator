@@ -19,6 +19,7 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.PIPE_WRENCH.get());
                 output.accept(ItemRegistry.ID_CARD.get());
                 output.accept(ItemRegistry.INSPECTOR.get());
+                output.accept(ItemRegistry.FRAME.get());
                 output.accept(ItemRegistry.CONTROLLER_ITEM.get());
                 output.accept(ItemRegistry.SOLAR_ITEM.get());
                 output.accept(ItemRegistry.WATER_ABSORBER_ITEM.get());

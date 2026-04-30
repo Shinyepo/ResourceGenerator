@@ -33,6 +33,7 @@ public class CustomItemGenerator extends ItemModelGenerators {
         generateItemWithExistingParent(ItemRegistry.CONDUIT_ABSORBER_ITEM.get(), "conduit_absorber");
         generateItemWithExistingParent(ItemRegistry.MARKET_ITEM.get(), "market");
         generateItemWithExistingModel(ItemRegistry.ITEM_PIPE_ITEM.get(), Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "item/item_pipe"));
+        generateItemWithExistingModel(ItemRegistry.FRAME.get(), Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "item/frame"));
         generateFlatItem(ItemRegistry.ID_CARD.get(), ModelTemplates.FLAT_ITEM);
         generateFlatItem(ItemRegistry.INSPECTOR.get(), ModelTemplates.FLAT_ITEM);
         generateFlatItem(ItemRegistry.PIPE_WRENCH.get(), ModelTemplates.FLAT_ITEM);
