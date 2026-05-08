@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.UUID;
 
 public class Producer extends NetworkDeviceEntity {
-    private final ProducerConfig config;
+    protected final ProducerConfig config;
 
     public Producer(BlockEntityType<?> type, ProducerConfig config, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
