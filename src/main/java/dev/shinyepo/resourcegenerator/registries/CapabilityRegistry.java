@@ -35,6 +35,7 @@ public class CapabilityRegistry {
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.SOLAR_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.WATER_ABSORBER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.SCULK_ABSORBER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
+        event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.SPAWNER_ABSORBER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
         event.registerBlockEntity(NETWORK_CAPABILITY, BlockEntityRegistry.CONDUIT_ABSORBER_ENTITY.get(), NetworkDeviceEntity::getNetworkCapability);
 
     }

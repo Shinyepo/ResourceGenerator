@@ -31,6 +31,7 @@ public class CustomItemGenerator extends ItemModelGenerators {
         generateItemWithExistingParent(ItemRegistry.SCULK_ABSORBER_ITEM.get(), "sculk_absorber");
         generateItemWithExistingParent(ItemRegistry.CONSUMER_OUTPUT_ITEM.get(), "consumer_output");
         generateItemWithExistingParent(ItemRegistry.CONDUIT_ABSORBER_ITEM.get(), "conduit_absorber");
+        generateItemWithExistingParent(ItemRegistry.SPAWNER_ABSORBER_ITEM.get(), "spawner_absorber");
         generateItemWithExistingParent(ItemRegistry.MARKET_ITEM.get(), "market");
         generateItemWithExistingModel(ItemRegistry.ITEM_PIPE_ITEM.get(), Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "item/item_pipe"));
         generateItemWithExistingModel(ItemRegistry.FRAME.get(), Identifier.fromNamespaceAndPath(ResourceGenerator.MODID, "item/frame"));

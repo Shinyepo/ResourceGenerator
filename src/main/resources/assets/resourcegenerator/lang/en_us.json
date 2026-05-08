@@ -14,6 +14,8 @@
   "item.resourcegenerator.consumer_output": "Consumer Output",
   "block.resourcegenerator.sculk_absorber": "Sculk Absorber",
   "item.resourcegenerator.sculk_absorber": "Sculk Absorber",
+  "block.resourcegenerator.spawner_absorber": "Spawner Absorber",
+  "item.resourcegenerator.spawner_absorber": "Spawner Absorber",
   "block.resourcegenerator.market": "Market",
   "item.resourcegenerator.market": "Market",
   "block.resourcegenerator.conduit_absorber": "Conduit Absorber",

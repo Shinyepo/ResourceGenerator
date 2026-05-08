@@ -24,6 +24,7 @@ public class ItemRegistry {
     public static final DeferredItem<BlockItem> OUTPUT_UPGRADE_ITEM = ITEMS.registerSimpleBlockItem("output_upgrade", BlockRegistry.OUTPUT_UPGRADE);
     public static final DeferredItem<BlockItem> RESOURCE_IMITATOR_ITEM = ITEMS.registerSimpleBlockItem("resource_imitator", BlockRegistry.RESOURCE_IMITATOR);
     public static final DeferredItem<BlockItem> SCULK_ABSORBER_ITEM = ITEMS.registerSimpleBlockItem("sculk_absorber", BlockRegistry.SCULK_ABSORBER);
+    public static final DeferredItem<BlockItem> SPAWNER_ABSORBER_ITEM = ITEMS.registerSimpleBlockItem("spawner_absorber", BlockRegistry.SPAWNER_ABSORBER);
     public static final DeferredItem<BlockItem> CONSUMER_OUTPUT_ITEM = ITEMS.registerSimpleBlockItem("consumer_output", BlockRegistry.CONSUMER_OUTPUT);
     public static final DeferredItem<BlockItem> CONDUIT_ABSORBER_ITEM = ITEMS.registerSimpleBlockItem("conduit_absorber", BlockRegistry.CONDUIT_ABSORBER);
     public static final DeferredItem<BlockItem> MARKET_ITEM = ITEMS.registerSimpleBlockItem("market", BlockRegistry.MARKET);
