@@ -116,6 +116,6 @@ public class BasicBlock extends Block implements EntityBlock {
             }
             return InteractionResult.PASS;
         }
-        return InteractionResult.CONSUME;
+        return InteractionResult.PASS;
     }
 }
