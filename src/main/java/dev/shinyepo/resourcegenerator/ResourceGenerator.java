@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils;
 import dev.shinyepo.resourcegenerator.controllers.AccountController;
 import dev.shinyepo.resourcegenerator.controllers.DeviceNetworkController;
 import dev.shinyepo.resourcegenerator.controllers.ItemTransferNetworkController;
+import dev.shinyepo.resourcegenerator.events.LivingEntityEvent;
 import dev.shinyepo.resourcegenerator.pipes.CustomBlockStateModel;
 import dev.shinyepo.resourcegenerator.pipes.builders.CustomBlockDefinition;
 import dev.shinyepo.resourcegenerator.registries.*;
@@ -70,6 +71,7 @@ public class ResourceGenerator {
         NeoForge.EVENT_BUS.addListener(this::onServerStopping);
         NeoForge.EVENT_BUS.addListener(ResourceGenerator::registerCommands);
 
+        NeoForge.EVENT_BUS.addListener(LivingEntityEvent::onEntityDeath);
         NeoForge.EVENT_BUS.addListener(DeviceNetworkController::onServerTick);
         NeoForge.EVENT_BUS.addListener(AccountController::onServerTick);
         NeoForge.EVENT_BUS.addListener(ItemTransferNetworkController::onServerTick);
