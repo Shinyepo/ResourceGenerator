@@ -27,6 +27,7 @@
   "block.resourcegenerator.basic_consumer": "Basic Consumer",
   "item.resourcegenerator.basic_consumer": "Basic Consumer",
   "item.resourcegenerator.id_card": "Id Card",
+  "item.resourcegenerator.machine_core": "Machine Core",
   "item.resourcegenerator.frame": "Machine Frame",
   "item.resourcegenerator.pipe_wrench": "Pipe Wrench",
   "item.resourcegenerator.inspector": "Inspector",
