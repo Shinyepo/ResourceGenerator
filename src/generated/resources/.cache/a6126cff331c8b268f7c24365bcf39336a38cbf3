@@ -1,4 +1,4 @@
-// 26.1.2	2026-05-08T12:02:09.3965327	Model Definitions - resourcegenerator
+// 26.1.2	2026-05-10T11:52:09.8902778	Model Definitions - resourcegenerator
 e24546adc9d464a7b3e8215289faae2a24201307 assets/resourcegenerator/blockstates/basic_consumer.json
 812d7a5519cd714a886d0164b0bfd2814e582925 assets/resourcegenerator/blockstates/cable.json
 6b960d4e31399ea68d2f22bcd238466c99cb8456 assets/resourcegenerator/blockstates/conduit_absorber.json
@@ -18,10 +18,10 @@ d26301ba2f81244e50e4163af652a43c5c22d6cf assets/resourcegenerator/items/basic_co
 0e38dbd96d718c9bb5b9ba1e5e68eed974235f50 assets/resourcegenerator/items/conduit_absorber.json
 bd2631671e7b0463eb752b5725497b450dc4e6ff assets/resourcegenerator/items/consumer_output.json
 59795a53c42fc86239878d93a99bb561bdf390f6 assets/resourcegenerator/items/controller.json
-fb9b8cebd0e1f62a3059fba29b3adde68e3102db assets/resourcegenerator/items/frame.json
 86ae4def8ad75e638e4d1caf67c27ef65da59842 assets/resourcegenerator/items/id_card.json
 8a35b2c77f249fe1d2fc0e043bd770e1c08319f4 assets/resourcegenerator/items/inspector.json
 d091d8d3b37f92139772b0cb83bc5aedc4610c21 assets/resourcegenerator/items/item_pipe.json
+1ece33c830411caded6bd267b7e8d85a0a12c08f assets/resourcegenerator/items/machine_core.json
 9e28d47bac7b72af01dc84db60bc14fa09e27103 assets/resourcegenerator/items/market.json
 c2a9294ebdf7402ed6b1a00cc12f49987cf59184 assets/resourcegenerator/items/output_upgrade.json
 fba5a170c2da1516a3f8d6c5729b7f8fe619f982 assets/resourcegenerator/items/pipe_wrench.json
@@ -32,4 +32,5 @@ fba5a170c2da1516a3f8d6c5729b7f8fe619f982 assets/resourcegenerator/items/pipe_wre
 311bc04705054cb51c3a996438a4f4d89b272be3 assets/resourcegenerator/items/water_absorber.json
 f8bd3664fb1a7e12f0f857a908e42bc076ac307c assets/resourcegenerator/models/item/id_card.json
 c5851948d24346f654aeaae42c93025e33a47349 assets/resourcegenerator/models/item/inspector.json
+6d725a6c1fbedabc751e3c14a80b5de85fefeaec assets/resourcegenerator/models/item/machine_core.json
 227aceb45fc61e1faab28f518a64e29ccdd043a3 assets/resourcegenerator/models/item/pipe_wrench.json

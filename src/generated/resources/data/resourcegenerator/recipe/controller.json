@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "D": "resourcegenerator:id_card",
+    "I": "minecraft:iron_ingot",
+    "M": "resourcegenerator:machine_core",
+    "R": "minecraft:repeater"
+  },
+  "pattern": [
+    "IDI",
+    "RMR",
+    "IRI"
+  ],
+  "result": {
+    "id": "resourcegenerator:controller"
+  }
+}

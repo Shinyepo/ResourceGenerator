@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "minecraft:comparator",
+    "G": "minecraft:gold_nugget",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "IGI",
+    "GCG",
+    "IGI"
+  ],
+  "result": {
+    "id": "resourcegenerator:machine_core"
+  }
+}

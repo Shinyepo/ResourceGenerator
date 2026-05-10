@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "minecraft:emerald"
+            "items": "minecraft:sculk"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "resourcegenerator:market"
+        "recipe": "resourcegenerator:sculk_absorber"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "resourcegenerator:market"
+      "resourcegenerator:sculk_absorber"
     ]
   }
 }

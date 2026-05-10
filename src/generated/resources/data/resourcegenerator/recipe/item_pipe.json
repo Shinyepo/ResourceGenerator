@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "H": "minecraft:hopper",
+    "I": "minecraft:iron_ingot",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "III",
+    "HRH",
+    "III"
+  ],
+  "result": {
+    "id": "resourcegenerator:item_pipe"
+  }
+}

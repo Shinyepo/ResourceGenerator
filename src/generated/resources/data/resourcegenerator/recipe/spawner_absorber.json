@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "minecraft:creeper_head",
+    "I": "minecraft:iron_ingot",
+    "M": "resourcegenerator:machine_core",
+    "S": "minecraft:skeleton_skull",
+    "Z": "minecraft:zombie_head"
+  },
+  "pattern": [
+    "III",
+    "ZMS",
+    "ICI"
+  ],
+  "result": {
+    "id": "resourcegenerator:spawner_absorber"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "P": "minecraft:repeater",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "CCC",
+    "PRP",
+    "CCC"
+  ],
+  "result": {
+    "id": "resourcegenerator:cable"
+  }
+}

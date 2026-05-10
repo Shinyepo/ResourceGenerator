@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "B": "minecraft:sculk",
+    "I": "minecraft:iron_ingot",
+    "M": "resourcegenerator:machine_core",
+    "S": "minecraft:sculk_sensor"
+  },
+  "pattern": [
+    "ISI",
+    "BMB",
+    "IBI"
+  ],
+  "result": {
+    "id": "resourcegenerator:sculk_absorber"
+  }
+}

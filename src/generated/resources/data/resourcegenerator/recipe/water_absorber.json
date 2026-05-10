@@ -2,19 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "C": "minecraft:chest",
-    "E": "minecraft:emerald",
-    "H": "minecraft:hopper",
+    "B": "minecraft:bucket",
     "I": "minecraft:iron_ingot",
-    "L": "minecraft:lectern",
     "M": "resourcegenerator:machine_core"
   },
   "pattern": [
-    "IEI",
-    "CML",
-    "IHI"
+    "III",
+    "BMB",
+    "IBI"
   ],
   "result": {
-    "id": "resourcegenerator:market"
+    "id": "resourcegenerator:water_absorber"
   }
 }

@@ -39,6 +39,25 @@ public class CustomRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_item", has(Items.IRON_INGOT))
                 .save(this.output);
 
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.ITEM_PIPE_ITEM)
+                .pattern("III")
+                .pattern("HRH")
+                .pattern("III")
+                .define('I', Items.IRON_INGOT)
+                .define('H', Items.HOPPER)
+                .define('R', Items.REDSTONE)
+                .unlockedBy("has_item", has(Items.HOPPER))
+                .save(this.output);
+
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.CABLE_ITEM)
+                .pattern("CCC")
+                .pattern("PRP")
+                .pattern("CCC")
+                .define('C', Items.COPPER_INGOT)
+                .define('R', Items.REDSTONE)
+                .define('P', Items.REPEATER)
+                .unlockedBy("has_item", has(Items.REDSTONE))
+                .save(this.output);
 
         ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.MACHINE_CORE)
                 .pattern("IGI")
@@ -77,13 +96,45 @@ public class CustomRecipeProvider extends RecipeProvider {
 
         ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.CONTROLLER_ITEM)
                 .pattern("IDI")
-                .pattern("RCR")
+                .pattern("RMR")
                 .pattern("IRI")
                 .define('I', Items.IRON_INGOT)
-                .define('C', Items.COMPARATOR)
+                .define('M', ItemRegistry.MACHINE_CORE)
                 .define('R', Items.REPEATER)
                 .define('D', ItemRegistry.ID_CARD)
-                .unlockedBy("has_item", has(ItemRegistry.ID_CARD))
+                .unlockedBy("has_item", has(ItemRegistry.MACHINE_CORE))
+                .save(this.output);
+
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.WATER_ABSORBER_ITEM)
+                .pattern("III")
+                .pattern("BMB")
+                .pattern("IBI")
+                .define('I', Items.IRON_INGOT)
+                .define('M', ItemRegistry.MACHINE_CORE)
+                .define('B', Items.BUCKET)
+                .unlockedBy("has_item", has(Items.BUCKET))
+                .save(this.output);
+
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.SCULK_ABSORBER_ITEM)
+                .pattern("ISI")
+                .pattern("BMB")
+                .pattern("IBI")
+                .define('I', Items.IRON_INGOT)
+                .define('M', ItemRegistry.MACHINE_CORE)
+                .define('B', Items.SCULK)
+                .define('S', Items.SCULK_SENSOR)
+                .unlockedBy("has_item", has(Items.SCULK))
+                .save(this.output);
+
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.CONDUIT_ABSORBER_ITEM)
+                .pattern("ICI")
+                .pattern("PMP")
+                .pattern("IPI")
+                .define('I', Items.IRON_INGOT)
+                .define('M', ItemRegistry.MACHINE_CORE)
+                .define('P', Items.PRISMARINE)
+                .define('C', Items.CONDUIT)
+                .unlockedBy("has_item", has(Items.PRISMARINE))
                 .save(this.output);
     }
 
