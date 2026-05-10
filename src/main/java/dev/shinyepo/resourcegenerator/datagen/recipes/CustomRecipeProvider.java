@@ -39,24 +39,51 @@ public class CustomRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_item", has(Items.IRON_INGOT))
                 .save(this.output);
 
-        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.MISC, ItemRegistry.FRAME)
-                .pattern("III")
-                .pattern("I I")
-                .pattern("III")
+
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.MACHINE_CORE)
+                .pattern("IGI")
+                .pattern("GCG")
+                .pattern("IGI")
                 .define('I', Items.IRON_INGOT)
-                .unlockedBy("has_item", has(Items.IRON_INGOT))
+                .define('C', Items.COMPARATOR)
+                .define('G', Items.GOLD_NUGGET)
+                .unlockedBy("has_item", has(Items.GOLD_INGOT))
                 .save(this.output);
 
         ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.MARKET_ITEM)
-                .pattern(" E ")
-                .pattern("CFL")
-                .pattern(" H ")
+                .pattern("IEI")
+                .pattern("CML")
+                .pattern("IHI")
                 .define('E', Items.EMERALD)
                 .define('C', Items.CHEST)
-                .define('F', ItemRegistry.FRAME)
+                .define('I', Items.IRON_INGOT)
                 .define('L', Items.LECTERN)
                 .define('H', Items.HOPPER)
-                .unlockedBy("has_item", has(ItemRegistry.FRAME))
+                .define('M', ItemRegistry.MACHINE_CORE)
+                .unlockedBy("has_item", has(Items.EMERALD))
+                .save(this.output);
+
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.SPAWNER_ABSORBER_ITEM)
+                .pattern("III")
+                .pattern("ZMS")
+                .pattern("ICI")
+                .define('I', Items.IRON_INGOT)
+                .define('C', Items.CREEPER_HEAD)
+                .define('S', Items.SKELETON_SKULL)
+                .define('Z', Items.ZOMBIE_HEAD)
+                .define('M', ItemRegistry.MACHINE_CORE)
+                .unlockedBy("has_item", has(ItemRegistry.MACHINE_CORE))
+                .save(this.output);
+
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.CONTROLLER_ITEM)
+                .pattern("IDI")
+                .pattern("RCR")
+                .pattern("IRI")
+                .define('I', Items.IRON_INGOT)
+                .define('C', Items.COMPARATOR)
+                .define('R', Items.REPEATER)
+                .define('D', ItemRegistry.ID_CARD)
+                .unlockedBy("has_item", has(ItemRegistry.ID_CARD))
                 .save(this.output);
     }
 
