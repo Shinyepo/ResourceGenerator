@@ -10,6 +10,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.common.Tags;
 import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -135,6 +136,36 @@ public class CustomRecipeProvider extends RecipeProvider {
                 .define('P', Items.PRISMARINE)
                 .define('C', Items.CONDUIT)
                 .unlockedBy("has_item", has(Items.PRISMARINE))
+                .save(this.output);
+
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.RESOURCE_IMITATOR_ITEM)
+                .pattern("IGI")
+                .pattern("GCG")
+                .pattern("IMI")
+                .define('I', Items.IRON_INGOT)
+                .define('G', Tags.Items.GLASS_BLOCKS)
+                .define('M', ItemRegistry.MACHINE_CORE)
+                .define('C', Tags.Items.CHESTS)
+                .unlockedBy("has_item", has(ItemRegistry.MACHINE_CORE))
+                .save(this.output);
+
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.CONSUMER_OUTPUT_ITEM)
+                .pattern("IHI")
+                .pattern("HMH")
+                .pattern("IHI")
+                .define('I', Items.IRON_INGOT)
+                .define('H', Items.HOPPER)
+                .define('M', ItemRegistry.MACHINE_CORE)
+                .unlockedBy("has_item", has(Items.HOPPER))
+                .save(this.output);
+
+        ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.REDSTONE, ItemRegistry.SOLAR_ITEM)
+                .pattern("GGG")
+                .pattern("IMI")
+                .define('I', Items.IRON_INGOT)
+                .define('G', Tags.Items.GLASS_PANES)
+                .define('M', ItemRegistry.MACHINE_CORE)
+                .unlockedBy("has_item", has(ItemRegistry.MACHINE_CORE))
                 .save(this.output);
     }
 
